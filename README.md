@@ -1,4 +1,3 @@
-
 # Source Transcriptions
 
 A custom module for [webtrees](https://www.webtrees.net/) to manage transcriptions of sources and source media.
@@ -33,7 +32,7 @@ It is treated as a structured object with
 - a provider
 - a status
 - a revision history
-- a current working note in webtrees (SOUR:NOTE or SOUR:OBJE:NOTE)
+- a current working note in webtrees (`SOUR:NOTE` or `SOUR:OBJE:NOTE`)
 
 ## Main ideas
 
@@ -77,18 +76,18 @@ Important
 - edited notes can optionally be saved as new manual revisions
 
 #### Structure of NOTE
-  `Transcription
-  Source: Kirchenbuch Musterort 1780–1810
-  Medium: Seite 23
-  Revision: 3
-  Provider: Transkribus
-  Imported: 20260428/11:12:13
+  `Transcription`
+  `Source: Kirchenbuch Musterort 1780–1810`
+  `Medium: Seite 23`
+  `Revision: 3`
+  `Provider: Transkribus`
+  `Imported: 20260428/11:12:13`
 
-  --- Begin transcription ---
+  `--- Begin transcription ---`
 
-  ...
+  `...`
 
-  --- End transcription ---`
+  `--- End transcription ---`
 
 ### 4. Tagging of sources
 
