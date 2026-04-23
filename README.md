@@ -1,4 +1,4 @@
-# webtrees module for Source Transcriptions (hh_source_transription)
+# **webtrees** module for Source Transcriptions (hh_source_transription)
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
@@ -34,14 +34,14 @@ This Readme contains the following main sections
 ## Purpose
 
 Genealogical sources often contain handwritten or otherwise difficult-to-read texts.  
-This module adds a structured workflow for creating, importing, managing, and revising transcriptions in webtrees.
+This module adds a structured workflow for creating, importing, managing, and revising transcriptions in **webtrees**.
 
 External or internal text recognition tools can support the transcription; the module is intentionally provider-agnostic.
 
 Version 1 starts with two transcription providers
 
-- **Manual** – transcriptions entered and maintained by an editor directly in webtrees
-- **Transkribus** – transcriptions created externally in Transkribus and imported into webtrees
+- **Manual** – transcriptions entered and maintained by an editor directly in **webtrees**
+- **Transkribus** – transcriptions created externally in Transkribus and imported into **webtrees**
 
 The architecture is designed to support additional providers, like other AI tools, later.
 
@@ -62,11 +62,12 @@ It is treated as a structured object with
 - a provider
 - a status
 - a revision history
-- a current working note in webtrees (`SOUR:NOTE` or `SOUR:OBJE:NOTE`)
+- a current working note in **webtrees** (`SOUR:NOTE` or `SOUR:OBJE:NOTE`)
 
 <a name="Main"></a>
 ## Main ideas
-The goal is to link a Digital Humanities edition system with a genealogical data model. The long-term goal is therefore a structured data collection with TEI parsing and integrated GEDCOM generation. This means that in the advanced transcription process, webtrees objects such as people, places and events should be created or linked. That could be a first introduction to turn the result-oriented webtrees into a process- and evidence-based program.
+The goal is to link a Digital Humanities edition system with a genealogical data model. The long-term goal is therefore a structured data collection with TEI parsing and integrated GEDCOM generation.
+This means that in the advanced transcription process, webtrees objects such as people, places and events should be created or linked. That could be a first introduction to turn the result-oriented **webtrees** into a process- and evidence-based program.
 
 ### 1. Provider-based architecture
 
@@ -255,8 +256,8 @@ The following points are still open for discussion
 <a name="Literature"></a>
 ## Literature
 
-- Zedlitz, Jesper: "Gedbas4all - neues Datenmodell für die Genealogie", in COMPUTERGENEALOGIE 4/2009, S. 15-18.
-- GENTECH Genealogical Data Model, May 29, 2000, https://xml.coverpages.org/GENTECH-DataModelV11.pdf (checked 23.04.2026).
+- Zedlitz, Jesper: "Gedbas4all - neues Datenmodell für die Genealogie", in COMPUTERGENEALOGIE 4/2009, S. 15-18, 2009, https://doi.org/10.5281/zenodo.33958 (checked 23.04.2026).
+- GENTECH Genealogical Data Model, 29.05.2000, https://xml.coverpages.org/GENTECH-DataModelV11.pdf (checked 23.04.2026).
 
 <a name="Requirements"></a>
 ## Requirements
@@ -270,15 +271,15 @@ and all available themes and all other custom modules.
 <a name="Installation"></a>
 ## Installation
 
-Install and use [Custom Module Manager](https://github.com/Jefferson49/CustomModuleManager) for an easy and convenient installation of webtrees custom modules.
-+ Open the Custom Module Manager view in webtrees, scroll to "Source Transcription", and click on the "Install Module" button.
+Install and use [Custom Module Manager](https://github.com/Jefferson49/CustomModuleManager) for an easy and convenient installation of **webtrees** custom modules.
++ Open the Custom Module Manager view in **webtrees**, scroll to "Source Transcription", and click on the "Install Module" button.
 
 **Manual installation**:
 
-1. Make database backup
-1. Download the [latest release](https://github.com/hartenthaler/hh_source_transcription/releases/latest)
-1. Unzip the package into your `webtrees/modules_v4` directory of your web server
-1. Rename the folder to `hh_source_transcription`
+1. Make a database backup.
+1. Download the [latest release](https://github.com/hartenthaler/hh_source_transcription/releases/latest).
+1. Unzip the package into your `webtrees/modules_v4` directory of your web server.
+1. Rename the folder to `hh_source_transcription`.
 1. Login to **webtrees** as administrator, go to <span class="pointer">Control Panel/Modules/Individual page/Tabs</span>, and find the module. It will be called "Source Transcription". Check if it has a tick for "Enabled".
 1. Finally, click SAVE, to complete the installation.
 
