@@ -35,6 +35,7 @@ It is treated as a structured object with
 - a current working note in webtrees (`SOUR:NOTE` or `SOUR:OBJE:NOTE`)
 
 ## Main ideas
+The goal is to link a Digital Humanities edition system with a genealogical data model. The long-term goal is therefore a structured data collection with TEI parsing and integrated GEDCOM generation. This means that in the advanced transcription process, webtrees objects such as people, places and events should be created or linked. That could be a first introduction to turn the result-oriented webtrees into a process- and evidence-based program.
 
 ### 1. Provider-based architecture
 
@@ -206,6 +207,7 @@ The Transkribus integration will follow on top of that generic foundation.
 
 The following points are still open for discussion
 
+- Do you know any other genealogy programs that support the transcription process well (best practices) and at the same time use genealogical data structures?
 - How to store the position of a transcribed line as position in the image?
 - Should a source receive one generic tag note (`TAG: Transcription`) or provider-specific tag notes as well?
 - Should the default note strategy be “always create new note” or “update if unchanged”?
