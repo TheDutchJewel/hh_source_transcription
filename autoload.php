@@ -23,7 +23,7 @@
  * along with this program; If not, see <https://www.gnu.org/licenses/>.
  *
  * Source Transcription
- * A weebtrees (https://webtrees.net) 2.2 custom module to transcribe sources
+ * A webtrees (https://webtrees.net) 2.2 custom module to transcribe sources
  */
 
 declare(strict_types=1);
@@ -33,7 +33,7 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription;
 use Composer\Autoload\ClassLoader;
 
 //Autoload this webtrees custom module
-$loader = new ClassLoader(__DIR__);
+$loader = new ClassLoader();
 $loader->addPsr4('Hartenthaler\\Webtrees\\Module\\SourceTranscription\\', __DIR__ . '/src');
 $loader->register();
 

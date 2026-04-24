@@ -66,8 +66,11 @@ It is treated as a structured object with
 
 <a name="Main"></a>
 ## Main ideas
-The goal is to link a Digital Humanities edition system with a genealogical data model. The long-term goal is therefore a structured data collection with TEI parsing and integrated GEDCOM generation.
-This means that in the advanced transcription process, webtrees objects such as people, places and events should be created or linked. That could be a first introduction to turn the result-oriented **webtrees** into a process- and evidence-based program.
+The goal is to link a Digital Humanities edition system with a genealogical data model.
+The long-term goal is therefore a structured data collection with TEI parsing and integrated GEDCOM generation.
+This means that in the advanced transcription process, webtrees objects such as people, places and events
+should be created or linked.
+That could be a first introduction to turn the result-oriented **webtrees** into a process- and evidence-based program.
 
 ### 1. Provider-based architecture
 
@@ -99,7 +102,9 @@ This means that revisions remain stable even if the associated webtrees note is 
 
 ### 3. webtrees NOTE as working copy
 
-The module can generate or update a shared NOTE linked to the source. This NOTE is the current working version shown and edited in webtrees. Only that NOTE is exported via GEDCOM.
+The module can generate or update a shared NOTE linked to the source.
+This NOTE is the current working version shown and edited in webtrees.
+Only that NOTE is exported via GEDCOM.
 
 Important
 
@@ -110,10 +115,15 @@ Important
 
 #### Structure of NOTE
   `Transcription`
+
   `Source: Kirchenbuch Musterort 1780–1810`
+
   `Medium: Seite 23`
+
   `Revision: 3`
+
   `Provider: Transkribus`
+
   `Imported: 20260428/11:12:13`
 
   `--- Begin transcription ---`
@@ -249,7 +259,7 @@ The following points are still open for discussion
 - How to store the position of a transcribed line as position in the image?
 - Should a source receive one generic tag note (`TAG: Transcription`) or provider-specific tag notes as well?
 - Should the default note strategy be “always create new note” or “update if unchanged”?
-- Should multiple transcription types (transcription, translation, normalised, or modernised text) already be visible in version 1?
+- Should multiple transcription types (transcription, translation, normalized, or modernized text) already be visible in version 1?
 - How should media selection be handled if a source has multiple media objects?
 - How to integrate named entities, links to persons and to locations in future versions?
 
@@ -302,9 +312,8 @@ There are, besides English and German, no other translations available.
 <a name="Support"></a>
 ## Support
 
-<span style="font-weight: bold;">Issues: </span> You can report errors by raising an issue in this GitHub repository.
-
-<span style="font-weight: bold;">Forum: </span>General webtrees support can be found at the [webtrees forum](http://www.webtrees.net/).
+- <span style="font-weight: bold;">Issues: </span> You can report errors by raising an issue in this GitHub repository.
+- <span style="font-weight: bold;">Forum: </span>General webtrees support can be found at the [webtrees forum](http://www.webtrees.net/).
 
 <a name="License"></a>
 ## License
