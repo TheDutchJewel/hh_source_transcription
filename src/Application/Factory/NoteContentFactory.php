@@ -30,6 +30,7 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Factory;
 
+use Fisharebest\Webtrees\I18N;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\TranscriptionRevision;
 
 final class NoteContentFactory

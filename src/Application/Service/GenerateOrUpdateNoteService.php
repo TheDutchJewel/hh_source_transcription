@@ -38,6 +38,7 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\RevisionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SharedNoteGateway;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SourceGateway;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Support\HashService;
 use RuntimeException;
 
