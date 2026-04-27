@@ -30,9 +30,23 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject;
 
+use Fisharebest\Webtrees\I18N;
+
 final class TranscriptionType
 {
     public const string TRANSCRIPTION = 'transcription';
     public const string TRANSLATION = 'translation';
     public const string NORMALIZED_TEXT = 'normalized_text';
+
+    /**
+     * @return array<string,string>
+     */
+    public static function labels(): array
+    {
+        return [
+            self::TRANSCRIPTION => I18N::translate('Transcription'),
+            self::TRANSLATION => I18N::translate('Translation'),
+            self::NORMALIZED_TEXT => I18N::translate('Normalized text'),
+        ];
+    }
 }

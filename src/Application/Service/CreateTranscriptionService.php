@@ -33,6 +33,8 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service;
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\I18N;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Dto\CreateTranscriptionCommand;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider\ProviderMetadata;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\InteractionModel;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\RevisionOriginType;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\TranscriptionStatus;
@@ -81,6 +83,7 @@ final class CreateTranscriptionService
                 'source_xref' => $command->source_xref,
                 'media_xref' => $command->media_xref,
                 'title' => $command->title,
+                'interaction_model' => ProviderMetadata::interactionModel($command->provider_key),
                 'transcription_type' => TranscriptionType::TRANSCRIPTION,
                 'provider_key' => ProviderKey::MANUAL,
                 'status' => TranscriptionStatus::NEW,

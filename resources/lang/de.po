@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SourceTranscription\n"
-"POT-Creation-Date: 2026-04-24 18:46+0200\n"
+"POT-Creation-Date: 2026-04-27 18:52+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
 "Language-Team: \n"
@@ -15,36 +15,136 @@ msgstr ""
 "X-Poedit-KeywordsList: translate\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: src/SourceTranscription.php:164
+#: src/Application/Service/CreateTranscriptionService.php:69
+msgid "Only manual transcriptions are supported by createManual()."
+msgstr "Von createManual() werden nur manuelle Transkriptionen unterstützt."
+
+#: src/Application/Service/CreateTranscriptionService.php:73
+msgid "source_xref must not be empty."
+msgstr "Quellen-XREF darf nicht leer sein."
+
+#: src/Application/Service/CreateTranscriptionService.php:77
+msgid "title must not be empty."
+msgstr "Titel darf nicht leer sein."
+
+#: src/Application/Service/EnsureTagNoteService.php:53
+#: src/Application/Service/GenerateOrUpdateNoteService.php:67
+#, php-format
+msgid "Transcription not found: %s"
+msgstr "Transkription nicht gefunden: %s"
+
+#: src/Application/Service/EnsureTagNoteService.php:128
+#, php-format
+msgid "Source not found: %s"
+msgstr "Quelle nicht gefunden: %s"
+
+#: src/Application/Service/GenerateOrUpdateNoteService.php:71
+#, php-format
+msgid "Revision not found: %s"
+msgstr "Revision nicht gefunden: %s"
+
+#: src/Domain/ValueObject/InteractionModel.php:22
+msgid "Manual (direct editing)"
+msgstr "Manuell (direktes Bearbeiten)"
+
+#: src/Domain/ValueObject/InteractionModel.php:23
+msgid "Automated (asynchronous)"
+msgstr "Automatisiert (asynchron)"
+
+#: src/Domain/ValueObject/InteractionModel.php:24
+msgid "Crowd-based (asynchronous)"
+msgstr "Crowd-basiert (asynchron)"
+
+#: src/Domain/ValueObject/InteractionModel.php:25
+msgid "Internal collaboration"
+msgstr "Interne Zusammenarbeit"
+
+#: src/Domain/ValueObject/NoteStrategy.php:48
+msgid "Always create a new NOTE"
+msgstr "Immer eine neue NOTE erzeugen"
+
+#: src/Domain/ValueObject/NoteStrategy.php:49
+msgid "Update existing NOTE only if unchanged"
+msgstr "Existierende NOTE nur aktualisieren, wenn sie nicht geändert wurde"
+
+#: src/Domain/ValueObject/NoteStrategy.php:50
+msgid "Always update existing NOTE"
+msgstr "Existierende NOTE immer aktualisieren"
+
+#: src/Domain/ValueObject/RevisionOriginType.php:48
+msgid "Manual entry"
+msgstr "Manuelle Eingabe"
+
+#: src/Domain/ValueObject/RevisionOriginType.php:49
+msgid "Manual note save"
+msgstr "Manuelle NOTE sichern"
+
+#: src/Domain/ValueObject/RevisionOriginType.php:50
+msgid "Transkribus import"
+msgstr "Transkribus Import"
+
+#: src/Domain/ValueObject/RevisionOriginType.php:51
+msgid "Transkribus sync"
+msgstr "Transkribus Synchronisation"
+
+#: src/Domain/ValueObject/TranscriptionStatus.php:48
+msgid "New"
+msgstr "Neu"
+
+#: src/Domain/ValueObject/TranscriptionStatus.php:49
+msgid "In progress"
+msgstr "In Arbeit"
+
+#: src/Domain/ValueObject/TranscriptionStatus.php:50
+msgid "Completed"
+msgstr "Abgeschlossen"
+
+#: src/Domain/ValueObject/TranscriptionStatus.php:51
+msgid "Archived"
+msgstr "Archiviert"
+
+#: src/Domain/ValueObject/TranscriptionType.php:47
+msgid "Transcription"
+msgstr "Transkription"
+
+#: src/Domain/ValueObject/TranscriptionType.php:48
+msgid "Translation"
+msgstr "Übersetzung"
+
+#: src/Domain/ValueObject/TranscriptionType.php:49
+msgid "Normalized text"
+msgstr "Normalisierter Text"
+
+#: src/Infrastructure/Persistence/SchemaManager.php:63
+msgid ""
+"Source Transcriptions database schema is newer than this module version."
+msgstr ""
+"Das Schema der Datenbank \"Transkription von Quellen\" ist neuer als diese "
+"Modulversion."
+
+#: src/Infrastructure/Persistence/SchemaManager.php:161
+#, php-format
+msgid "No migration defined from schema version %s"
+msgstr "Aus der Schemaversion %s wurde keine Migration definiert"
+
+#: src/SourceTranscription.php:185
 msgid "Source Transcription"
 msgstr "Transkription von Quellen"
 
-#: src/SourceTranscription.php:176
+#: src/SourceTranscription.php:197
 msgid "Manage source transcriptions with manual and provider-based workflows."
 msgstr ""
 "Verwaltung von Quellen-Transkriptionen mit einem manuellen oder Anbieter-"
 "Arbeitsablauf."
 
-#: src/SourceTranscription.php:332
+#: src/SourceTranscription.php:353
 #, fuzzy, php-format
 #| msgid "The preferences for the module \"%s\" were updated."
 msgid "The preferences for the module “%s” have been updated."
 msgstr ""
 "Die Einstellungen für das Erweiterungsmodul \"%s\" wurden aktualisiert."
 
-#: src/SourceTranscription.php:345
-msgid "Always create a new NOTE"
-msgstr "Immer eine neue NOTE erzeugen"
-
-#: src/SourceTranscription.php:346
-msgid "Update existing NOTE only if unchanged"
-msgstr "Existierende NOTE nur aktualisieren, wenn sie nicht geändert wurde"
-
-#: src/SourceTranscription.php:347
-msgid "Always update existing NOTE"
-msgstr "Existierende NOTE immer aktualisieren"
-
-#: resources/views/admin-settings.phtml:23
+#: resources/views/admin-settings.phtml:25
 #, php-format
 msgid ""
 "This module can only be used with a webtrees version greater or equal than "
@@ -53,20 +153,20 @@ msgstr ""
 "Dieses Erweiterungsmodul kann nur mit einer webtrees-Version verwendet "
 "werden, die größer oder gleich %s ist."
 
-#: resources/views/admin-settings.phtml:32
+#: resources/views/admin-settings.phtml:35
 msgid "NOTE update strategy"
 msgstr "NOTE Aktualisierungsstrategie"
 
-#: resources/views/admin-settings.phtml:57
+#: resources/views/admin-settings.phtml:60
 msgid "Tag value for tagging all sources with at least one transcription"
 msgstr ""
 "Tag-Kennzeichen zum Taggen aller Quellen mit wenigstens einer Transkription"
 
-#: resources/views/admin-settings.phtml:74
+#: resources/views/admin-settings.phtml:77
 msgid "Default"
 msgstr "Standard"
 
-#: resources/views/admin-settings.phtml:82
+#: resources/views/admin-settings.phtml:85
 msgid "save"
 msgstr ""
 

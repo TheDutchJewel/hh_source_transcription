@@ -102,6 +102,7 @@ final class TranscriptionRepository
             source_xref: (string)$row->source_xref,
             media_xref: $row->media_xref !== null ? (string)$row->media_xref : null,
             title: (string)$row->title,
+            interaction_model: (string)$row->interaction_model,
             transcription_type: (string)$row->transcription_type,
             provider_key: (string)$row->provider_key,
             status: (string)$row->status,

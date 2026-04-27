@@ -1,20 +1,47 @@
 <?php
 
+/*
+ * webtrees: online genealogy application
+ * Copyright (C) 2026 webtrees development team
+ *                    <https://webtrees.net>
+ *
+ * Source Transcription (webtrees custom module):
+ * Copyright (C) 2026 Hermann Hartenthaler
+ *                     <https://ahnen.hartenthaler.eu>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Source Transcription
+ * A webtrees (https://webtrees.net) 2.2 custom module to transcribe sources
+ */
+
 declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence;
 
 use Fisharebest\Webtrees\DB;
+use Fisharebest\Webtrees\I18N;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\SettingsRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\SourceTranscription;
 use RuntimeException;
 
 final class SchemaManager
 {
-    private const TABLE_METADATA = 'transcription_metadata';
-    private const TABLE_TRANSCRIPTIONS = 'transcriptions';
-    private const TABLE_REVISIONS = 'transcription_revisions';
-    private const TABLE_NOTE_LINKS = 'transcription_note_links';
+    private const string TABLE_METADATA = 'transcription_metadata';
+    private const string TABLE_TRANSCRIPTIONS = 'transcriptions';
+    private const string TABLE_REVISIONS = 'transcription_revisions';
+    private const string TABLE_NOTE_LINKS = 'transcription_note_links';
 
     public function __construct(
         private readonly SettingsRepository $settingsRepository
@@ -33,7 +60,7 @@ final class SchemaManager
 
         if ($current > $target) {
             throw new RuntimeException(
-                'Source Transcriptions database schema is newer than this module version.'
+                I18N::translate('Source Transcriptions database schema is newer than this module version.')
             );
         }
 
@@ -69,6 +96,7 @@ final class SchemaManager
             $table->string('source_xref', 20);
             $table->string('media_xref', 20)->nullable();
             $table->string('title', 255);
+            $table->string('interaction_model', 32);
             $table->string('transcription_type', 32);
             $table->string('provider_key', 32);
             $table->string('status', 32);
@@ -130,7 +158,7 @@ final class SchemaManager
         while ($version < $toVersion) {
             match ($version) {
                 1 => $this->migrate1To2(),
-                default => throw new RuntimeException('No migration defined from schema version ' . $version),
+                default => throw new RuntimeException(I18N::translate('No migration defined from schema version %s', $version)),
             };
 
             $version++;

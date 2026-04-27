@@ -30,10 +30,25 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject;
 
+use Fisharebest\Webtrees\I18N;
+
 final class TranscriptionStatus
 {
     public const string NEW = 'new';
     public const string IN_PROGRESS = 'in_progress';
     public const string COMPLETED = 'completed';
     public const string ARCHIVED = 'archived';
+
+    /**
+     * @return array<string,string>
+     */
+    public static function labels(): array
+    {
+        return [
+            self::NEW => I18N::translate('New'),
+            self::IN_PROGRESS => I18N::translate('In progress'),
+            self::COMPLETED => I18N::translate('Completed'),
+            self::ARCHIVED => I18N::translate('Archived'),
+        ];
+    }
 }

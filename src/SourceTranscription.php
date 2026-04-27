@@ -123,7 +123,7 @@ final class SourceTranscription extends AbstractModule implements
         // TEMP TEST
         Registry::container()->get(SchemaManager::class)->ensureSchema();
 
-        if (false) {
+        if (true) {
             $service = Registry::container()->get(CreateTranscriptionService::class);
 
             $transcription_id = $service->createManual(new CreateTranscriptionCommand(

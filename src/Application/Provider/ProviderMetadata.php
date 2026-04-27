@@ -1,5 +1,4 @@
 <?php
-
 /*
  * webtrees: online genealogy application
  * Copyright (C) 2026 webtrees development team
@@ -28,12 +27,21 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject;
+namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider;
 
-final class ProviderKey
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\InteractionModel;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
+
+final class ProviderMetadata
 {
-    public const string MANUAL = 'manual';
-    public const string TRANSKRIBUS = 'transkribus';
-    public const string DISCOURSE = 'discourse';
-    public const string INTERNAL = 'internal';
+    public static function interactionModel(string $provider_key): string
+    {
+        return match ($provider_key) {
+            ProviderKey::MANUAL => InteractionModel::MANUAL_DIRECT,
+            ProviderKey::TRANSKRIBUS => InteractionModel::AUTOMATED_ASYNC,
+            ProviderKey::DISCOURSE => InteractionModel::CROWD_ASYNC,
+            ProviderKey::INTERNAL => InteractionModel::INTERNAL_COLLABORATIVE,
+            default => InteractionModel::MANUAL_DIRECT,
+        };
+    }
 }

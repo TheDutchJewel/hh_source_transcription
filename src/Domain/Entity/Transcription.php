@@ -38,6 +38,7 @@ final class Transcription
         public readonly string $source_xref,
         public readonly ?string $media_xref,
         public readonly string $title,
+        public readonly string $interaction_model,
         public readonly string $transcription_type,
         public readonly string $provider_key,
         public readonly string $status,

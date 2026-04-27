@@ -30,10 +30,25 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject;
 
+use Fisharebest\Webtrees\I18N;
+
 final class RevisionOriginType
 {
     public const string MANUAL_ENTRY = 'manual_entry';
     public const string MANUAL_NOTE_SAVE = 'manual_note_save';
     public const string TRANSKRIBUS_IMPORT = 'transkribus_import';
     public const string TRANSKRIBUS_SYNC = 'transkribus_sync';
+
+    /**
+     * @return array<string,string>
+     */
+    public static function labels(): array
+    {
+        return [
+            self::MANUAL_ENTRY => I18N::translate('Manual entry'),
+            self::MANUAL_NOTE_SAVE => I18N::translate('Manual note save'),
+            self::TRANSKRIBUS_IMPORT => I18N::translate('Transkribus import'),
+            self::TRANSKRIBUS_SYNC => I18N::translate('Transkribus sync'),
+        ];
+    }
 }
