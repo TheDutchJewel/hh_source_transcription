@@ -1,4 +1,4 @@
-# **webtrees** module for Source Transcriptions (hh_source_transription)
+# **webtrees** module for Source Transcriptions (hh_source_transcription)
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
@@ -38,12 +38,9 @@ This module adds a structured workflow for creating, importing, managing, and re
 
 External or internal text recognition tools can support the transcription; the module is intentionally provider-agnostic.
 
-Version 1 starts with two transcription providers
-
-- **Manual** – transcriptions entered and maintained by an editor directly in **webtrees**
-- **Transkribus** – transcriptions created externally in Transkribus and imported into **webtrees**
-
-The architecture is designed to support additional providers, like other AI tools, later.
+Version 1 starts with the manual transcription provider.
+The architecture is designed to support additional providers,
+like Transkribus, Discourse, and AI tools.
 
 <a name="Scope"></a>
 ## Scope
@@ -254,6 +251,7 @@ tbd
 ## Current status
 
 This project is currently in the design and initial development phase.
+It is an alpha version and not ready for production use.
 
 The first implementation goal is
 
@@ -262,8 +260,14 @@ The first implementation goal is
 - revision storage (done)
 - note generation (done)
 - tagging of sources (done)
-- backup and restore (tbd)
-- note conflict detection (tbd)
+
+### Current limitations
+Actually the user #1 instead of the current user is used for all operations.
+There are no permissions checked yet.
+
+The current implementation directly updates GEDCOM records in database tables.
+This may not update all webtrees reverse-reference indexes immediately.
+This will be replaced by a webtrees-compliant record update mechanism.
 
 ### Implementation of provider candidates by priority
 
@@ -301,10 +305,6 @@ Strategically very interesting for CompGen
 
 - Very flexible, but privacy, costs, prompting, and reproducibility must be properly resolved
 
-8. Wikisource
-
-- rather a special case for publicly editable sources, less for private genealogical media
-
 ### Roadmap
 - V1.0 
   - actual development version
@@ -320,6 +320,7 @@ Strategically very interesting for CompGen
   - composer.json
   - use active user and his rights
   - backup/restore of database tables
+  - webtrees internal collaboration
   - first release version
 - V1.4
   - Discourse integration
@@ -350,7 +351,6 @@ The following points are still open for discussion
 - Do you know any other genealogy programs that support the transcription process well (best practices) and at the same time use genealogical data structures?
 - How to store the position of a transcribed line as position in the image?
 - Should the default note strategy be “always create new NOTE” or “update if unchanged”?
-- Should multiple transcription types (transcription, translation, normalized, or modernized text) already be visible in version 1?
 - How should media selection be handled if a source has multiple media objects or media objects with multiple pages?
 - How to integrate named entities, links to persons and to locations in future versions?
 - How to indicate the confidence about a transcription or parts of it?
@@ -389,7 +389,8 @@ Install and use [Custom Module Manager](https://github.com/Jefferson49/CustomMod
 1. Download the [latest release](https://github.com/hartenthaler/hh_source_transcription/releases/latest).
 1. Unzip the package into your `webtrees/modules_v4` directory of your web server.
 1. Rename the folder to `hh_source_transcription`.
-1. Login to **webtrees** as administrator, go to <span class="pointer">Control Panel/Modules/Individual page/Tabs</span>, and find the module. It will be called "Source Transcription". Check if it has a tick for "Enabled".
+1. Login to **webtrees** as administrator, go to <span class="pointer">Control Panel/Modules/Genealogy/Menus</span>, and find the module. It will be called "Source Transcription". Check if it has a tick for "Enabled".
+1. Change the order of the menu items to your liking.
 1. Finally, click SAVE, to complete the installation.
 
 <a name="Upgrade"></a>
