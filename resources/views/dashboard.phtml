@@ -1,0 +1,56 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @var string $title
+ * @var Tree $tree
+ * @var array<int, Transcription> $transcriptions
+ */
+
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Tree;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription;
+
+?>
+
+<h2><?= e($title) ?></h2>
+
+<p>
+    <a class="btn btn-primary" href="<?= e(route('source-transcription-create-manual', ['tree' => $tree->name()])) ?>">
+        <?= I18N::translate('Create manual transcription') ?>
+    </a>
+</p>
+
+<table class="table table-bordered table-sm">
+    <thead>
+    <tr>
+        <th><?= I18N::translate('ID') ?></th>
+        <th><?= I18N::translate('Source') ?></th>
+        <th><?= I18N::translate('Media') ?></th>
+        <th><?= I18N::translate('Title') ?></th>
+        <th><?= I18N::translate('Provider') ?></th>
+        <th><?= I18N::translate('Status') ?></th>
+        <th><?= I18N::translate('Note') ?></th>
+        <th><?= I18N::translate('Actions') ?></th>
+    </tr>
+    </thead>
+    <tbody>
+    <?php foreach ($transcriptions as $transcription) : ?>
+        <tr>
+            <td><?= e((string) $transcription->id) ?></td>
+            <td><?= e($transcription->source_xref) ?></td>
+            <td><?= e((string) $transcription->media_xref) ?></td>
+            <td><?= e($transcription->title) ?></td>
+            <td><?= e($transcription->provider_key) ?></td>
+            <td><?= e($transcription->status) ?></td>
+            <td><?= e((string) $transcription->current_note_xref) ?></td>
+            <td>
+                <a class="btn btn-sm btn-secondary" href="<?= e(route('source-transcription-detail', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>">
+                    <?= I18N::translate('Open') ?>
+                </a>
+            </td>
+        </tr>
+    <?php endforeach ?>
+    </tbody>
+</table>

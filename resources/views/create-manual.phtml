@@ -1,0 +1,68 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @var string $title
+ * @var Tree $tree
+ */
+
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Tree;
+
+?>
+
+<h2><?= e($title) ?></h2>
+
+<form method="post" action="<?= e(route('source-transcription-store-manual', ['tree' => $tree->name()])) ?>">
+    <?= csrf_field() ?>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="tree_id">
+            <?= I18N::translate('Tree ID') ?>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control" id="tree_id" name="tree_id" type="number" value="<?= e((string) $tree->id()) ?>" readonly required>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="source_xref">
+            <?= I18N::translate('Source XREF') ?>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control" id="source_xref" name="source_xref" type="text" value="X6753" required>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="media_xref">
+            <?= I18N::translate('Media XREF') ?>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control" id="media_xref" name="media_xref" type="text">
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="title">
+            <?= I18N::translate('Title') ?>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control" id="title" name="title" type="text" required>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="initial_text">
+            <?= I18N::translate('Initial text') ?>
+        </label>
+        <div class="col-sm-9">
+            <textarea class="form-control" id="initial_text" name="initial_text" rows="10"></textarea>
+        </div>
+    </div>
+
+    <button class="btn btn-primary" type="submit">
+        <?= I18N::translate('Create transcription') ?>
+    </button>
+</form>

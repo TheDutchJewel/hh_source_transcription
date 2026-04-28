@@ -1,0 +1,158 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @var string $title
+ * @var Tree $tree
+ * @var Transcription $transcription
+ * @var array<int, TranscriptionRevision> $revisions
+ * @var ?string $note_text
+ */
+
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Tree;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\TranscriptionRevision;
+
+?>
+
+<h2><?= e($title) ?>: <?= e($transcription->title) ?></h2>
+
+<p>
+    <a class="btn btn-secondary" href="<?= e(route('source-transcription-dashboard', ['tree' => $tree->name()])) ?>">
+        <?= I18N::translate('Back to dashboard') ?>
+    </a>
+</p>
+
+<div class="alert alert-info">
+    <?= I18N::translate('The current webtrees NOTE is used as a working copy. Changes are only archived when saved as a new revision.') ?>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-header">
+                <?= I18N::translate('Source') ?>
+            </div>
+
+            <div class="card-body">
+                <dl>
+                    <dt><?= I18N::translate('Source XREF') ?></dt>
+                    <dd><code><?= e($transcription->source_xref) ?></code></dd>
+
+                    <dt><?= I18N::translate('Media XREF') ?></dt>
+                    <dd>
+                        <?php if ($transcription->media_xref !== null) : ?>
+                            <code><?= e($transcription->media_xref) ?></code>
+                        <?php else : ?>
+                            <span class="text-muted"><?= I18N::translate('No media object selected.') ?></span>
+                        <?php endif ?>
+                    </dd>
+
+                    <dt><?= I18N::translate('Provider') ?></dt>
+                    <dd><?= e($transcription->provider_key) ?></dd>
+
+                    <dt><?= I18N::translate('Status') ?></dt>
+                    <dd><?= e($transcription->status) ?></dd>
+
+                    <dt><?= I18N::translate('Current NOTE') ?></dt>
+                    <dd>
+                        <?php if ($transcription->current_note_xref !== null) : ?>
+                            <code><?= e($transcription->current_note_xref) ?></code>
+                        <?php else : ?>
+                            <span class="text-muted"><?= I18N::translate('None') ?></span>
+                        <?php endif ?>
+                    </dd>
+
+                    <dt><?= I18N::translate('Tag NOTE') ?></dt>
+                    <dd>
+                        <?php if ($transcription->tag_note_xref !== null) : ?>
+                            <code><?= e($transcription->tag_note_xref) ?></code>
+                        <?php else : ?>
+                            <span class="text-muted"><?= I18N::translate('None') ?></span>
+                        <?php endif ?>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <?= I18N::translate('Media preview') ?>
+            </div>
+
+            <div class="card-body">
+                <div class="alert alert-secondary mb-0">
+                    <?= I18N::translate('Media preview will be added later.') ?>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <?= I18N::translate('Active webtrees NOTE') ?>
+            </div>
+
+            <div class="card-body">
+                <form method="post" action="<?= e(route('source-transcription-update-note', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>">
+                    <?= csrf_field() ?>
+
+                    <textarea
+                        class="form-control font-monospace"
+                        name="note_text"
+                        rows="24"
+                    ><?= e((string) $note_text) ?></textarea>
+
+                    <div class="mt-3 d-flex gap-2">
+                        <button class="btn btn-primary" type="submit">
+                            <?= I18N::translate('Save NOTE') ?>
+                        </button>
+                    </div>
+                </form>
+
+                <form method="post" class="mt-2" action="<?= e(route('source-transcription-save-note-as-revision', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>">
+                    <?= csrf_field() ?>
+
+                    <button class="btn btn-success" type="submit">
+                        <?= I18N::translate('Archive as new revision') ?>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<hr>
+
+<h3><?= I18N::translate('Revision history') ?></h3>
+
+<table class="table table-bordered table-sm">
+    <thead>
+        <tr>
+            <th><?= I18N::translate('Revision') ?></th>
+            <th><?= I18N::translate('Provider') ?></th>
+            <th><?= I18N::translate('Origin') ?></th>
+            <th><?= I18N::translate('Current') ?></th>
+            <th><?= I18N::translate('Hash') ?></th>
+            <th><?= I18N::translate('Text') ?></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <?php foreach ($revisions as $revision) : ?>
+            <tr>
+                <td><?= e((string) $revision->revision_no) ?></td>
+                <td><?= e($revision->provider_key) ?></td>
+                <td><?= e($revision->origin_type) ?></td>
+                <td><?= $revision->is_current_revision ? '✓' : '' ?></td>
+                <td><code><?= e(substr($revision->content_hash, 0, 12)) ?></code></td>
+                <td>
+                    <pre class="mb-0"><?= e(mb_substr($revision->content_text, 0, 500)) ?></pre>
+                </td>
+            </tr>
+        <?php endforeach ?>
+    </tbody>
+</table>

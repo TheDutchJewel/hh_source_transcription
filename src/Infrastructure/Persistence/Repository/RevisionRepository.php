@@ -40,11 +40,19 @@ final class RevisionRepository
 {
     private const string TABLE = 'transcription_revisions';
 
+    /**
+     * @param array $data
+     * @return int
+     */
     public function create(array $data): int
     {
         return (int)DB::table(self::TABLE)->insertGetId($data);
     }
 
+    /**
+     * @param int $id
+     * @return TranscriptionRevision|null
+     */
     public function find(int $id): ?TranscriptionRevision
     {
         $row = DB::table(self::TABLE)->where('id', '=', $id)->first();
@@ -52,6 +60,10 @@ final class RevisionRepository
         return $row === null ? null : $this->map($row);
     }
 
+    /**
+     * @param int $transcription_id
+     * @return int
+     */
     public function nextRevisionNo(int $transcription_id): int
     {
         $max = DB::table(self::TABLE)
@@ -101,5 +113,18 @@ final class RevisionRepository
             generated_note_xref: $row->generated_note_xref !== null ? (string)$row->generated_note_xref : null,
             is_current_revision: (bool)$row->is_current_revision,
         );
+    }
+
+    /**
+     * @return array<int, TranscriptionRevision>
+     */
+    public function findByTranscription(int $transcription_id): array
+    {
+        return DB::table(self::TABLE)
+            ->where('transcription_id', '=', $transcription_id)
+            ->orderByDesc('revision_no')
+            ->get()
+            ->map(fn ($row): TranscriptionRevision => $this->map($row))
+            ->all();
     }
 }

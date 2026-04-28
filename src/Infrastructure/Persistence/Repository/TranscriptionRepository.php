@@ -112,4 +112,17 @@ final class TranscriptionRepository
             is_active: (bool)$row->is_active,
         );
     }
+
+    /**
+     * @return array<int, Transcription>
+     */
+    public function allActive(): array
+    {
+        return DB::table(self::TABLE)
+            ->where('is_active', '=', true)
+            ->orderByDesc('id')
+            ->get()
+            ->map(fn ($row): Transcription => $this->map($row))
+            ->all();
+    }
 }

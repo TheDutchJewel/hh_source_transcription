@@ -46,22 +46,35 @@ use Fisharebest\Webtrees\View;
 use Fisharebest\Webtrees\Webtrees;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Dto\CreateTranscriptionCommand;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\CreateTranscriptionService;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\SaveNoteAsRevisionService;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\RevisionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\SettingsRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\SchemaManager;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SharedNoteGateway;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\NoteStrategy;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Fisharebest\Webtrees\Menu;
+use Fisharebest\Webtrees\Tree;
+use Fisharebest\Webtrees\Module\ModuleMenuInterface;
+use Fisharebest\Webtrees\Module\ModuleMenuTrait;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\CreateManualAction;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\DashboardAction;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\DetailAction;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\SaveNoteAsRevisionAction;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\StoreManualAction;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\UpdateCurrentNoteAction;
 
 final class SourceTranscription extends AbstractModule implements
-    ModuleInterface, ModuleCustomInterface, ModuleConfigInterface
+    ModuleCustomInterface, ModuleConfigInterface, ModuleMenuInterface
 {
     use ModuleCustomTrait;
     use ModuleConfigTrait;
+    use ModuleMenuTrait;
 
     //Custom module version
 	public const string CUSTOM_VERSION = '2.2.5.0';
@@ -95,6 +108,12 @@ final class SourceTranscription extends AbstractModule implements
     public const string DEFAULT_TAG_PREFIX = 'TAG: ';
     public const string DEFAULT_TAG_VALUE = 'Transcription';
 
+    private const string ROUTE_DASHBOARD = '/tree/{tree}/source-transcriptions';
+    private const string ROUTE_CREATE_MANUAL = '/tree/{tree}/source-transcriptions/create-manual';
+    private const string ROUTE_DETAIL = '/tree/{tree}/source-transcriptions/{transcription_id}';
+    private const string ROUTE_UPDATE_NOTE = '/tree/{tree}/source-transcriptions/{transcription_id}/update-note';
+    private const string ROUTE_SAVE_NOTE_AS_REVISION = '/tree/{tree}/source-transcriptions/{transcription_id}/save-note-as-revision';
+
     /**
      * SourceTranscription constructor.
      */
@@ -111,35 +130,62 @@ final class SourceTranscription extends AbstractModule implements
      * @throws NotFoundExceptionInterface
      */
     public function boot(): void
-    {              
+    {
+        Registry::container()->get(SchemaManager::class)->ensureSchema();
+
         // Register a namespace for the views.
-		View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
+        View::registerNamespace('hh_source_transcription', $this->resourcesFolder() . 'views/');
 
-        Registry::container()->get(SchemaManager::class)->ensureSchema();
-
-        //tbd
-        // - Provider registrieren
-        // - Routen laden
-
-        // TEMP TEST
-        Registry::container()->get(SchemaManager::class)->ensureSchema();
-
-        if (true) {
-            $service = Registry::container()->get(CreateTranscriptionService::class);
-            $tree_id = 50;
-            $transcription_id = $service->createManual(new CreateTranscriptionCommand(
-                tree_id: $tree_id,
+        /*  $create = Registry::container()->get(CreateTranscriptionService::class);
+            $save   = Registry::container()->get(SaveNoteAsRevisionService::class);
+            $transcription_id = $create->createManual(new CreateTranscriptionCommand(
+                tree_id: 50,
                 source_xref: 'X6753',
                 media_xref: null,
-                title: 'Manual smoke test',
+                title: 'Manual test',
                 provider_key: ProviderKey::MANUAL,
                 user_id: 1,
-                initial_text: 'Dies ist eine erste manuelle Test-Transkription.',
-                comment: 'Smoke test 27.4.'
+                initial_text: 'Erste Version'
             ));
+        */
 
-            error_log('Created manual transcription id=' . $transcription_id);
-        }
+        $router = Registry::routeFactory()->routeMap();
+
+        $router->get(
+            'source-transcription-dashboard',
+            self::ROUTE_DASHBOARD,
+            DashboardAction::class
+        );
+
+        $router->get(
+            'source-transcription-create-manual',
+            self::ROUTE_CREATE_MANUAL,
+            CreateManualAction::class
+        );
+
+        $router->post(
+            'source-transcription-store-manual',
+            self::ROUTE_CREATE_MANUAL,
+            StoreManualAction::class
+        );
+
+        $router->get(
+            'source-transcription-detail',
+            self::ROUTE_DETAIL,
+            DetailAction::class
+        );
+
+        $router->post(
+            'source-transcription-update-note',
+            self::ROUTE_UPDATE_NOTE,
+            UpdateCurrentNoteAction::class
+        );
+
+        $router->post(
+            'source-transcription-save-note-as-revision',
+            self::ROUTE_SAVE_NOTE_AS_REVISION,
+            SaveNoteAsRevisionAction::class
+        );
     }
 
     /**
@@ -171,7 +217,7 @@ final class SourceTranscription extends AbstractModule implements
      */
     public static function activeModuleName(): string
     {
-        return '_' . basename(dirname(__DIR__, 1)) . '_';
+        return basename(dirname(__DIR__, 1));
     }
 
     /**
@@ -252,6 +298,22 @@ final class SourceTranscription extends AbstractModule implements
     public function customModuleSupportUrl(): string
     {
         return self::REPOSITORY . self::GITHUB_REPO;
+    }
+
+    public function defaultMenuOrder(): int
+    {
+        return 80;
+    }
+
+    public function getMenu(Tree $tree): ?Menu
+    {
+        return new Menu(
+            I18N::translate('Transcriptions'),
+            e(route('source-transcription-dashboard', [
+                'tree' => $tree->name(),
+            ])),
+            $this->name()
+        );
     }
 
     /**

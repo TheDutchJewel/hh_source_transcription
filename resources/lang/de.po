@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SourceTranscription\n"
-"POT-Creation-Date: 2026-04-27 23:53+0200\n"
+"POT-Creation-Date: 2026-04-28 16:14+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
 "Language-Team: \n"
@@ -15,32 +15,158 @@ msgstr ""
 "X-Poedit-KeywordsList: translate\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: src/Application/Factory/NoteContentFactory.php:44
-#: src/Domain/ValueObject/TranscriptionType.php:47
-msgid "Transcription"
-msgstr "Transkription"
+#: resources/views/create-manual.phtml.php:22
+msgid "Tree ID"
+msgstr "Baum-ID"
 
-#: src/Application/Factory/NoteContentFactory.php:45
+#: resources/views/create-manual.phtml.php:31
+#: resources/views/detail.phtml.php:41
+msgid "Source XREF"
+msgstr "Quellen XREF"
+
+#: resources/views/create-manual.phtml.php:40
+#: resources/views/detail.phtml.php:44
+msgid "Media XREF"
+msgstr "Medien XREF"
+
+#: resources/views/create-manual.phtml.php:49
+#: resources/views/dashboard.phtml.php:31
+#: src/Application/Factory/NoteContentFactory.php:46
 msgid "Title"
 msgstr "Titel"
 
-#: src/Application/Factory/NoteContentFactory.php:46
-msgid "Revision"
-msgstr "Revision"
+#: resources/views/create-manual.phtml.php:58
+msgid "Initial text"
+msgstr "Ausgangstext"
 
-#: src/Application/Factory/NoteContentFactory.php:47
+#: resources/views/create-manual.phtml.php:66
+msgid "Create transcription"
+msgstr "Starte Transkription"
+
+#: resources/views/dashboard.phtml.php:21
+#: src/Http/Controller/TranscriptionUiController.php:65
+msgid "Create manual transcription"
+msgstr "Starte manuelle Transkription"
+
+#: resources/views/dashboard.phtml.php:28
+msgid "ID"
+msgstr "ID"
+
+#: resources/views/dashboard.phtml.php:29 resources/views/detail.phtml.php:36
+msgid "Source"
+msgstr ""
+
+#: resources/views/dashboard.phtml.php:30
+msgid "Media"
+msgstr ""
+
+#: resources/views/dashboard.phtml.php:32 resources/views/detail.phtml.php:53
+#: resources/views/detail.phtml.php:136
+#: src/Application/Factory/NoteContentFactory.php:48
 msgid "Provider"
 msgstr "Anbieter"
 
-#: src/Application/Factory/NoteContentFactory.php:48
+#: resources/views/dashboard.phtml.php:33 resources/views/detail.phtml.php:56
+msgid "Status"
+msgstr "Status"
+
+#: resources/views/dashboard.phtml.php:34
+msgid "Note"
+msgstr ""
+
+#: resources/views/dashboard.phtml.php:35
+msgid "Actions"
+msgstr "Aktionen"
+
+#: resources/views/dashboard.phtml.php:50
+msgid "Open"
+msgstr "Öffnen"
+
+#: resources/views/detail.phtml.php:24
+msgid "Back to dashboard"
+msgstr "Zurück zum Dashboard"
+
+#: resources/views/detail.phtml.php:29
+msgid ""
+"The current webtrees NOTE is used as a working copy. Changes are only "
+"archived when saved as a new revision."
+msgstr ""
+"Die aktuelle webtrees-NOTE dient als Arbeitskopie. Änderungen werden erst "
+"archiviert, wenn sie als neue Revision gespeichert werden."
+
+#: resources/views/detail.phtml.php:49
+msgid "No media object selected."
+msgstr "Kein Medienobjekt wurde ausgewählt"
+
+#: resources/views/detail.phtml.php:59
+msgid "Current NOTE"
+msgstr "Aktuelle Notiz"
+
+#: resources/views/detail.phtml.php:64 resources/views/detail.phtml.php:73
+msgid "None"
+msgstr "Nichts"
+
+#: resources/views/detail.phtml.php:68
+msgid "Tag NOTE"
+msgstr "Tag NOTE"
+
+#: resources/views/detail.phtml.php:82
+msgid "Media preview"
+msgstr "Medienvorschau"
+
+#: resources/views/detail.phtml.php:87
+msgid "Media preview will be added later."
+msgstr "Medienvorschau wird später ergänzt werden."
+
+#: resources/views/detail.phtml.php:96
+msgid "Active webtrees NOTE"
+msgstr "Aktive webtrees NOTE"
+
+#: resources/views/detail.phtml.php:111
+msgid "Save NOTE"
+msgstr "Speichere NOTE"
+
+#: resources/views/detail.phtml.php:120
+msgid "Archive as new revision"
+msgstr "Archivieren als neue Revision"
+
+#: resources/views/detail.phtml.php:130
+msgid "Revision history"
+msgstr "Revisionshistorie"
+
+#: resources/views/detail.phtml.php:135
+#: src/Application/Factory/NoteContentFactory.php:47
+msgid "Revision"
+msgstr "Revision"
+
+#: resources/views/detail.phtml.php:137
+#: src/Application/Factory/NoteContentFactory.php:49
 msgid "Origin"
 msgstr "Ursprung"
 
-#: src/Application/Factory/NoteContentFactory.php:50
+#: resources/views/detail.phtml.php:138
+msgid "Current"
+msgstr "Aktuell"
+
+#: resources/views/detail.phtml.php:139
+msgid "Hash"
+msgstr "Prüfsumme"
+
+#: resources/views/detail.phtml.php:140
+msgid "Text"
+msgstr "Text"
+
+#: src/Application/Factory/NoteContentFactory.php:45
+#: src/Domain/ValueObject/TranscriptionType.php:47
+#: src/Http/Controller/TranscriptionUiController.php:111
+msgid "Transcription"
+msgstr "Transkription"
+
+#: src/Application/Factory/NoteContentFactory.php:51
 msgid "Begin transcription"
 msgstr "Beginn der Transkription"
 
-#: src/Application/Factory/NoteContentFactory.php:54
+#: src/Application/Factory/NoteContentFactory.php:55
 msgid "End transcription"
 msgstr "Ende der Transkription"
 
@@ -112,17 +238,39 @@ msgstr "Übersetzung"
 msgid "Normalized text"
 msgstr "Normalisierter Text"
 
-#: src/SourceTranscription.php:186
+#: src/Http/Controller/TranscriptionUiController.php:54
+#: src/SourceTranscription.php:307
+msgid "Transcriptions"
+msgstr "Transkriptionen"
+
+#: src/Http/Controller/TranscriptionUiController.php:91
+msgid "Created from UI"
+msgstr "Von der Bedienoberfläche erzeugt"
+
+#: src/Http/Controller/TranscriptionUiController.php:94
+msgid "The transcription has been created."
+msgstr "Die Transkription wurde erzeugt."
+
+#: src/Http/Controller/TranscriptionUiController.php:126
+msgid "Saved from UI"
+msgstr "Gesichert von der Bedienoberfläche"
+
+#: src/Http/Controller/TranscriptionUiController.php:130
+#, php-format
+msgid "The current note has been saved as revision %s."
+msgstr "Die aktuelle Notiz wurde als Revision %s gespeichert."
+
+#: src/SourceTranscription.php:228
 msgid "Source Transcription"
 msgstr "Transkription von Quellen"
 
-#: src/SourceTranscription.php:198
+#: src/SourceTranscription.php:240
 msgid "Manage source transcriptions with manual and provider-based workflows."
 msgstr ""
 "Verwaltung von Quellen-Transkriptionen mit einem manuellen oder Anbieter-"
 "Arbeitsablauf."
 
-#: src/SourceTranscription.php:354
+#: src/SourceTranscription.php:412
 #, fuzzy, php-format
 #| msgid "The preferences for the module \"%s\" were updated."
 msgid "The preferences for the module “%s” have been updated."

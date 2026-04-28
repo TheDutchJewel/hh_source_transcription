@@ -88,7 +88,7 @@ Providers can support different workflows, such as
 
 #### Provider interaction models
 
-Providers are grouped by their interaction model:
+Providers are grouped by their interaction model
 
 - Manual/direct: The user creates or edits the transcription directly in webtrees.
 - Automated asynchronous: An external or local tool processes an image or document and returns a transcription result. Examples: Transkribus, eScriptorium, OCR/HTR tools, local AI models.
@@ -176,13 +176,6 @@ Typical properties
 
 A revision is a specific text state of a transcription.
 
-Possible origins in version 1
-
-- `manual_entry`
-- `manual_note_save`
-- `transkribus_import`
-- `transkribus_sync`
-
 ### Note link
 
 The module tracks which NOTE was generated from which revision and whether that NOTE is currently active.
@@ -213,7 +206,7 @@ The Transkribus provider supports
 <a name="Database"></a>
 ## Database schema
 
-Version 1 uses the following tables:
+Version 1 uses the following tables
 
 - `wt_transcription_metadata`
 - `wt_transcriptions`
@@ -243,6 +236,9 @@ The module uses an explicit schema version to allow future migrations.
 6. Save the note as a new revision when needed
 
 or select an already existing NOTE containing transcribed text as a new revision.
+
+### Discourse
+tbd
 
 ### Transkribus
 1. Open a source with a media object
@@ -293,17 +289,56 @@ Strategically very interesting for CompGen
 
 - strong automated specialist
 
-5. eScriptorium
+5. File import
+
+- import of PAGE XML, and ALTO XML
+
+6. eScriptorium
 
 - very interesting for self-hosting/open source, but probably more installation and operational effort
 
-6. LLM-/Vision-API
+7. LLM-/Vision-API
 
 - Very flexible, but privacy, costs, prompting, and reproducibility must be properly resolved
 
-7. Wikisource
+8. Wikisource
 
 - rather a special case for publicly editable sources, less for private genealogical media
+
+### Roadmap
+- V1.1
+  - Context display directly at the source
+  - NOTE editable
+  - Save NOTE and Save Revision
+- V1.2
+  - Media Viewer
+  - Diff Revision
+  - Restore Revision
+- V1.3
+  - configuration: support tagging yes/no
+  - composer.json
+  - use active user and his rights
+  - backup/restore of database tables
+- V1.4
+  - Discourse integration
+- V1.5
+  - Transkribus integration
+- V1.6
+  - File import
+- V1.7
+  - support translation
+  - templates as plugins for vital records (Personenstandsurkunden)
+  - templates for census as a replacement for the core census module
+- V2
+  - Named Entity Recognition
+  - Findings and interpretation
+  - Position specifications in the source image
+  - Uncertainty markers
+  - TEI as output format
+- V3
+  - Derivation of statements from the source
+  - Genealogical Proof Standard (GPS)
+  - assisted workflow to link or generate GEDCOM records (INDI, FAM, _LOC, ...)
 
 <a name="Discussion"></a>
 ## Discussion points
