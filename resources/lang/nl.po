@@ -15,20 +15,108 @@ msgstr ""
 "X-Poedit-KeywordsList: translate\n"
 "X-Poedit-SearchPath-0: .\n"
 
-msgid "Transcription"
-msgstr "Tanscriptie"
+msgid "Tree ID"
+msgstr "Stamboom-ID"
+
+msgid "Source XREF"
+msgstr "Bron-XREF"
+
+msgid "Media XREF"
+msgstr "Media-XREF"
 
 msgid "Title"
 msgstr "Titel"
 
-msgid "Revision"
-msgstr "Revisie"
+msgid "Initial text"
+msgstr "Oorspronkelijke tekst"
+
+msgid "Create transcription"
+msgstr "Start transcriptie"
+
+msgid "Create manual transcription"
+msgstr "Start handmatige transcriptie"
+
+msgid "ID"
+msgstr "ID"
+
+msgid "Source"
+msgstr "Bron"
+
+msgid "Media"
+msgstr "Media"
 
 msgid "Provider"
 msgstr "Aanbieder"
 
+msgid "Status"
+msgstr "Status"
+
+msgid "Note"
+msgstr "Notitie"
+
+msgid "Actions"
+msgstr "Acties"
+
+msgid "Open"
+msgstr "Openen"
+
+msgid "Back to dashboard"
+msgstr "Terug naar dashboard"
+
+msgid ""
+"The current webtrees NOTE is used as a working copy. Changes are only archived when saved as a new "
+"revision."
+msgstr ""
+"De huidige webtrees-NOTE wordt gebruikt als werkkopie. Wijzigingen worden pas gearchiveerd wanneer ze als "
+"nieuwe revisie worden opgeslagen."
+
+msgid "No media object selected."
+msgstr "Geen mediaobject geselecteerd."
+
+msgid "Current NOTE"
+msgstr "Huidige NOTE"
+
+msgid "None"
+msgstr "Niets"
+
+msgid "Tag NOTE"
+msgstr "Label NOTE"
+
+msgid "Media preview"
+msgstr "Mediavoorvertoning"
+
+msgid "Media preview will be added later."
+msgstr "Mediavoorvertoning wordt later toegevoegd."
+
+msgid "Active webtrees NOTE"
+msgstr "Actieve webtrees-NOTE"
+
+msgid "Save NOTE"
+msgstr "Opslaan NOTE"
+
+msgid "Archive as new revision"
+msgstr "Archiveren als nieuwe revisie"
+
+msgid "Revision history"
+msgstr "Revisiegeschiedenis"
+
+msgid "Revision"
+msgstr "Revisie"
+
 msgid "Origin"
 msgstr "Oorsprong"
+
+msgid "Current"
+msgstr "Huidig"
+
+msgid "Hash"
+msgstr "Hash"
+
+msgid "Text"
+msgstr "Tekst"
+
+msgid "Transcription"
+msgstr "Transcriptie"
 
 msgid "Begin transcription"
 msgstr "Begin van de transcriptie"
@@ -86,6 +174,22 @@ msgstr "Vertaling"
 
 msgid "Normalized text"
 msgstr "Genormaliseerde tekst"
+
+msgid "Transcriptions"
+msgstr "Transcripties"
+
+msgid "Created from UI"
+msgstr "Gemaakt via gebruikersinterface"
+
+msgid "The transcription has been created."
+msgstr "De transcriptie is gemaakt."
+
+msgid "Saved from UI"
+msgstr "Opgeslagen via gebruikersinterface"
+
+#, php-format
+msgid "The current note has been saved as revision %s."
+msgstr "De huidige notitie is opgeslagen als revisie %s."
 
 msgid "Source Transcription"
 msgstr "Brontranscriptie"
