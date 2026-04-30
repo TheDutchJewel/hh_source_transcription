@@ -42,6 +42,8 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\Sou
 use Hartenthaler\Webtrees\Module\SourceTranscription\Support\HashService;
 use RuntimeException;
 
+use Fisharebest\Webtrees\Tree;
+
 final class GenerateOrUpdateNoteService
 {
     public function __construct(
@@ -85,27 +87,27 @@ final class GenerateOrUpdateNoteService
                 $note_xref = $current_link->note_xref;
 
                 $this->sharedNoteGateway->updateSharedNote(
-                    $transcription->tree_id,
+                    $transcription->tree,
                     $note_xref,
                     $note_text
                 );
 
                 $this->createCurrentLink(
-                    $transcription->tree_id,
+                    $transcription->tree,
                     $transcription->source_xref,
                     $transcription->id,
                     $revision->id,
                     $note_xref,
                     $revision->created_by_user_id,
                     $note_text,
-                    'generated_from_revision'
+                    'updated_from_revision'
                 );
                 return $note_xref;
             }
 
             if ($strategy === NoteStrategy::UPDATE_IF_UNCHANGED && $current_link !== null) {
                 $current_text = $this->sharedNoteGateway->readSharedNote(
-                    $transcription->tree_id,
+                    $transcription->tree,
                     $current_link->note_xref
                 );
 
@@ -115,32 +117,32 @@ final class GenerateOrUpdateNoteService
                     $note_xref = $current_link->note_xref;
 
                     $this->sharedNoteGateway->updateSharedNote(
-                        $transcription->tree_id,
+                        $transcription->tree,
                         $note_xref,
                         $note_text
                     );
 
                     $this->createCurrentLink(
-                        $transcription->tree_id,
+                        $transcription->tree,
                         $transcription->source_xref,
                         $transcription->id,
                         $revision->id,
                         $note_xref,
                         $revision->created_by_user_id,
                         $note_text,
-                        'generated_from_revision'
+                        'updated_from_revision'
                     );
                     return $note_xref;
                 }
             }
 
             $note_xref = $this->sharedNoteGateway->createSharedNote(
-                $transcription->tree_id,
+                $transcription->tree,
                 $note_text
             );
 
             $this->createCurrentLink(
-                $transcription->tree_id,
+                $transcription->tree,
                 $transcription->source_xref,
                 $transcription->id,
                 $revision->id,
@@ -154,7 +156,7 @@ final class GenerateOrUpdateNoteService
     }
 
     private function createCurrentLink(
-        int $tree_id,
+        Tree $tree,
         string $source_xref,
         int $transcription_id,
         int $revision_id,
@@ -175,6 +177,6 @@ final class GenerateOrUpdateNoteService
 
         $this->noteLinkRepository->markCurrent($transcription_id, $note_xref);
         $this->transcriptionRepository->setCurrentNoteXref($transcription_id, $note_xref);
-        $this->sourceGateway->linkNoteToSource($tree_id, $source_xref, $note_xref);
+        $this->sourceGateway->linkNoteToSource($tree, $source_xref, $note_xref);
     }
 }

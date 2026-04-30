@@ -31,6 +31,9 @@ declare(strict_types=1);
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository;
 
 use Fisharebest\Webtrees\DB;
+use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Services\TreeService;
+use Fisharebest\Webtrees\Tree;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription;
 
 final class TranscriptionRepository
@@ -52,10 +55,10 @@ final class TranscriptionRepository
     /**
      * @return array<int,Transcription>
      */
-    public function findBySource(int $tree_id, string $source_xref): array
+    public function findBySource(Tree $tree, string $source_xref): array
     {
         return DB::table(self::TABLE)
-            ->where('tree_id', '=', $tree_id)
+            ->where('tree_id', '=', $tree->id())
             ->where('source_xref', '=', $source_xref)
             ->where('is_active', '=', true)
             ->orderBy('id')
@@ -98,11 +101,14 @@ final class TranscriptionRepository
     {
         return new Transcription(
             id: (int)$row->id,
-            tree_id: (int)$row->tree_id,
+            tree: Registry::container()->get(TreeService::class)->find((int)$row->tree_id),
             source_xref: (string)$row->source_xref,
             media_xref: $row->media_xref !== null ? (string)$row->media_xref : null,
             title: (string)$row->title,
             interaction_model: (string)$row->interaction_model,
+            primary_language_tag: $row->primary_language_tag !== null ? (string) $row->primary_language_tag : null,
+            primary_script_tag: $row->primary_script_tag !== null ? (string) $row->primary_script_tag : null,
+            primary_form: $row->primary_form !== null ? (string) $row->primary_form : null,
             transcription_type: (string)$row->transcription_type,
             provider_key: (string)$row->provider_key,
             status: (string)$row->status,
@@ -114,11 +120,13 @@ final class TranscriptionRepository
     }
 
     /**
+     * @param Tree $tree
      * @return array<int, Transcription>
      */
-    public function allActive(): array
+    public function allActiveForTree(Tree $tree): array
     {
         return DB::table(self::TABLE)
+            ->where('tree_id', '=', $tree->id())
             ->where('is_active', '=', true)
             ->orderByDesc('id')
             ->get()

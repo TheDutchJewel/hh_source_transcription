@@ -29,9 +29,12 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service;
 
+use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Tree;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\RevisionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SharedNoteGateway;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\MediaFileGateway;
 
 final class GetTranscriptionDetailService
 {
@@ -39,10 +42,11 @@ final class GetTranscriptionDetailService
         private readonly TranscriptionRepository $transcriptionRepository,
         private readonly RevisionRepository $revisionRepository,
         private readonly SharedNoteGateway $sharedNoteGateway,
+        private readonly MediaFileGateway $mediaFileGateway,
     ) {
     }
 
-    public function get(int $transcription_id): array
+    public function get(Tree $tree, int $transcription_id): array
     {
         $transcription = $this->transcriptionRepository->find($transcription_id);
 
@@ -51,18 +55,36 @@ final class GetTranscriptionDetailService
         }
 
         $note_text = null;
+        $source = Registry::sourceFactory()->make(
+            $transcription->source_xref,
+            $transcription->tree
+        );
+
+        $media_object = null;
+        if ($transcription->media_xref !== null) {
+            $media_object = Registry::mediaFactory()->make(
+                $transcription->media_xref,
+                $transcription->tree
+            );
+        }
 
         if ($transcription->current_note_xref !== null) {
             $note_text = $this->sharedNoteGateway->readSharedNote(
-                $transcription->tree_id,
+                $transcription->tree,
                 $transcription->current_note_xref
             );
         }
+        $media_files = $media_object !== null
+            ? $this->mediaFileGateway->files($media_object)
+            : [];
 
         return [
             'transcription' => $transcription,
             'revisions' => $this->revisionRepository->findByTranscription($transcription_id),
             'note_text' => $note_text,
+            'source' => $source,
+            'media_object' => $media_object,
+            'media_files' => $media_files,
         ];
     }
 }

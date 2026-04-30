@@ -51,7 +51,7 @@ final class DashboardAction
         $content = view('hh_source_transcription::dashboard', [
             'title' => $title,
             'tree' => $tree,
-            'transcriptions' => $repo->allActive(),
+            'transcriptions' => $repo->allActiveForTree($tree),
         ]);
 
         return response(view('layouts/default', [

@@ -9,6 +9,11 @@ declare(strict_types=1);
 
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Tree;
+use Fisharebest\Webtrees\Http\RequestHandlers\TomSelectSource;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryForm;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryLanguage;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryScript;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\MediaForSourceAction;
 
 ?>
 
@@ -18,38 +23,94 @@ use Fisharebest\Webtrees\Tree;
     <?= csrf_field() ?>
 
     <div class="row mb-3">
-        <label class="col-sm-3 col-form-label" for="tree_id">
-            <?= I18N::translate('Tree ID') ?>
-        </label>
-        <div class="col-sm-9">
-            <input class="form-control" id="tree_id" name="tree_id" type="number" value="<?= e((string) $tree->id()) ?>" readonly required>
-        </div>
-    </div>
-
-    <div class="row mb-3">
-        <label class="col-sm-3 col-form-label" for="source_xref">
-            <?= I18N::translate('Source XREF') ?>
-        </label>
-        <div class="col-sm-9">
-            <input class="form-control" id="source_xref" name="source_xref" type="text" value="X6753" required>
-        </div>
-    </div>
-
-    <div class="row mb-3">
-        <label class="col-sm-3 col-form-label" for="media_xref">
-            <?= I18N::translate('Media XREF') ?>
-        </label>
-        <div class="col-sm-9">
-            <input class="form-control" id="media_xref" name="media_xref" type="text">
-        </div>
-    </div>
-
-    <div class="row mb-3">
         <label class="col-sm-3 col-form-label" for="title">
             <?= I18N::translate('Title') ?>
         </label>
         <div class="col-sm-9">
             <input class="form-control" id="title" name="title" type="text" required>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="source_xref">
+            <?= I18N::translate('Source') ?>
+        </label>
+
+        <div class="col-sm-9">
+            <div class="input-group">
+                <select
+                        class="form-select tom-select"
+                        id="source_xref"
+                        name="source_xref"
+                        data-wt-url="<?= e(route(TomSelectSource::class, ['tree' => $tree->name(), 'at' => '@'])) ?>"
+                        data-wt-i18n-no-results="<?= e(I18N::translate('No results found')) ?>"
+                        placeholder="<?= e(I18N::translate('Search for a source')) ?>"
+                        required
+                ></select>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="media_xref">
+            <?= I18N::translate('Media object') ?>
+        </label>
+
+        <div class="col-sm-9">
+            <select
+                    class="form-select"
+                    id="media_xref"
+                    name="media_xref"
+                    disabled
+            >
+                <option value=""><?= I18N::translate('Select a source first') ?></option>
+            </select>
+
+            <div class="form-text">
+                <?= I18N::translate('Only media objects linked to the selected source are shown.') ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="primary_language_tag">
+            <?= I18N::translate('Primary language') ?>
+        </label>
+        <div class="col-sm-9">
+            <select class="form-select" id="primary_language_tag" name="primary_language_tag">
+                <option value=""><?= I18N::translate('Language not specified') ?></option>
+                <?php foreach (PrimaryLanguage::labels() as $value => $label) : ?>
+                    <option value="<?= e($value) ?>"><?= e($label) ?> (<?= e($value) ?>)</option>
+                <?php endforeach ?>
+            </select>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="primary_script_tag">
+            <?= I18N::translate('Primary script') ?>
+        </label>
+        <div class="col-sm-9">
+            <select class="form-select" id="primary_script_tag" name="primary_script_tag">
+                <option value=""><?= I18N::translate('Script not specified') ?></option>
+                <?php foreach (PrimaryScript::labels() as $value => $label) : ?>
+                    <option value="<?= e($value) ?>"><?= e($label) ?> (<?= e($value) ?>)</option>
+                <?php endforeach ?>
+            </select>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="primary_form">
+            <?= I18N::translate('Primary form') ?>
+        </label>
+        <div class="col-sm-9">
+            <select class="form-select" id="primary_form" name="primary_form">
+                <option value=""><?= I18N::translate('Form not specified') ?></option>
+                <?php foreach (PrimaryForm::labels() as $value => $label) : ?>
+                    <option value="<?= e($value) ?>"><?= e($label) ?></option>
+                <?php endforeach ?>
+            </select>
         </div>
     </div>
 
@@ -66,3 +127,82 @@ use Fisharebest\Webtrees\Tree;
         <?= I18N::translate('Create transcription') ?>
     </button>
 </form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sourceSelect = document.getElementById('source_xref');
+        const mediaSelect = document.getElementById('media_xref');
+
+        const mediaUrl = <?= json_encode(route(MediaForSourceAction::class, ['tree' => $tree->name()])) ?>;
+
+        function resetMediaSelect(message) {
+            mediaSelect.innerHTML = '';
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent = message;
+            mediaSelect.appendChild(option);
+            mediaSelect.disabled = true;
+        }
+
+        function addMediaOption(value, label) {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = label;
+            mediaSelect.appendChild(option);
+        }
+
+        function loadMediaForSource(sourceXref) {
+            sourceXref = (sourceXref || '').replaceAll('@', '').trim();
+
+            if (!sourceXref) {
+                resetMediaSelect(<?= json_encode(I18N::translate('Select a source first')) ?>);
+                return;
+            }
+
+            resetMediaSelect(<?= json_encode(I18N::translate('Loading media objects…')) ?>);
+
+            const separator = mediaUrl.includes('?') ? '&' : '?';
+
+            fetch(mediaUrl + separator + 'source_xref=' + encodeURIComponent(sourceXref), {
+                            headers: { 'Accept': 'application/json' }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(items => {
+                    mediaSelect.innerHTML = '';
+
+                    const emptyOption = document.createElement('option');
+                    emptyOption.value = '';
+                    emptyOption.textContent = <?= json_encode(I18N::translate('No media object selected')) ?>;
+                    mediaSelect.appendChild(emptyOption);
+
+                    if (!Array.isArray(items) || items.length === 0) {
+                        resetMediaSelect(<?= json_encode(I18N::translate('No linked media objects found')) ?>);
+                        return;
+                    }
+
+                    for (const item of items) {
+                        addMediaOption(item.id, item.text);
+                    }
+
+                    mediaSelect.disabled = false;
+                })
+                .catch(error => {
+                    console.error(error);
+                    resetMediaSelect(<?= json_encode(I18N::translate('Could not load media objects')) ?>);
+                });
+        }
+
+        sourceSelect.addEventListener('change', function () {
+            loadMediaForSource(sourceSelect.value);
+        });
+
+        sourceSelect.addEventListener('input', function () {
+            resetMediaSelect(<?= json_encode(I18N::translate('Select a source first')) ?>);
+        });
+    });
+</script>

@@ -51,6 +51,7 @@ The module links transcriptions to
 - optionally a specific **media object** (`OBJE`) attached to a source
 
 The media object contains a media file with one or more pages of images (jpg, pdf, tiff, ...)
+or a media file with a single audio or video file (mp3, ...).
 
 A transcription is not just a note.  
 It is treated as a structured object with
@@ -63,9 +64,9 @@ It is treated as a structured object with
 
 <a name="Main"></a>
 ## Main ideas
-The goal is to link a Digital Humanities edition system with a genealogical data model.
-The long-term goal is therefore a structured data collection with TEI parsing and integrated GEDCOM generation.
-This means that in the advanced transcription process, webtrees objects such as people, places and events
+The overarching goal is to link a Digital Humanities edition system with a genealogical data model.
+The long-term goal is therefore the development of a structured data collection with TEI parsing and integrated GEDCOM generation.
+Based on claims webtrees objects such as people, places, and events
 should be created or linked.
 That could be a first introduction to turn the result-oriented **webtrees** into a process- and evidence-based program.
 
@@ -77,11 +78,11 @@ Instead, it defines a provider interface.
 Providers can support different workflows, such as
 
 - manual transcription
-- Transkribus import/synchronisation
-- future OCR/HTR tools
-- file import (TXT, TEI, PAGE XML)
-- local AI-based recognition
 - crowdsourcing (e.g. discourse.genealogy.net)
+- Transkribus import/synchronisation
+- file import (TXT, TEI, PAGE XML)
+- future OCR/HTR tools
+- local AI-based recognition
 
 #### Provider interaction models
 
@@ -121,23 +122,17 @@ Important
 - edited notes can optionally be saved as new manual revisions
 
 #### Structure of NOTE
-  `Transcription`
-
-  `Source: Kirchenbuch Musterort 1780–1810`
-
-  `Medium: Seite 23`
-
-  `Revision: 3`
-
-  `Provider: Transkribus`
-
-  `Imported: 20260428/11:12:13`
-
-  `--- Begin transcription ---`
-
-  `...`
-
-  `--- End transcription ---`
+```text
+  Transcription
+  Source: Kirchenbuch Musterort 1780–1810
+  Medium: page 23
+  Revision: 3
+  Provider: Transkribus
+  Imported: 20260428/11:12:13
+  --- Begin transcription ---
+  ...
+  --- End transcription ---
+```
 
 ### 4. Tagging of sources
 
@@ -203,13 +198,6 @@ The Transkribus provider supports
 <a name="Database"></a>
 ## Database schema
 
-Version 1 uses the following tables
-
-- `wt_transcription_metadata`
-- `wt_transcriptions`
-- `wt_transcription_revisions`
-- `wt_transcription_note_links`
-
 The module uses an explicit schema version to allow future migrations.
 
 <a name="Design"></a>
@@ -256,14 +244,13 @@ It is an alpha version and not ready for production use.
 The first implementation goal is
 
 - schema installation and migration support (done)
-- manual provider and UI (work in progress)
 - revision storage (done)
 - note generation (done)
 - tagging of sources (done)
+- manual provider and UI (work in progress)
 
 ### Current limitations
-Actually the user #1 instead of the current user is used for all operations.
-There are no permissions checked yet.
+There are no permissions of the user checked yet.
 
 The current implementation directly updates GEDCOM records in database tables.
 This may not update all webtrees reverse-reference indexes immediately.
@@ -272,37 +259,27 @@ This will be replaced by a webtrees-compliant record update mechanism.
 ### Implementation of provider candidates by priority
 
 1. Manual
-
 - must be stable first
 
 2. Internal webtrees
-
-- no API
-- no privacy issues
 - good basis for review workflow
 
 3. Discourse
-
 Strategically very interesting for CompGen
-
 - uses existing crowd
 - fits with Lesehilfe
 - makes webtrees connectable to community knowledge
 
 4. Transkribus
-
 - strong automated specialist
 
 5. File import
-
 - import of PAGE XML, and ALTO XML
 
 6. eScriptorium
-
 - very interesting for self-hosting/open source, but probably more installation and operational effort
 
 7. LLM-/Vision-API
-
 - Very flexible, but privacy, costs, prompting, and reproducibility must be properly resolved
 
 ### Roadmap
@@ -310,37 +287,43 @@ Strategically very interesting for CompGen
   - actual development version
 - V1.1
   - Context display directly at the source
-  - bug fixing
 - V1.2
   - Media Viewer
+  - TinyMCE or CKEditor (ask Bernd Schwendinger)
   - Diff Revision
   - Restore Revision
 - V1.3
+  - webtrees internal collaboration
   - configuration: support tagging yes/no
   - composer.json
-  - use active user and his rights
+  - use rights of active user
   - backup/restore of database tables
-  - webtrees internal collaboration
-  - first release version
+  - first GitHub release version
 - V1.4
   - Discourse integration
 - V1.5
   - Transkribus integration
 - V1.6
   - File import
-- V1.7
-  - support translation
+  - use metadata in TIFF, PDF, JPEG, PNG, and WebP (XMP/IPTC) like dc:language
+  - store metadata in source images (EXIF/XMP)
+  - delete transcriptions (manual as user or as admin for sources that are no longer linked to a source media object)
+- V2
+  - support for transliteration (and diplomatic transcription and modern transcription)
+  - virtual keyboard for manual transliteration (supporting special Latf charcaters)
+  - automatic conversion from Latf to Latn (and vice versa) using Fraktur webfonts (like UnifrakturMaguntia)
+  - support for translation
+  - full text search in all transcriptions and revisions
   - templates as plugins for vital records (Personenstandsurkunden)
   - templates for census as a replacement for the core census module
-- V2
+- V3
   - Named Entity Recognition
   - Findings and interpretation
-  - Position specifications in the source image
+  - Position specifications in the source image / audio file
   - Uncertainty markers
-  - TEI as output format
-- V3
-  - Derivation of statements from the source
-  - Genealogical Proof Standard (GPS)
+  - TEI as new output format
+- New custom module
+  - Derivation of claims from the source following the Genealogical Proof Standard (GPS)
   - assisted workflow to link or generate GEDCOM records (INDI, FAM, _LOC, ...)
 
 <a name="Discussion"></a>

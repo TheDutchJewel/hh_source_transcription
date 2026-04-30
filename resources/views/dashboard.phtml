@@ -11,6 +11,8 @@ declare(strict_types=1);
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Tree;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderLabel;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\TranscriptionStatus;
 
 ?>
 
@@ -29,7 +31,7 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription
         <th><?= I18N::translate('Source') ?></th>
         <th><?= I18N::translate('Media') ?></th>
         <th><?= I18N::translate('Title') ?></th>
-        <th><?= I18N::translate('Provider') ?></th>
+        <th><?= I18N::translate('Transcription provider') ?></th>
         <th><?= I18N::translate('Status') ?></th>
         <th><?= I18N::translate('Note') ?></th>
         <th><?= I18N::translate('Actions') ?></th>
@@ -42,8 +44,8 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription
             <td><?= e($transcription->source_xref) ?></td>
             <td><?= e((string) $transcription->media_xref) ?></td>
             <td><?= e($transcription->title) ?></td>
-            <td><?= e($transcription->provider_key) ?></td>
-            <td><?= e($transcription->status) ?></td>
+            <td><?= e(ProviderLabel::label($transcription->provider_key)) ?></td>
+            <td><?= e(TranscriptionStatus::labels()[$transcription->status]) ?></td>
             <td><?= e((string) $transcription->current_note_xref) ?></td>
             <td>
                 <a class="btn btn-sm btn-secondary" href="<?= e(route('source-transcription-detail', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>">

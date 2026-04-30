@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SourceTranscription\n"
-"POT-Creation-Date: 2026-04-28 16:14+0200\n"
+"POT-Creation-Date: 2026-04-30 06:36+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
 "Language-Team: \n"
@@ -15,152 +15,27 @@ msgstr ""
 "X-Poedit-KeywordsList: translate\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: resources/views/create-manual.phtml.php:22
-msgid "Tree ID"
-msgstr "Baum-ID"
+#: src/Application/Factory/NoteContentFactory.php:45
+#: src/Domain/ValueObject/TranscriptionType.php:47
+#: src/Http/RequestHandlers/DetailAction.php:49
+msgid "Transcription"
+msgstr "Transkription"
 
-#: resources/views/create-manual.phtml.php:31
-#: resources/views/detail.phtml.php:41
-msgid "Source XREF"
-msgstr "Quellen XREF"
-
-#: resources/views/create-manual.phtml.php:40
-#: resources/views/detail.phtml.php:44
-msgid "Media XREF"
-msgstr "Medien XREF"
-
-#: resources/views/create-manual.phtml.php:49
-#: resources/views/dashboard.phtml.php:31
 #: src/Application/Factory/NoteContentFactory.php:46
 msgid "Title"
 msgstr "Titel"
 
-#: resources/views/create-manual.phtml.php:58
-msgid "Initial text"
-msgstr "Ausgangstext"
-
-#: resources/views/create-manual.phtml.php:66
-msgid "Create transcription"
-msgstr "Starte Transkription"
-
-#: resources/views/dashboard.phtml.php:21
-#: src/Http/Controller/TranscriptionUiController.php:65
-msgid "Create manual transcription"
-msgstr "Starte manuelle Transkription"
-
-#: resources/views/dashboard.phtml.php:28
-msgid "ID"
-msgstr "ID"
-
-#: resources/views/dashboard.phtml.php:29 resources/views/detail.phtml.php:36
-msgid "Source"
-msgstr ""
-
-#: resources/views/dashboard.phtml.php:30
-msgid "Media"
-msgstr ""
-
-#: resources/views/dashboard.phtml.php:32 resources/views/detail.phtml.php:53
-#: resources/views/detail.phtml.php:136
-#: src/Application/Factory/NoteContentFactory.php:48
-msgid "Provider"
-msgstr "Anbieter"
-
-#: resources/views/dashboard.phtml.php:33 resources/views/detail.phtml.php:56
-msgid "Status"
-msgstr "Status"
-
-#: resources/views/dashboard.phtml.php:34
-msgid "Note"
-msgstr ""
-
-#: resources/views/dashboard.phtml.php:35
-msgid "Actions"
-msgstr "Aktionen"
-
-#: resources/views/dashboard.phtml.php:50
-msgid "Open"
-msgstr "Öffnen"
-
-#: resources/views/detail.phtml.php:24
-msgid "Back to dashboard"
-msgstr "Zurück zum Dashboard"
-
-#: resources/views/detail.phtml.php:29
-msgid ""
-"The current webtrees NOTE is used as a working copy. Changes are only "
-"archived when saved as a new revision."
-msgstr ""
-"Die aktuelle webtrees-NOTE dient als Arbeitskopie. Änderungen werden erst "
-"archiviert, wenn sie als neue Revision gespeichert werden."
-
-#: resources/views/detail.phtml.php:49
-msgid "No media object selected."
-msgstr "Kein Medienobjekt wurde ausgewählt"
-
-#: resources/views/detail.phtml.php:59
-msgid "Current NOTE"
-msgstr "Aktuelle Notiz"
-
-#: resources/views/detail.phtml.php:64 resources/views/detail.phtml.php:73
-msgid "None"
-msgstr "Nichts"
-
-#: resources/views/detail.phtml.php:68
-msgid "Tag NOTE"
-msgstr "Tag NOTE"
-
-#: resources/views/detail.phtml.php:82
-msgid "Media preview"
-msgstr "Medienvorschau"
-
-#: resources/views/detail.phtml.php:87
-msgid "Media preview will be added later."
-msgstr "Medienvorschau wird später ergänzt werden."
-
-#: resources/views/detail.phtml.php:96
-msgid "Active webtrees NOTE"
-msgstr "Aktive webtrees NOTE"
-
-#: resources/views/detail.phtml.php:111
-msgid "Save NOTE"
-msgstr "Speichere NOTE"
-
-#: resources/views/detail.phtml.php:120
-msgid "Archive as new revision"
-msgstr "Archivieren als neue Revision"
-
-#: resources/views/detail.phtml.php:130
-msgid "Revision history"
-msgstr "Revisionshistorie"
-
-#: resources/views/detail.phtml.php:135
 #: src/Application/Factory/NoteContentFactory.php:47
 msgid "Revision"
 msgstr "Revision"
 
-#: resources/views/detail.phtml.php:137
+#: src/Application/Factory/NoteContentFactory.php:48
+msgid "Provider"
+msgstr "Anbieter"
+
 #: src/Application/Factory/NoteContentFactory.php:49
 msgid "Origin"
 msgstr "Ursprung"
-
-#: resources/views/detail.phtml.php:138
-msgid "Current"
-msgstr "Aktuell"
-
-#: resources/views/detail.phtml.php:139
-msgid "Hash"
-msgstr "Prüfsumme"
-
-#: resources/views/detail.phtml.php:140
-msgid "Text"
-msgstr "Text"
-
-#: src/Application/Factory/NoteContentFactory.php:45
-#: src/Domain/ValueObject/TranscriptionType.php:47
-#: src/Http/Controller/TranscriptionUiController.php:111
-msgid "Transcription"
-msgstr "Transkription"
 
 #: src/Application/Factory/NoteContentFactory.php:51
 msgid "Begin transcription"
@@ -197,6 +72,141 @@ msgstr "Existierende NOTE nur aktualisieren, wenn sie nicht geändert wurde"
 #: src/Domain/ValueObject/NoteStrategy.php:50
 msgid "Always update existing NOTE"
 msgstr "Existierende NOTE immer aktualisieren"
+
+#: src/Domain/ValueObject/PrimaryForm.php:57
+msgid "Handwritten Kurrent"
+msgstr "Handschriftliches Kurrent"
+
+#: src/Domain/ValueObject/PrimaryForm.php:58
+msgid "Handwritten Sütterlin"
+msgstr "Handschriftliches Sütterlin"
+
+#: src/Domain/ValueObject/PrimaryForm.php:59
+msgid "Handwritten Latin script"
+msgstr "Handschriftliche lateinische Schrift"
+
+#: src/Domain/ValueObject/PrimaryForm.php:60
+msgid "Printed Fraktur"
+msgstr "Gedruckte Fraktur"
+
+#: src/Domain/ValueObject/PrimaryForm.php:61
+msgid "Printed Antiqua"
+msgstr "Gedruckte Antiqua"
+
+#: src/Domain/ValueObject/PrimaryForm.php:62
+msgid "Inscription on gravestone"
+msgstr "Grabsteininschrift"
+
+#: src/Domain/ValueObject/PrimaryForm.php:63
+msgid "Audio interview"
+msgstr "Ton - Interview"
+
+#: src/Domain/ValueObject/PrimaryForm.php:64
+msgid "Audio lecture"
+msgstr "Ton - Vortrag"
+
+#: src/Domain/ValueObject/PrimaryForm.php:65
+msgid "Video interview"
+msgstr "Video - Interview"
+
+#: src/Domain/ValueObject/PrimaryForm.php:66
+msgid "Video lecture"
+msgstr "Video - Vortrag"
+
+#: src/Domain/ValueObject/PrimaryForm.php:67
+msgid "Mixed"
+msgstr "Gemischt"
+
+#: src/Domain/ValueObject/PrimaryForm.php:68
+msgid "Other"
+msgstr "Anderes"
+
+#: src/Domain/ValueObject/PrimaryForm.php:69
+msgid "Unknown"
+msgstr "Unbekannt"
+
+#: src/Domain/ValueObject/PrimaryForm.php:76
+msgid "Form not specified"
+msgstr "Form: keine Angabe"
+
+#: src/Domain/ValueObject/PrimaryLanguage.php:52
+msgid "German"
+msgstr "Deutsch"
+
+#: src/Domain/ValueObject/PrimaryLanguage.php:53
+msgid "Low German"
+msgstr "Niederdeutsch"
+
+#: src/Domain/ValueObject/PrimaryLanguage.php:54
+msgid "Western Frisian"
+msgstr "Westfriesisch"
+
+#: src/Domain/ValueObject/PrimaryLanguage.php:55
+msgid "Latin"
+msgstr "Latein"
+
+#: src/Domain/ValueObject/PrimaryLanguage.php:56
+msgid "English"
+msgstr "Englisch"
+
+#: src/Domain/ValueObject/PrimaryLanguage.php:57
+msgid "French"
+msgstr "Französisch"
+
+#: src/Domain/ValueObject/PrimaryLanguage.php:58
+msgid "Dutch"
+msgstr "Niederländisch"
+
+#: src/Domain/ValueObject/PrimaryLanguage.php:59
+msgid "Undetermined"
+msgstr "Unbestimmt"
+
+#: src/Domain/ValueObject/PrimaryLanguage.php:66
+msgid "Language not specified"
+msgstr "Sprache: keine Angabe"
+
+#: src/Domain/ValueObject/PrimaryScript.php:51
+msgid "Latin script"
+msgstr "Lateinische Schriftart"
+
+#: src/Domain/ValueObject/PrimaryScript.php:52
+msgid "Latin script, Fraktur variant"
+msgstr "Lateinische Schriftart, Variante Fraktur"
+
+#: src/Domain/ValueObject/PrimaryScript.php:53
+msgid "Cyrillic script"
+msgstr "Kyrillische Schriftart"
+
+#: src/Domain/ValueObject/PrimaryScript.php:54
+msgid "Greek script"
+msgstr "Griechische Schriftart"
+
+#: src/Domain/ValueObject/PrimaryScript.php:55
+msgid "Hebrew script"
+msgstr "Hebräische Schriftart"
+
+#: src/Domain/ValueObject/PrimaryScript.php:56
+msgid "Unknown script"
+msgstr "Unbekannte Schriftart"
+
+#: src/Domain/ValueObject/PrimaryScript.php:63
+msgid "Script not specified"
+msgstr "Schriftart: keine Angabe"
+
+#: src/Domain/ValueObject/ProviderLabel.php:47
+#: src/Domain/ValueObject/ProviderLabel.php:56
+msgid "Manual"
+msgstr "Manuelle Eingabe"
+
+#: src/Domain/ValueObject/ProviderLabel.php:48
+#: src/Domain/ValueObject/ProviderLabel.php:57
+msgid "Transkribus"
+msgstr "Transkribus"
+
+#: src/Domain/ValueObject/ProviderLabel.php:49
+#: src/Domain/ValueObject/ProviderLabel.php:58
+msgid "Community (Discourse)"
+msgstr "Gemeinschaft (Discourse)"
 
 #: src/Domain/ValueObject/RevisionOriginType.php:48
 msgid "Manual entry"
@@ -238,41 +248,48 @@ msgstr "Übersetzung"
 msgid "Normalized text"
 msgstr "Normalisierter Text"
 
-#: src/Http/Controller/TranscriptionUiController.php:54
-#: src/SourceTranscription.php:307
+#: src/Http/RequestHandlers/CreateManualAction.php:46
+msgid "Create manual transcription"
+msgstr "Start der manuellen Transkription"
+
+#: src/Http/RequestHandlers/DashboardAction.php:47
+#: src/SourceTranscription.php:303
 msgid "Transcriptions"
 msgstr "Transkriptionen"
 
-#: src/Http/Controller/TranscriptionUiController.php:91
-msgid "Created from UI"
-msgstr "Von der Bedienoberfläche erzeugt"
-
-#: src/Http/Controller/TranscriptionUiController.php:94
-msgid "The transcription has been created."
-msgstr "Die Transkription wurde erzeugt."
-
-#: src/Http/Controller/TranscriptionUiController.php:126
+#: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:57
 msgid "Saved from UI"
 msgstr "Gesichert von der Bedienoberfläche"
 
-#: src/Http/Controller/TranscriptionUiController.php:130
+#: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:66
 #, php-format
-msgid "The current note has been saved as revision %s."
-msgstr "Die aktuelle Notiz wurde als Revision %s gespeichert."
+msgid "The current NOTE has been saved as revision %s."
+msgstr "Die aktuelle NOTE wurde als Revision %s gespeichert."
 
-#: src/SourceTranscription.php:228
+#: src/Http/RequestHandlers/StoreManualAction.php:92
+msgid "Created from UI"
+msgstr "Von der Bedienoberfläche erzeugt"
+
+#: src/Http/RequestHandlers/StoreManualAction.php:95
+msgid "The transcription has been created."
+msgstr "Die Transkription wurde erzeugt."
+
+#: src/Http/RequestHandlers/UpdateCurrentNoteAction.php:64
+msgid "The NOTE has been updated."
+msgstr "Die NOTE wurde aktualisiert."
+
+#: src/SourceTranscription.php:224
 msgid "Source Transcription"
 msgstr "Transkription von Quellen"
 
-#: src/SourceTranscription.php:240
+#: src/SourceTranscription.php:236
 msgid "Manage source transcriptions with manual and provider-based workflows."
 msgstr ""
 "Verwaltung von Quellen-Transkriptionen mit einem manuellen oder Anbieter-"
 "Arbeitsablauf."
 
-#: src/SourceTranscription.php:412
-#, fuzzy, php-format
-#| msgid "The preferences for the module \"%s\" were updated."
+#: src/SourceTranscription.php:408
+#, php-format
 msgid "The preferences for the module “%s” have been updated."
 msgstr ""
 "Die Einstellungen für das Erweiterungsmodul \"%s\" wurden aktualisiert."
@@ -302,6 +319,190 @@ msgstr "Standard"
 #: resources/views/admin-settings.phtml:85
 msgid "save"
 msgstr ""
+
+#: resources/views/create-manual.phtml:36 resources/views/dashboard.phtml:31
+#: resources/views/detail.phtml:46 resources/views/detail.phtml:51
+msgid "Source"
+msgstr ""
+
+#: resources/views/create-manual.phtml:46
+msgid "No results found"
+msgstr ""
+
+#: resources/views/create-manual.phtml:47
+msgid "Search for a source"
+msgstr "Suche nach einer Quelle"
+
+#: resources/views/create-manual.phtml:56
+msgid "Media object"
+msgstr "Medienobjekt"
+
+#: resources/views/create-manual.phtml:66
+#: resources/views/create-manual.phtml:158
+#: resources/views/create-manual.phtml:205
+msgid "Select a source first"
+msgstr "Wähle zuerst eine Quelle"
+
+#: resources/views/create-manual.phtml:70
+msgid "Only media objects linked to the selected source are shown."
+msgstr ""
+"Es werden nur Medienobjekte angezeigt, die mit der gewählten Quelle "
+"verknüpft sind."
+
+#: resources/views/create-manual.phtml:77 resources/views/detail.phtml:86
+msgid "Primary language"
+msgstr "Primäre Sprache"
+
+#: resources/views/create-manual.phtml:91 resources/views/detail.phtml:89
+msgid "Primary script"
+msgstr "Primäre Schriftart"
+
+#: resources/views/create-manual.phtml:105 resources/views/detail.phtml:92
+msgid "Primary form"
+msgstr "Primäre Form"
+
+#: resources/views/create-manual.phtml:119
+msgid "Initial text"
+msgstr "Ausgangstext"
+
+#: resources/views/create-manual.phtml:127
+msgid "Create transcription"
+msgstr "Starte Transkription"
+
+#: resources/views/create-manual.phtml:162
+msgid "Loading media objects…"
+msgstr "Laden der Medienobjekte"
+
+#: resources/views/create-manual.phtml:180
+msgid "No media object selected"
+msgstr "Es wurde kein Medienobjekt ausgewählt."
+
+#: resources/views/create-manual.phtml:184
+msgid "No linked media objects found"
+msgstr "Es wurde kein verknüpftes Medienobjekt gefunden."
+
+#: resources/views/create-manual.phtml:196
+msgid "Could not load media objects"
+msgstr "Es konnten keine Medienobjekte geladen werden"
+
+#: resources/views/dashboard.phtml:30
+msgid "ID"
+msgstr "ID"
+
+#: resources/views/dashboard.phtml:32
+msgid "Media"
+msgstr ""
+
+#: resources/views/dashboard.phtml:34
+msgid "Transcription provider"
+msgstr "Anbieter der Transkription"
+
+#: resources/views/dashboard.phtml:35 resources/views/detail.phtml:74
+msgid "Status"
+msgstr "Status"
+
+#: resources/views/dashboard.phtml:36
+msgid "Note"
+msgstr "NOTE"
+
+#: resources/views/dashboard.phtml:37
+msgid "Actions"
+msgstr "Aktionen"
+
+#: resources/views/dashboard.phtml:52
+msgid "Open"
+msgstr "Öffnen"
+
+#: resources/views/detail.phtml:34
+msgid "Back to dashboard"
+msgstr "Zurück zum Dashboard"
+
+#: resources/views/detail.phtml:39
+msgid ""
+"The current webtrees NOTE is used as a working copy. Changes are only "
+"archived when saved as a new revision."
+msgstr ""
+"Die aktuelle NOTE dient als Arbeitskopie. Änderungen werden erst archiviert, "
+"wenn sie als neue Revision gespeichert werden."
+
+#: resources/views/detail.phtml:60
+msgid "Media XREF"
+msgstr "Medien XREF"
+
+#: resources/views/detail.phtml:67 resources/views/detail.phtml:115
+msgid "No media object selected."
+msgstr "Es wurde kein Medienobjekt ausgewählt."
+
+#: resources/views/detail.phtml:77
+msgid "Current NOTE"
+msgstr "Aktuelle NOTE"
+
+#: resources/views/detail.phtml:82 resources/views/detail.phtml:100
+msgid "None"
+msgstr "Nichts"
+
+#: resources/views/detail.phtml:95
+msgid "Tag NOTE"
+msgstr "Tag NOTE"
+
+#: resources/views/detail.phtml:109
+msgid "Media preview"
+msgstr "Medienvorschau"
+
+#: resources/views/detail.phtml:119
+msgid "No media files found for this media object."
+msgstr "Für dieses Medienobjekt wurden keine Mediendateien gefunden."
+
+#: resources/views/detail.phtml:125
+msgid "Media files"
+msgstr "Mediendateien"
+
+#: resources/views/detail.phtml:161
+msgid "Open media file"
+msgstr "Öffne Mediendatei"
+
+#: resources/views/detail.phtml:190
+msgid "Active webtrees NOTE"
+msgstr "Aktive NOTE"
+
+#: resources/views/detail.phtml:205
+msgid "Save NOTE"
+msgstr "Speichere NOTE"
+
+#: resources/views/detail.phtml:214
+msgid "Archive as new revision"
+msgstr "Archivieren als neue Revision"
+
+#: resources/views/detail.phtml:224
+msgid "Revision history"
+msgstr "Revisionshistorie"
+
+#: resources/views/detail.phtml:230
+msgid "Transcription Provider"
+msgstr "Anbieter der Transkription"
+
+#: resources/views/detail.phtml:232
+msgid "Current"
+msgstr "Aktuell"
+
+#: resources/views/detail.phtml:233
+msgid "Text"
+msgstr "Text"
+
+#~ msgid "Media preview will be added later."
+#~ msgstr "Medienvorschau wird später ergänzt werden."
+
+#~ msgid "Not specified"
+#~ msgstr "keine Angabe"
+
+#~ msgid "Source XREF"
+#~ msgstr "Quellen XREF"
+
+#~ msgid "Hash"
+#~ msgstr "Prüfsumme"
+
+#~ msgid "Tree ID"
+#~ msgstr "Baum-ID"
 
 #~ msgid "Only manual transcriptions are supported by createManual()."
 #~ msgstr "Von createManual() werden nur manuelle Transkriptionen unterstützt."

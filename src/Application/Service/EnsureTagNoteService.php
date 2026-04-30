@@ -37,6 +37,8 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\Sha
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SourceGateway;
 use Hartenthaler\Webtrees\Module\SourceTranscription\SourceTranscription;
 
+use Fisharebest\Webtrees\Tree;
+
 final class EnsureTagNoteService
 {
     /**
@@ -65,7 +67,7 @@ final class EnsureTagNoteService
                         SourceTranscription::DEFAULT_TAG_PREFIX . SourceTranscription::DEFAULT_TAG_VALUE);
 
         $existing_note_xref = $this->findExistingTagNote(
-            $transcription->tree_id,
+            $transcription->tree,
             $transcription->source_xref,
             $tag_text
         );
@@ -77,12 +79,12 @@ final class EnsureTagNoteService
         }
 
         $note_xref = $this->sharedNoteGateway->createSharedNote(
-            $transcription->tree_id,
+            $transcription->tree,
             $tag_text
         );
 
         $this->sourceGateway->linkNoteToSource(
-            $transcription->tree_id,
+            $transcription->tree,
             $transcription->source_xref,
             $note_xref
         );
@@ -93,12 +95,12 @@ final class EnsureTagNoteService
     }
 
     private function findExistingTagNote(
-        int $tree_id,
+        Tree $tree,
         string $source_xref,
         string $tag_text
     ): ?string {
         $gedcom = DB::table('sources')
-            ->where('s_file', '=', $tree_id)
+            ->where('s_file', '=', $tree->id())
             ->where('s_id', '=', $source_xref)
             ->value('s_gedcom');
 
@@ -112,7 +114,7 @@ final class EnsureTagNoteService
             }
 
             $note_xref = $match[1];
-            $note_text = $this->sharedNoteGateway->readSharedNote($tree_id, $note_xref);
+            $note_text = $this->sharedNoteGateway->readSharedNote($tree, $note_xref);
 
             if (trim((string) $note_text) === trim($tag_text)) {
                 return $note_xref;

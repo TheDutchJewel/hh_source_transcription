@@ -26,7 +26,6 @@
  * A webtrees (https://webtrees.net) 2.2 custom module to transcribe sources
  */
 
-
 declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers;
@@ -36,6 +35,9 @@ use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Dto\CreateTranscriptionCommand;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\CreateTranscriptionService;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryForm;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryLanguage;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryScript;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -49,23 +51,43 @@ class StoreManualAction implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $tree = $request->getAttribute('tree');
+        $user = $request->getAttribute('user');
         $params = (array) $request->getParsedBody();
 
-        $tree_id = (int) ($params['tree_id'] ?? 0);
-        $source_xref = trim((string) ($params['source_xref'] ?? ''));
-        $media_xref = trim((string) ($params['media_xref'] ?? ''));
+        $source_xref = $this->normalizeXref((string) ($params['source_xref'] ?? ''));
+        $media_xref  = $this->normalizeXref((string) ($params['media_xref'] ?? ''));
+
+        $primary_language_tag = trim((string) ($params['primary_language_tag'] ?? ''));
+        $primary_script_tag = trim((string) ($params['primary_script_tag'] ?? ''));
+        $primary_form = trim((string) ($params['primary_form'] ?? ''));
+
+        if (!PrimaryLanguage::isValid($primary_language_tag)) {
+            $primary_language_tag = '';
+        }
+
+        if (!PrimaryScript::isValid($primary_script_tag)) {
+            $primary_script_tag = '';
+        }
+
+        if (!PrimaryForm::isValid($primary_form)) {
+            $primary_form = '';
+        }
+
         $title = trim((string) ($params['title'] ?? ''));
         $initial_text = (string) ($params['initial_text'] ?? '');
 
         $service = Registry::container()->get(CreateTranscriptionService::class);
 
         $transcription_id = $service->createManual(new CreateTranscriptionCommand(
-            tree_id: $tree_id,
+            tree: $tree,
             source_xref: $source_xref,
             media_xref: $media_xref !== '' ? $media_xref : null,
             title: $title,
             provider_key: ProviderKey::MANUAL,
-            user_id: 1,
+            primary_language_tag: $primary_language_tag !== '' ? $primary_language_tag : null,
+            primary_script_tag: $primary_script_tag !== '' ? $primary_script_tag : null,
+            primary_form: $primary_form !== '' ? $primary_form : null,
+            user_id: $user->id(),
             initial_text: $initial_text,
             comment: I18N::translate('Created from UI')
         ));
@@ -76,5 +98,10 @@ class StoreManualAction implements RequestHandlerInterface
             'tree' => $tree->name(),
             'transcription_id' => $transcription_id,
         ]));
+    }
+
+    private function normalizeXref(string $xref): string
+    {
+        return trim(trim($xref), '@');
     }
 }

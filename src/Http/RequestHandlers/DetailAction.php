@@ -50,7 +50,7 @@ class DetailAction implements RequestHandlerInterface
 
         $transcription_id = (int) $request->getAttribute('transcription_id');
         $service = Registry::container()->get(GetTranscriptionDetailService::class);
-        $data = $service->get($transcription_id);
+        $data = $service->get($tree, $transcription_id);
 
         $content = view('hh_source_transcription::detail', [
             'title'         => $title,
@@ -58,6 +58,9 @@ class DetailAction implements RequestHandlerInterface
             'transcription' => $data['transcription'],
             'revisions'     => $data['revisions'],
             'note_text'     => $data['note_text'],
+            'source'        => $data['source'],
+            'media_object'  => $data['media_object'],
+            'media_files'   => $data['media_files'],
         ]);
 
         return response(view('layouts/default', [

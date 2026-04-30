@@ -56,7 +56,11 @@ class UpdateCurrentNoteAction implements RequestHandlerInterface
 
         $transcription = $repo->find($transcription_id);
         if ($transcription !== null && $transcription->current_note_xref !== null) {
-            $gateway->updateSharedNote($tree->id(), $transcription->current_note_xref, $note_text);
+            $gateway->updateSharedNote(
+                $transcription->tree,
+                $transcription->current_note_xref,
+                $note_text
+            );
             FlashMessages::addMessage(I18N::translate('The NOTE has been updated.'), 'success');
         }
 

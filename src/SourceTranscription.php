@@ -30,29 +30,22 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription;
 
+use Aura\Router\Exception\ImmutableProperty;
+use Aura\Router\Exception\RouteAlreadyExists;
 use Fisharebest\Localization\Translation;
-use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Module\AbstractModule;
 use Fisharebest\Webtrees\Module\ModuleConfigInterface;
 use Fisharebest\Webtrees\Module\ModuleConfigTrait;
-use Fisharebest\Webtrees\Module\ModuleInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomInterface;
 use Fisharebest\Webtrees\Module\ModuleCustomTrait;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Validator;
 use Fisharebest\Webtrees\View;
 use Fisharebest\Webtrees\Webtrees;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Dto\CreateTranscriptionCommand;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\CreateTranscriptionService;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\SaveNoteAsRevisionService;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\RevisionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\SettingsRepository;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\SchemaManager;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SharedNoteGateway;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\NoteStrategy;
 use Psr\Container\ContainerExceptionInterface;
 use Psr\Container\NotFoundExceptionInterface;
@@ -68,6 +61,7 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\Detail
 use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\SaveNoteAsRevisionAction;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\StoreManualAction;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\UpdateCurrentNoteAction;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\MediaForSourceAction;
 
 final class SourceTranscription extends AbstractModule implements
     ModuleCustomInterface, ModuleConfigInterface, ModuleMenuInterface
@@ -108,11 +102,13 @@ final class SourceTranscription extends AbstractModule implements
     public const string DEFAULT_TAG_PREFIX = 'TAG: ';
     public const string DEFAULT_TAG_VALUE = 'Transcription';
 
+    //ROUTE
     private const string ROUTE_DASHBOARD = '/tree/{tree}/source-transcriptions';
     private const string ROUTE_CREATE_MANUAL = '/tree/{tree}/source-transcriptions/create-manual';
     private const string ROUTE_DETAIL = '/tree/{tree}/source-transcriptions/{transcription_id}';
     private const string ROUTE_UPDATE_NOTE = '/tree/{tree}/source-transcriptions/{transcription_id}/update-note';
     private const string ROUTE_SAVE_NOTE_AS_REVISION = '/tree/{tree}/source-transcriptions/{transcription_id}/save-note-as-revision';
+    private const string ROUTE_MEDIA_FOR_SOURCE = '/tree/{tree}/source-transcriptions/media-for-source';
 
     /**
      * SourceTranscription constructor.
@@ -128,6 +124,8 @@ final class SourceTranscription extends AbstractModule implements
      * @return void
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
+     * @throws ImmutableProperty
+     * @throws RouteAlreadyExists
      */
     public function boot(): void
     {
@@ -135,19 +133,6 @@ final class SourceTranscription extends AbstractModule implements
 
         // Register a namespace for the views.
         View::registerNamespace('hh_source_transcription', $this->resourcesFolder() . 'views/');
-
-        /*  $create = Registry::container()->get(CreateTranscriptionService::class);
-            $save   = Registry::container()->get(SaveNoteAsRevisionService::class);
-            $transcription_id = $create->createManual(new CreateTranscriptionCommand(
-                tree_id: 50,
-                source_xref: 'X6753',
-                media_xref: null,
-                title: 'Manual test',
-                provider_key: ProviderKey::MANUAL,
-                user_id: 1,
-                initial_text: 'Erste Version'
-            ));
-        */
 
         $router = Registry::routeFactory()->routeMap();
 
@@ -169,12 +154,6 @@ final class SourceTranscription extends AbstractModule implements
             StoreManualAction::class
         );
 
-        $router->get(
-            'source-transcription-detail',
-            self::ROUTE_DETAIL,
-            DetailAction::class
-        );
-
         $router->post(
             'source-transcription-update-note',
             self::ROUTE_UPDATE_NOTE,
@@ -185,6 +164,19 @@ final class SourceTranscription extends AbstractModule implements
             'source-transcription-save-note-as-revision',
             self::ROUTE_SAVE_NOTE_AS_REVISION,
             SaveNoteAsRevisionAction::class
+        );
+
+        $router->get(
+            MediaForSourceAction::class,
+            self::ROUTE_MEDIA_FOR_SOURCE,
+            MediaForSourceAction::class
+        );
+
+        //Generic Route at the end!
+        $router->get(
+            'source-transcription-detail',
+            self::ROUTE_DETAIL,
+            DetailAction::class
         );
     }
 

@@ -32,13 +32,14 @@ declare(strict_types=1);
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees;
 
 use Fisharebest\Webtrees\DB;
+use Fisharebest\Webtrees\Tree;
 
 final class SourceGateway
 {
-    public function linkNoteToSource(int $tree_id, string $source_xref, string $note_xref): void
+    public function linkNoteToSource(Tree $tree, string $source_xref, string $note_xref): void
     {
         $gedcom = DB::table('sources')
-            ->where('s_file', '=', $tree_id)
+            ->where('s_file', '=', $tree->id())
             ->where('s_id', '=', $source_xref)
             ->value('s_gedcom');
 
@@ -55,7 +56,7 @@ final class SourceGateway
         $gedcom .= PHP_EOL . '1 NOTE @' . $note_xref . '@';
 
         DB::table('sources')
-            ->where('s_file', '=', $tree_id)
+            ->where('s_file', '=', $tree->id())
             ->where('s_id', '=', $source_xref)
             ->update([
                 's_gedcom' => $gedcom,

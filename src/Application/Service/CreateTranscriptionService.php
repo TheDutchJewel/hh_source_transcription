@@ -79,11 +79,14 @@ final class CreateTranscriptionService
 
         return DB::transaction(function () use ($command): int {
             $transcription_id = $this->transcriptionRepository->create([
-                'tree_id' => $command->tree_id,
+                'tree_id' => $command->tree->id(),
                 'source_xref' => $command->source_xref,
                 'media_xref' => $command->media_xref,
                 'title' => $command->title,
                 'interaction_model' => ProviderMetadata::interactionModel($command->provider_key),
+                'primary_language_tag' => $command->primary_language_tag,
+                'primary_script_tag' => $command->primary_script_tag,
+                'primary_form' => $command->primary_form,
                 'transcription_type' => TranscriptionType::TRANSCRIPTION,
                 'provider_key' => ProviderKey::MANUAL,
                 'status' => TranscriptionStatus::NEW,

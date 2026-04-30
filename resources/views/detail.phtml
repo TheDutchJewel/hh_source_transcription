@@ -8,12 +8,23 @@ declare(strict_types=1);
  * @var Transcription $transcription
  * @var array<int, TranscriptionRevision> $revisions
  * @var ?string $note_text
+ * @var ?Source $source
+ * @var ?Media $media_object
+ * @var array<int,MediaFile> $media_files
  */
 
 use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Media;
+use Fisharebest\Webtrees\MediaFile;
+use Fisharebest\Webtrees\Source;
 use Fisharebest\Webtrees\Tree;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\TranscriptionRevision;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryForm;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryLanguage;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryScript;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderLabel;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\TranscriptionStatus;
 
 ?>
 
@@ -38,23 +49,31 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription
 
             <div class="card-body">
                 <dl>
-                    <dt><?= I18N::translate('Source XREF') ?></dt>
-                    <dd><code><?= e($transcription->source_xref) ?></code></dd>
+                    <dt><?= I18N::translate('Source') ?></dt>
+                    <dd>
+                        <?php if ($source) : ?>
+                            <a href="<?= e($source->url()) ?>">
+                                <?= e($source->fullName()) ?>
+                            </a>
+                        <?php endif ?>
+                    </dd>
 
                     <dt><?= I18N::translate('Media XREF') ?></dt>
                     <dd>
-                        <?php if ($transcription->media_xref !== null) : ?>
-                            <code><?= e($transcription->media_xref) ?></code>
+                        <?php if ($media_object) : ?>
+                            <a href="<?= e($media_object->url()) ?>">
+                                <?= e($media_object->fullName()) ?>
+                            </a>
                         <?php else : ?>
                             <span class="text-muted"><?= I18N::translate('No media object selected.') ?></span>
                         <?php endif ?>
                     </dd>
 
                     <dt><?= I18N::translate('Provider') ?></dt>
-                    <dd><?= e($transcription->provider_key) ?></dd>
+                    <dd><?= e(ProviderLabel::label($transcription->provider_key)) ?></dd>
 
                     <dt><?= I18N::translate('Status') ?></dt>
-                    <dd><?= e($transcription->status) ?></dd>
+                    <dd><?= e(TranscriptionStatus::labels()[$transcription->status]) ?></dd>
 
                     <dt><?= I18N::translate('Current NOTE') ?></dt>
                     <dd>
@@ -64,6 +83,15 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription
                             <span class="text-muted"><?= I18N::translate('None') ?></span>
                         <?php endif ?>
                     </dd>
+
+                    <dt><?= I18N::translate('Primary language') ?></dt>
+                    <dd><?= e(PrimaryLanguage::label($transcription->primary_language_tag)) ?></dd>
+
+                    <dt><?= I18N::translate('Primary script') ?></dt>
+                    <dd><?= e(PrimaryScript::label($transcription->primary_script_tag)) ?></dd>
+
+                    <dt><?= I18N::translate('Primary form') ?></dt>
+                    <dd><?= e(PrimaryForm::label($transcription->primary_form)) ?></dd>
 
                     <dt><?= I18N::translate('Tag NOTE') ?></dt>
                     <dd>
@@ -83,9 +111,71 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription
             </div>
 
             <div class="card-body">
-                <div class="alert alert-secondary mb-0">
-                    <?= I18N::translate('Media preview will be added later.') ?>
-                </div>
+                <?php if ($media_object === null) : ?>
+                    <div class="alert alert-secondary mb-0">
+                        <?= I18N::translate('No media object selected.') ?>
+                    </div>
+                <?php elseif ($media_files === []) : ?>
+                    <div class="alert alert-warning mb-0">
+                        <?= I18N::translate('No media files found for this media object.') ?>
+                    </div>
+                <?php else : ?>
+                <?php if (count($media_files) > 1) : ?>
+                    <div class="mb-3">
+                        <label class="form-label" for="media-file-select">
+                            <?= I18N::translate('Media file') ?>
+                        </label>
+
+                        <select class="form-select" id="media-file-select">
+                            <?php foreach ($media_files as $index => $file) : ?>
+                                <option value="<?= e((string) $index) ?>">
+                                    <?= e($file->basename()) ?>
+                                </option>
+                            <?php endforeach ?>
+                        </select>
+                    </div>
+                <?php endif ?>
+
+                <?php foreach ($media_files as $index => $file) : ?>
+                    <div
+                            class="source-transcription-media-preview"
+                            data-media-file-index="<?= e((string) $index) ?>"
+                            style="<?= $index === 0 ? '' : 'display:none' ?>"
+                    >
+                        <?php if ($file->isImage()) : ?>
+                            <div class="border p-2 text-center">
+                                <?= $file->displayImage(900, 900, 'contain', [
+                                        'class' => 'img-fluid',
+                                ]) ?>
+                            </div>
+                        <?php else : ?>
+                            <div class="alert alert-secondary">
+                                <?= I18N::translate('This media file cannot be previewed here.') ?>
+                            </div>
+                            <p>
+                                <?= e($file->basename()) ?>
+                            </p>
+                        <?php endif ?>
+                    </div>
+                <?php endforeach ?>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function () {
+                            const select = document.getElementById('media-file-select');
+
+                            if (!select) {
+                                return;
+                            }
+
+                            select.addEventListener('change', function () {
+                                document.querySelectorAll('.source-transcription-media-preview').forEach(function (element) {
+                                    element.style.display = element.dataset.mediaFileIndex === select.value ? '' : 'none';
+                                });
+                            });
+                        });
+                    </script>
+
+                <?php endif ?>
             </div>
         </div>
     </div>
@@ -133,10 +223,9 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription
     <thead>
         <tr>
             <th><?= I18N::translate('Revision') ?></th>
-            <th><?= I18N::translate('Provider') ?></th>
+            <th><?= I18N::translate('Transcription Provider') ?></th>
             <th><?= I18N::translate('Origin') ?></th>
             <th><?= I18N::translate('Current') ?></th>
-            <th><?= I18N::translate('Hash') ?></th>
             <th><?= I18N::translate('Text') ?></th>
         </tr>
     </thead>
@@ -145,10 +234,9 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription
         <?php foreach ($revisions as $revision) : ?>
             <tr>
                 <td><?= e((string) $revision->revision_no) ?></td>
-                <td><?= e($revision->provider_key) ?></td>
+                <td><?= e(ProviderLabel::label($revision->provider_key)) ?></td>
                 <td><?= e($revision->origin_type) ?></td>
                 <td><?= $revision->is_current_revision ? '✓' : '' ?></td>
-                <td><code><?= e(substr($revision->content_hash, 0, 12)) ?></code></td>
                 <td>
                     <pre class="mb-0"><?= e(mb_substr($revision->content_text, 0, 500)) ?></pre>
                 </td>

@@ -30,15 +30,20 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity;
 
+use Fisharebest\Webtrees\Tree;
+
 final class Transcription
 {
     public function __construct(
         public readonly int $id,
-        public readonly int $tree_id,
+        public readonly Tree $tree,
         public readonly string $source_xref,
         public readonly ?string $media_xref,
         public readonly string $title,
         public readonly string $interaction_model,
+        public readonly ?string $primary_language_tag,
+        public readonly ?string $primary_script_tag,
+        public readonly ?string $primary_form,
         public readonly string $transcription_type,
         public readonly string $provider_key,
         public readonly string $status,

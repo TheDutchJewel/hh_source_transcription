@@ -28,33 +28,40 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers;
+namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject;
 
 use Fisharebest\Webtrees\I18N;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
 
-use function response;
-use function view;
-
-class CreateManualAction implements RequestHandlerInterface
+final class ProviderLabel
 {
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    public const string MANUAL = 'manual';
+    public const string TRANSKRIBUS = 'transkribus';
+    public const string DISCOURSE = 'discourse';
+
+    /**
+     * @return array<string,string>
+     */
+    public static function labels(): array
     {
-        $tree = $request->getAttribute('tree');
-        $title = I18N::translate('Create manual transcription');
+        return [
+            self::MANUAL        => I18N::translate('Manual'),
+            self::TRANSKRIBUS   => I18N::translate('Transkribus'),
+            self::DISCOURSE     => I18N::translate('Community (Discourse)'),
+        ];
+    }
 
-        $content = view('hh_source_transcription::create-manual', [
-            'title'         => $title,
-            'tree'          => $tree,
-        ]);
+    public static function label(string $key): string
+    {
+        return match ($key) {
+            'manual' => I18N::translate('Manual'),
+            'transkribus' => I18N::translate('Transkribus'),
+            'discourse' => I18N::translate('Community (Discourse)'),
+            default => $key,
+        };
+    }
 
-        return response(view('layouts/default', [
-            'title'   => $title,
-            'tree'    => $tree,
-            'request' => $request,
-            'content' => $content,
-        ]));
+    public static function isValid(?string $tag): bool
+    {
+        return $tag === null || $tag === '' || array_key_exists($tag, self::labels());
     }
 }

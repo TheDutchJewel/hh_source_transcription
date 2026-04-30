@@ -30,14 +30,19 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Dto;
 
+use Fisharebest\Webtrees\Tree;
+
 final class CreateTranscriptionCommand
 {
     public function __construct(
-        public readonly int     $tree_id,
+        public readonly Tree    $tree,
         public readonly string  $source_xref,
         public readonly ?string $media_xref,
         public readonly string  $title,
         public readonly string  $provider_key,
+        public readonly ?string $primary_language_tag = null,
+        public readonly ?string $primary_script_tag = null,
+        public readonly ?string $primary_form = null,
         public readonly int     $user_id,
         public readonly string  $initial_text = '',
         public readonly ?string $comment = null,

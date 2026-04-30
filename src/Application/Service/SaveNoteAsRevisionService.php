@@ -65,7 +65,7 @@ final class SaveNoteAsRevisionService
         }
 
         $note_text = $this->sharedNoteGateway->readSharedNote(
-            $transcription->tree_id,
+            $transcription->tree,
             $transcription->current_note_xref
         );
 

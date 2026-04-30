@@ -37,20 +37,21 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtre
 
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Tree;
 
 final class SharedNoteGateway
 {
-    public function createSharedNote(int $tree_id, string $text): string
+    public function createSharedNote(Tree $tree, string $text): string
     {
         for ($attempt = 0; $attempt < 20; $attempt++) {
             $xref = $this->newModuleNoteXref();
 
-            if ($this->xrefExists($tree_id, $xref)) {
+            if ($this->xrefExists($tree, $xref)) {
                 continue;
             }
 
             DB::table('other')->insert([
-                'o_file'   => $tree_id,
+                'o_file'   => $tree->id(),
                 'o_type'   => 'NOTE',
                 'o_id'     => $xref,
                 'o_gedcom' => $this->buildNoteGedcom($xref, $text),
@@ -67,10 +68,10 @@ final class SharedNoteGateway
         return 'STN' . strtoupper(bin2hex(random_bytes(8)));
     }
 
-    public function readSharedNote(int $tree_id, string $note_xref): ?string
+    public function readSharedNote(Tree $tree, string $note_xref): ?string
     {
         $gedcom = DB::table('other')
-            ->where('o_file', '=', $tree_id)
+            ->where('o_file', '=', $tree->id())
             ->where('o_type', '=', 'NOTE')
             ->where('o_id', '=', $note_xref)
             ->value('o_gedcom');
@@ -78,10 +79,10 @@ final class SharedNoteGateway
         return $gedcom === null ? null : $this->extractNoteText((string)$gedcom);
     }
 
-    public function updateSharedNote(int $tree_id, string $note_xref, string $text): void
+    public function updateSharedNote(Tree $tree, string $note_xref, string $text): void
     {
         DB::table('other')
-            ->where('o_file', '=', $tree_id)
+            ->where('o_file', '=', $tree->id())
             ->where('o_type', '=', 'NOTE')
             ->where('o_id', '=', $note_xref)
             ->update([
@@ -150,36 +151,10 @@ final class SharedNoteGateway
         return '';
     }
 
-    private function nextNoteXref(int $tree_id): string
-    {
-        $rows = DB::table('other')
-            ->where('o_file', '=', $tree_id)
-            ->where('o_id', 'LIKE', 'N%')
-            ->pluck('o_id');
-
-        $max = 0;
-
-        foreach ($rows as $xref) {
-            $xref = (string) $xref;
-
-            if (preg_match('/^N(\d+)$/', $xref, $match)) {
-                $max = max($max, (int) $match[1]);
-            }
-        }
-
-        $number = $max + 1;
-
-        while ($this->xrefExists($tree_id, 'N' . $number)) {
-            $number++;
-        }
-
-        return 'N' . $number;
-    }
-
-    private function xrefExists(int $tree_id, string $xref): bool
+    private function xrefExists(Tree $tree, string $xref): bool
     {
         return DB::table('other')
-            ->where('o_file', '=', $tree_id)
+            ->where('o_file', '=', $tree->id())
             ->where('o_id', '=', $xref)
             ->exists();
     }
