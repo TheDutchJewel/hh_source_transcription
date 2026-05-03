@@ -1,1 +1,10 @@
-
+# IDE-files
+.vscode
+# working-directories
+/build/
+/dist/
+/node_modules/
+/vendor/
+# others
+/_assets/
+*.bak
