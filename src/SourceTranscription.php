@@ -32,36 +32,37 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription;
 
 use Aura\Router\Exception\ImmutableProperty;
 use Aura\Router\Exception\RouteAlreadyExists;
-use Fisharebest\Localization\Translation;
-use Fisharebest\Webtrees\FlashMessages;
-use Fisharebest\Webtrees\I18N;
-use Fisharebest\Webtrees\Module\AbstractModule;
-use Fisharebest\Webtrees\Module\ModuleConfigInterface;
-use Fisharebest\Webtrees\Module\ModuleConfigTrait;
-use Fisharebest\Webtrees\Module\ModuleCustomInterface;
-use Fisharebest\Webtrees\Module\ModuleCustomTrait;
-use Fisharebest\Webtrees\Registry;
-use Fisharebest\Webtrees\Validator;
-use Fisharebest\Webtrees\View;
-use Fisharebest\Webtrees\Webtrees;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\SettingsRepository;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\SchemaManager;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\NoteStrategy;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Fisharebest\Webtrees\Menu;
-use Fisharebest\Webtrees\Tree;
-use Fisharebest\Webtrees\Module\ModuleMenuInterface;
-use Fisharebest\Webtrees\Module\ModuleMenuTrait;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\CreateManualAction;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\DashboardAction;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\DetailAction;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\SaveNoteAsRevisionAction;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\StoreManualAction;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\UpdateCurrentNoteAction;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\MediaForSourceAction;
+use Fisharebest\{Localization\Translation,
+    Webtrees\FlashMessages,
+    Webtrees\I18N,
+    Webtrees\Module\AbstractModule,
+    Webtrees\Module\ModuleConfigInterface,
+    Webtrees\Module\ModuleConfigTrait,
+    Webtrees\Module\ModuleCustomInterface,
+    Webtrees\Module\ModuleCustomTrait,
+    Webtrees\Registry,
+    Webtrees\Validator,
+    Webtrees\View,
+    Webtrees\Webtrees,
+    Webtrees\Menu,
+    Webtrees\Tree,
+    Webtrees\Module\ModuleMenuInterface,
+    Webtrees\Module\ModuleMenuTrait};
+use Psr\{Container\ContainerExceptionInterface,
+    Container\NotFoundExceptionInterface,
+    Http\Message\ResponseInterface,
+    Http\Message\ServerRequestInterface};
+use Hartenthaler\{Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\SettingsRepository,
+    Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Schema\SchemaManager,
+    Webtrees\Module\SourceTranscription\Domain\ValueObject\NoteStrategy,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\CreateManualAction,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\DashboardAction,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\DetailAction,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\SaveNoteAsRevisionAction,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\StoreManualAction,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\UpdateCurrentNoteAction,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\MediaForSourceAction,
+    };
 
 final class SourceTranscription extends AbstractModule implements
     ModuleCustomInterface, ModuleConfigInterface, ModuleMenuInterface
@@ -113,9 +114,10 @@ final class SourceTranscription extends AbstractModule implements
     /**
      * SourceTranscription constructor.
      */
-    public function __construct()
+    public function __construct(
+        //private readonly SettingsRepository $settingsRepository
+    )
     {
-        
     }
 
     /**
@@ -129,11 +131,25 @@ final class SourceTranscription extends AbstractModule implements
      */
     public function boot(): void
     {
-        Registry::container()->get(SchemaManager::class)->ensureSchema();
+        $schema_manager = Registry::container()->get(SchemaManager::class);
+        //check database schema version and update if necessary
+        if (!$schema_manager->allTablesExist()) {
+            $schema_manager->deleteAllTables();
+            $schema_manager->updateSchema('\Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Schema',
+                'schema_version', self::CURRENT_SCHEMA_VERSION);
+            $this->setInitialDefaults();
+        } else {
+            $schema_manager->updateSchema('\Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Schema',
+                'schema_version', self::CURRENT_SCHEMA_VERSION);
+        }
 
-        // Register a namespace for the views.
+        //Register a namespace for the views.
         View::registerNamespace('hh_source_transcription', $this->resourcesFolder() . 'views/');
 
+        //Enable the TinyMDE editor of custom module linkenhancer
+        $this->enableTinyMde();
+
+        //Register routes
         $router = Registry::routeFactory()->routeMap();
 
         $router->get(
@@ -181,6 +197,37 @@ final class SourceTranscription extends AbstractModule implements
     }
 
     /**
+     * set the initial defaults for the settings
+     *
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function setInitialDefaults(): void
+    {
+        $settingsRepository = Registry::container()->get(SettingsRepository::class);
+        $settingsRepository->setSchemaVersion(0);
+        $settingsRepository->set('default_note_strategy', 'update_if_unchanged');
+        $settingsRepository->set('default_tag_text', 'TAG: Transcription');
+    }
+
+    private function enableTinyMde(): void
+    {
+        $class = "Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\MarkdownEditorActivationService";
+        if (Registry::container()->has($class)) {
+            /** @var Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService $mde_service */
+            $mde_service = Registry::container()->get($class);
+            //if (!$mde_service->getCustomRule(self::CUSTOM_TITLE)) {
+                $mde_service->setCustomRule(
+                    self::CUSTOM_TITLE,  // module name as key
+                    ["source-transcription-detail", "source-transcription-create-manual"], // handler: usually the short class name / last part of the route name - see js console with enabled debug info
+                    ["textarea[id='note_text']"] // filter: querySelector filter expressions
+                );
+            //}
+        }
+    }
+
+    /**
      * {@inheritDoc}
      *
      * @return string
@@ -202,11 +249,6 @@ final class SourceTranscription extends AbstractModule implements
         return self::activeModuleName();
     }
 
-    /**
-     * Get the active module name, e.g. the name of the currently running module
-     *
-     * @return string
-     */
     public static function activeModuleName(): string
     {
         return basename(dirname(__DIR__, 1));
@@ -292,11 +334,22 @@ final class SourceTranscription extends AbstractModule implements
         return self::REPOSITORY . self::GITHUB_REPO;
     }
 
+    /**
+     * define the default menu order (can be overwritten by admin)
+     *
+     * @return int
+     */
     public function defaultMenuOrder(): int
     {
         return 80;
     }
 
+    /**
+     * set the main menu entry
+     *
+     * @param Tree $tree
+     * @return Menu|null
+     */
     public function getMenu(Tree $tree): ?Menu
     {
         return new Menu(
@@ -360,7 +413,7 @@ final class SourceTranscription extends AbstractModule implements
         $tag_text = $settings->get('default_tag_text', self::DEFAULT_TAG_PREFIX . self::DEFAULT_TAG_VALUE);
         $tag_value = $this->tagValueFromTagText($tag_text);
 
-        return $this->viewResponse($this->name() . '::' . 'admin-settings', [
+        return $this->viewResponse(self::CUSTOM_TITLE . '::' . 'admin-settings', [
             'title'                         => $this->title(),
             'runs_with_webtrees_version'    => SourceTranscription::runsWithInstalledWebtreesVersion(),
             'tag_prefix'                    => self::DEFAULT_TAG_PREFIX,
@@ -412,6 +465,12 @@ final class SourceTranscription extends AbstractModule implements
         return redirect($this->getConfigLink());
     }
 
+    /**
+     * define tag value based on parameter or set to default if not defined already
+     *
+     * @param string $tag_value
+     * @return string
+     */
     private function normalizeTagValue(string $tag_value): string
     {
         $tag_value = trim($tag_value);
@@ -423,6 +482,12 @@ final class SourceTranscription extends AbstractModule implements
         return $tag_value !== '' ? $tag_value : self::DEFAULT_TAG_VALUE;
     }
 
+    /**
+     * define tag value (like "TAG: Transcription") from tag text (like "Transcription" or "TAG: Transcription"))
+     *
+     * @param string|null $tag_text
+     * @return string
+     */
     private function tagValueFromTagText(?string $tag_text): string
     {
         return $this->normalizeTagValue((string) $tag_text);

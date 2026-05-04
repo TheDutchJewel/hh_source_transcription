@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SourceTranscription\n"
-"POT-Creation-Date: 2026-05-01 00:51+0200\n"
+"POT-Creation-Date: 2026-05-04 16:46+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
 "Language-Team: \n"
@@ -259,10 +259,10 @@ msgstr "Normalisierter Text"
 
 #: src/Http/RequestHandlers/CreateManualAction.php:46
 msgid "Create manual transcription"
-msgstr "Start der manuellen Transkription"
+msgstr "Start einer manuellen Transkription"
 
 #: src/Http/RequestHandlers/DashboardAction.php:47
-#: src/SourceTranscription.php:303
+#: src/SourceTranscription.php:355
 msgid "Transcriptions"
 msgstr "Transkriptionen"
 
@@ -287,17 +287,17 @@ msgstr "Die Transkription wurde erzeugt."
 msgid "The NOTE has been updated."
 msgstr "Die NOTE wurde aktualisiert."
 
-#: src/SourceTranscription.php:224
+#: src/SourceTranscription.php:265
 msgid "Source Transcription"
 msgstr "Transkription von Quellen"
 
-#: src/SourceTranscription.php:236
+#: src/SourceTranscription.php:277
 msgid "Manage source transcriptions with manual and provider-based workflows."
 msgstr ""
 "Verwaltung von Quellen-Transkriptionen mit einem manuellen oder Anbieter-"
 "Arbeitsablauf."
 
-#: src/SourceTranscription.php:408
+#: src/SourceTranscription.php:460
 #, php-format
 msgid "The preferences for the module “%s” have been updated."
 msgstr ""
@@ -329,7 +329,7 @@ msgstr "Standard"
 msgid "save"
 msgstr ""
 
-#: resources/views/create-manual.phtml:36 resources/views/dashboard.phtml:72
+#: resources/views/create-manual.phtml:36 resources/views/dashboard.phtml:73
 #: resources/views/detail.phtml:72 resources/views/detail.phtml:77
 msgid "Source"
 msgstr ""
@@ -342,7 +342,7 @@ msgstr "Keine Ergebnisse gefunden"
 msgid "Search for a source"
 msgstr "Suche nach einer Quelle"
 
-#: resources/views/create-manual.phtml:56 resources/views/dashboard.phtml:136
+#: resources/views/create-manual.phtml:56 resources/views/dashboard.phtml:137
 msgid "Media object"
 msgstr "Medienobjekt"
 
@@ -394,40 +394,40 @@ msgstr "Es wurde kein verknüpftes Medienobjekt gefunden."
 msgid "Could not load media objects"
 msgstr "Es konnten keine Medienobjekte geladen werden"
 
-#: resources/views/dashboard.phtml:73
+#: resources/views/dashboard.phtml:74
 msgid "Media"
 msgstr ""
 
-#: resources/views/dashboard.phtml:75
+#: resources/views/dashboard.phtml:76
 msgid "Transcription provider"
 msgstr "Anbieter der Transkription"
 
-#: resources/views/dashboard.phtml:76 resources/views/detail.phtml:100
+#: resources/views/dashboard.phtml:77 resources/views/detail.phtml:100
 msgid "Status"
 msgstr "Status"
 
-#: resources/views/dashboard.phtml:77
-msgid "Note"
-msgstr "NOTE"
-
 #: resources/views/dashboard.phtml:78
+msgid "Note"
+msgstr ""
+
+#: resources/views/dashboard.phtml:79
 msgid "Actions"
 msgstr "Aktionen"
 
-#: resources/views/dashboard.phtml:125
+#: resources/views/dashboard.phtml:126
 msgid "Source record"
 msgstr "Quellendatensatz"
 
-#: resources/views/dashboard.phtml:129
+#: resources/views/dashboard.phtml:130
 msgid "Deleted"
 msgstr "Gelöscht"
 
-#: resources/views/dashboard.phtml:140 resources/views/dashboard.phtml:169
+#: resources/views/dashboard.phtml:141 resources/views/dashboard.phtml:170
 #: resources/views/detail.phtml:108 resources/views/detail.phtml:126
 msgid "None"
 msgstr "Nichts"
 
-#: resources/views/dashboard.phtml:175
+#: resources/views/dashboard.phtml:176
 msgid "Open"
 msgstr "Öffnen"
 
@@ -479,27 +479,27 @@ msgstr "Diese Mediendatei kann hier nicht angezeigt werden."
 msgid "Active webtrees NOTE"
 msgstr "Aktive NOTE"
 
-#: resources/views/detail.phtml:226
+#: resources/views/detail.phtml:227
 msgid "Save NOTE"
 msgstr "Speichere NOTE"
 
-#: resources/views/detail.phtml:235
+#: resources/views/detail.phtml:236
 msgid "Archive as new revision"
 msgstr "Archivieren als neue Revision"
 
-#: resources/views/detail.phtml:245
+#: resources/views/detail.phtml:246
 msgid "Revision history"
 msgstr "Revisionshistorie"
 
-#: resources/views/detail.phtml:251
+#: resources/views/detail.phtml:252
 msgid "Transcription Provider"
 msgstr "Anbieter der Transkription"
 
-#: resources/views/detail.phtml:253
+#: resources/views/detail.phtml:254
 msgid "Current"
 msgstr "Aktuell"
 
-#: resources/views/detail.phtml:254
+#: resources/views/detail.phtml:255
 msgid "Text"
 msgstr "Text"
 

@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository;
 
 use Fisharebest\Webtrees\DB;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Schema\SchemaManager;
 
 final class SettingsRepository
 {
-    private const TABLE = 'transcription_metadata';
-
     public function get(string $key, ?string $default = null): ?string
     {
-        $value = DB::table(self::TABLE)
+        $value = DB::table(SchemaManager::TABLE_METADATA)
             ->where('setting_name', '=', $key)
             ->value('setting_value');
 
@@ -21,7 +20,7 @@ final class SettingsRepository
 
     public function set(string $key, string $value): void
     {
-        DB::table(self::TABLE)->updateOrInsert(
+        DB::table(SchemaManager::TABLE_METADATA)->updateOrInsert(
             ['setting_name' => $key],
             ['setting_value' => $value]
         );

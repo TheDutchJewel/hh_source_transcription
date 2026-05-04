@@ -66,116 +66,118 @@ $muted = 'text-secondary fst-italic';
     </div>
 </div>
 
-<table class="table table-bordered table-sm">
-    <thead>
-    <tr>
-        <th><?= I18N::translate('Source') ?></th>
-        <th><?= I18N::translate('Media') ?></th>
-        <th><?= I18N::translate('Title') ?></th>
-        <th><?= I18N::translate('Transcription provider') ?></th>
-        <th><?= I18N::translate('Status') ?></th>
-        <th><?= I18N::translate('Note') ?></th>
-        <th><?= I18N::translate('Actions') ?></th>
-    </tr>
-    </thead>
-    <tbody>
-    <?php foreach ($transcriptions as $transcription) : ?>
-        <?php
-        $source = Registry::sourceFactory()->make($transcription->source_xref, $tree);
-
-        $detail_url = route('source-transcription-detail', [
-                'tree'             => $tree->name(),
-                'transcription_id' => $transcription->id,
-                'slug'             => TranscriptionSlug::fromTitle($transcription->title),
-        ]);
-
-        $action_url = route('source-transcription-detail', [
-                'tree'             => $tree->name(),
-                'transcription_id' => $transcription->id,
-        ]);
-
-        $provider_label = ProviderPresentation::label($transcription->provider_key);
-        $provider_url   = ProviderPresentation::url($transcription->provider_key, $tree);
-        $provider_icon  = ProviderPresentation::icon($transcription->provider_key);
-        $provider_title = ProviderPresentation::title($transcription->provider_key);
-
-        $media = null;
-        if ($transcription->media_xref !== null) {
-            $media = Registry::mediaFactory()->make($transcription->media_xref, $tree);
-        }
-
-        $note = null;
-        if ($transcription->current_note_xref !== null) {
-            $note = Registry::noteFactory()->make($transcription->current_note_xref, $tree);
-        }
-
-        $badge_class = match ($transcription->status) {
-            'draft'     => 'bg-secondary',
-            'in_work'   => 'bg-warning text-dark',
-            'review'    => 'bg-info text-dark',
-            'final'     => 'bg-success',
-            default     => 'bg-light text-dark',
-        };
-        ?>
-
+<?php if (count($transcriptions) > 0) : ?>
+    <table class="table table-bordered table-sm">
+        <thead>
         <tr>
-            <td>
-                <?php if ($source !== null) : ?>
-                    <a href="<?= e($source->url()) ?>" class="<?= $cell_format ?>">
-                        <?= $source->fullName() ?: I18N::translate('Source record') ?>
-                    </a>
-                <?php else : ?>
-                    <span class="<?= $muted ?>">
-                        <?= e(I18N::translate('Deleted')) ?>
-                    </span>
-                <?php endif ?>
-            </td>
-            <td>
-                <?php if ($media !== null) : ?>
-                    <a href="<?= e($media->url()) ?>" class="<?= $cell_format ?>">
-                        <?= $media->fullName() ?: I18N::translate('Media object') ?>
-                    </a>
-                <?php else : ?>
-                    <span class="<?= $muted ?>">
-                        <?= e(I18N::translate('None')) ?>
-                    </span>
-                <?php endif ?>
-            </td>
-            <td>
-                <a href="<?= e($detail_url) ?>">
-                    <?= e($transcription->title) ?>
-                </a>
-            </td>
-            <td>
-                <a href="<?= e($provider_url) ?>" title="<?= e($provider_title) ?>" class="<?= $cell_format ?>">
-                    <?php if ($provider_icon !== '') : ?>
-                        <img src="<?= e($provider_icon) ?>" alt="" width="16" height="16" class="me-1">
-                    <?php endif ?>
-                    <?= e($provider_label) ?>
-                </a>
-            </td>
-            <td>
-                <span class="badge <?= $badge_class ?>">
-                    <?= e(TranscriptionStatus::labels()[$transcription->status]) ?>
-                </span>
-            </td>
-            <td>
-                <?php if ($note !== null) : ?>
-                    <a href="<?= e($note->url()) ?>" class="<?= $cell_format ?>">
-                        <?= e('NOTE') ?>
-                    </a>
-                <?php else : ?>
-                    <span class="<?= $muted ?>">
-                        <?= e(I18N::translate('None')) ?>
-                    </span>
-                <?php endif ?>
-            </td>
-            <td>
-                <a class="btn btn-sm btn-secondary" href="<?= e($action_url) ?>">
-                    <?= I18N::translate('Open') ?>
-                </a>
-            </td>
+            <th><?= I18N::translate('Source') ?></th>
+            <th><?= I18N::translate('Media') ?></th>
+            <th><?= I18N::translate('Title') ?></th>
+            <th><?= I18N::translate('Transcription provider') ?></th>
+            <th><?= I18N::translate('Status') ?></th>
+            <th><?= I18N::translate('Note') ?></th>
+            <th><?= I18N::translate('Actions') ?></th>
         </tr>
-    <?php endforeach ?>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        <?php foreach ($transcriptions as $transcription) : ?>
+            <?php
+            $source = Registry::sourceFactory()->make($transcription->source_xref, $tree);
+
+            $detail_url = route('source-transcription-detail', [
+                    'tree'             => $tree->name(),
+                    'transcription_id' => $transcription->id,
+                    'slug'             => TranscriptionSlug::fromTitle($transcription->title),
+            ]);
+
+            $action_url = route('source-transcription-detail', [
+                    'tree'             => $tree->name(),
+                    'transcription_id' => $transcription->id,
+            ]);
+
+            $provider_label = ProviderPresentation::label($transcription->provider_key);
+            $provider_url   = ProviderPresentation::url($transcription->provider_key, $tree);
+            $provider_icon  = ProviderPresentation::icon($transcription->provider_key);
+            $provider_title = ProviderPresentation::title($transcription->provider_key);
+
+            $media = null;
+            if ($transcription->media_xref !== null) {
+                $media = Registry::mediaFactory()->make($transcription->media_xref, $tree);
+            }
+
+            $note = null;
+            if ($transcription->current_note_xref !== null) {
+                $note = Registry::noteFactory()->make($transcription->current_note_xref, $tree);
+            }
+
+            $badge_class = match ($transcription->status) {
+                'draft'     => 'bg-secondary',
+                'in_work'   => 'bg-warning text-dark',
+                'review'    => 'bg-info text-dark',
+                'final'     => 'bg-success',
+                default     => 'bg-light text-dark',
+            };
+            ?>
+
+            <tr>
+                <td>
+                    <?php if ($source !== null) : ?>
+                        <a href="<?= e($source->url()) ?>" class="<?= $cell_format ?>">
+                            <?= $source->fullName() ?: I18N::translate('Source record') ?>
+                        </a>
+                    <?php else : ?>
+                        <span class="<?= $muted ?>">
+                            <?= e(I18N::translate('Deleted')) ?>
+                        </span>
+                    <?php endif ?>
+                </td>
+                <td>
+                    <?php if ($media !== null) : ?>
+                        <a href="<?= e($media->url()) ?>" class="<?= $cell_format ?>">
+                            <?= $media->fullName() ?: I18N::translate('Media object') ?>
+                        </a>
+                    <?php else : ?>
+                        <span class="<?= $muted ?>">
+                            <?= e(I18N::translate('None')) ?>
+                        </span>
+                    <?php endif ?>
+                </td>
+                <td>
+                    <a href="<?= e($detail_url) ?>">
+                        <?= e($transcription->title) ?>
+                    </a>
+                </td>
+                <td>
+                    <a href="<?= e($provider_url) ?>" title="<?= e($provider_title) ?>" class="<?= $cell_format ?>">
+                        <?php if ($provider_icon !== '') : ?>
+                            <img src="<?= e($provider_icon) ?>" alt="" width="16" height="16" class="me-1">
+                        <?php endif ?>
+                        <?= e($provider_label) ?>
+                    </a>
+                </td>
+                <td>
+                    <span class="badge <?= $badge_class ?>">
+                        <?= e(TranscriptionStatus::labels()[$transcription->status]) ?>
+                    </span>
+                </td>
+                <td>
+                    <?php if ($note !== null) : ?>
+                        <a href="<?= e($note->url()) ?>" class="<?= $cell_format ?>">
+                            <?= e('NOTE') ?>
+                        </a>
+                    <?php else : ?>
+                        <span class="<?= $muted ?>">
+                            <?= e(I18N::translate('None')) ?>
+                        </span>
+                    <?php endif ?>
+                </td>
+                <td>
+                    <a class="btn btn-sm btn-secondary" href="<?= e($action_url) ?>">
+                        <?= I18N::translate('Open') ?>
+                    </a>
+                </td>
+            </tr>
+        <?php endforeach ?>
+        </tbody>
+    </table>
+<?php endif ?>

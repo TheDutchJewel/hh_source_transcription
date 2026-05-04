@@ -41,6 +41,7 @@ declare(strict_types=1);
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Media;
 use Fisharebest\Webtrees\MediaFile;
+use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Source;
 use Fisharebest\Webtrees\Tree;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription;
@@ -50,6 +51,11 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryL
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryScript;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderLabel;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\TranscriptionStatus;
+
+$note = null;
+if ($transcription->current_note_xref !== null) {
+    $note = Registry::noteFactory()->make($transcription->current_note_xref, $tree);
+}
 
 ?>
 
@@ -65,35 +71,38 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\Transcri
     <?= I18N::translate('The current webtrees NOTE is used as a working copy. Changes are only archived when saved as a new revision.') ?>
 </div>
 
-<div class="row">
-    <div class="col-md-4">
-        <div class="card mb-3">
-            <div class="card-header">
-                <?= I18N::translate('Source') ?>
-            </div>
+<div class="card mb-3">
+    <div class="card-header">
+        <?= I18N::translate('Source') ?>
+    </div>
 
-            <div class="card-body">
-                <dl>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-4">
+                <dl class="mb-0">
                     <dt><?= I18N::translate('Source') ?></dt>
                     <dd>
                         <?php if ($source) : ?>
                             <a href="<?= e($source->url()) ?>">
-                                <?= e($source->fullName()) ?>
+                                <?= $source->fullName() ?>
                             </a>
                         <?php endif ?>
                     </dd>
 
-                    <dt><?= I18N::translate('Media XREF') ?></dt>
+                    <dt><?= I18N::translate('Media file') ?></dt>
                     <dd>
                         <?php if ($media_object) : ?>
                             <a href="<?= e($media_object->url()) ?>">
-                                <?= e($media_object->fullName()) ?>
+                                <?= $media_object->fullName() ?>
                             </a>
                         <?php else : ?>
                             <span class="text-muted"><?= I18N::translate('No media object selected.') ?></span>
                         <?php endif ?>
                     </dd>
-
+                </dl>
+            </div>
+            <div class="col-md-4">
+                <dl class="mb-0">
                     <dt><?= I18N::translate('Provider') ?></dt>
                     <dd><?= e(ProviderLabel::label($transcription->provider_key)) ?></dd>
 
@@ -103,12 +112,15 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\Transcri
                     <dt><?= I18N::translate('Current NOTE') ?></dt>
                     <dd>
                         <?php if ($transcription->current_note_xref !== null) : ?>
-                            <code><?= e($transcription->current_note_xref) ?></code>
+                            <code><?= $note->fullName() ?></code>
                         <?php else : ?>
                             <span class="text-muted"><?= I18N::translate('None') ?></span>
                         <?php endif ?>
                     </dd>
-
+                </dl>
+            </div>
+            <div class="col-md-4">
+                <dl class="mb-0">
                     <dt><?= I18N::translate('Primary language') ?></dt>
                     <dd><?= e(PrimaryLanguage::label($transcription->primary_language_tag)) ?></dd>
 
@@ -117,20 +129,15 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\Transcri
 
                     <dt><?= I18N::translate('Primary form') ?></dt>
                     <dd><?= e(PrimaryForm::label($transcription->primary_form)) ?></dd>
-
-                    <dt><?= I18N::translate('Tag NOTE') ?></dt>
-                    <dd>
-                        <?php if ($transcription->tag_note_xref !== null) : ?>
-                            <code><?= e($transcription->tag_note_xref) ?></code>
-                        <?php else : ?>
-                            <span class="text-muted"><?= I18N::translate('None') ?></span>
-                        <?php endif ?>
-                    </dd>
                 </dl>
             </div>
         </div>
+    </div>
+</div>
 
-        <div class="card">
+<div class="row">
+    <div class="col-md-6">
+        <div class="card h-100">
             <div class="card-header">
                 <?= I18N::translate('Media preview') ?>
             </div>
@@ -205,8 +212,8 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\Transcri
         </div>
     </div>
 
-    <div class="col-md-8">
-        <div class="card">
+    <div class="col-md-6">
+        <div class="card h-100">
             <div class="card-header">
                 <?= I18N::translate('Active webtrees NOTE') ?>
             </div>
@@ -217,6 +224,7 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\Transcri
 
                     <textarea
                         class="form-control font-monospace"
+                        id="note_text"
                         name="note_text"
                         rows="24"
                     ><?= e((string) $note_text) ?></textarea>

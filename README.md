@@ -124,15 +124,15 @@ Important
 #### Structure of NOTE
 ```text
   Transcription
-  Source: Kirchenbuch Musterort 1780–1810
-  Medium: page 23
-  Revision: 3
-  Provider: Transkribus
-  Imported: 20260428/11:12:13
+  Title: Test
+  Revision: 1
+  Provider: manual
+  Origin: manual_entry
   --- Begin transcription ---
   ...
   --- End transcription ---
 ```
+If the custom modul [linkenhancer](https://codeberg.org/bschwede/linkenhancer) is installed, the advanced editor TinyMDE is used.
 
 ### 4. Tagging of sources
 
@@ -354,13 +354,16 @@ The following points are still open for discussion
 
 - Zedlitz, Jesper: "Gedbas4all - neues Datenmodell für die Genealogie", in COMPUTERGENEALOGIE 4/2009, S. 15-18, 2009, https://doi.org/10.5281/zenodo.33958 (checked 23.04.2026).
 - GENTECH Genealogical Data Model, 29.05.2000, https://xml.coverpages.org/GENTECH-DataModelV11.pdf (checked 23.04.2026).
-- [Transkribus](https://transkribus.eu/)
-- [eScriptorium](https://escriptorium.org/)
-- [Wikisource](https://wikisource.org/)
-- [Discourse](https://discourse.genealogy.net/)
-- [TEI P5](https://tei-c.org/release/doc/tei-p5-doc/en/html/index.html)
-- PAGE XML
-- ...
+- [ResearchSpace](https://researchspace.org/argument/) (checked 4.05.2026).
+- [CRMinf (CIDOC CRM)](https://cidoc-crm.org/crminf/) (checked 4.05.2026).
+- [Transkribus](https://transkribus.org/) (checked 4.05.2026).
+- [Transkribus API](https://transkribus.org/api/) (checked 4.05.2026).
+- [eScriptorium](https://escriptorium.eu/) (checked 4.05.2026).
+- [Wikisource](https://wikisource.org/) (checked 4.05.2026).
+- [Discourse](https://discourse.genealogy.net/) (checked 4.05.2026).
+- [TEI P5](https://tei-c.org/guidelines/p5/) (checked 4.05.2026).
+- [Documentation of the PAGE XML Format for Page Content](https://ocr-d.de/en/gt-guidelines/trans/trPage.html) (checked 4.05.2026).
+- [ALTO: Technical Metadata for Layout and Text Objects](https://www.loc.gov/standards/alto/) (checked 4.05.2026).
 
 <a name="Requirements"></a>
 ## Requirements
