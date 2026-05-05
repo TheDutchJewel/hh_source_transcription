@@ -6,12 +6,14 @@ declare(strict_types=1);
 
 /**
  * @var string $title
+ * @var SourceTranscription $module
  * @var bool $runs_with_webtrees_version
- * @var string $tag_prefix
- * @var string $tag_value
  * @var string $default_note_strategy
  * @var array<string,string> $note_strategies
- * @var SourceTranscription $module
+ * @var string $tiny_mde
+ * @var string $tagging_support
+ * @var string $tag_prefix
+ * @var string $tag_value
  */
 
 use Fisharebest\Webtrees\I18N;
@@ -56,6 +58,44 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\SourceTranscription;
     </fieldset>
 
     <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="tiny_mde">
+            <?= I18N::translate('Use of TinyMDE as the editor for transcription notes') ?>
+        </label>
+
+        <div class="col-sm-9">
+            <div class="form-check">
+                <input
+                        class="form-check-input"
+                        id="tiny_mde"
+                        name="tiny_mde"
+                        type="checkbox"
+                        value="enabled"
+                        <?= $tiny_mde === 'enabled' ? 'checked' : '' ?>
+                >
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="tagging_support">
+            <?= I18N::translate('Should tagging be supported') ?>
+        </label>
+
+        <div class="col-sm-9">
+            <div class="form-check">
+                <input
+                        class="form-check-input"
+                        id="tagging_support"
+                        name="tagging_support"
+                        type="checkbox"
+                        value="enabled"
+                        <?= $tagging_support === 'enabled' ? 'checked' : '' ?>
+                >
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3" id="tag_value_container">
         <label class="col-sm-3 col-form-label" for="tag_value">
             <?= I18N::translate('Tag value for tagging all sources with at least one transcription') ?>
         </label>
@@ -87,3 +127,27 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\SourceTranscription;
         </div>
     </div>
 </form>
+
+<script>
+    const taggingSupportCheckbox = document.getElementById('tagging_support');
+    const tagValueInput = document.getElementById('tag_value');
+    const tagValueContainer = document.getElementById('tag_value_container');
+    const tagPrefixAddon = tagValueInput.closest('.input-group').querySelector('.input-group-text');
+
+    function updateTaggingFields() {
+        const isEnabled = taggingSupportCheckbox.checked;
+        tagValueInput.disabled = !isEnabled;
+        if (isEnabled) {
+            tagValueContainer.classList.remove('text-muted');
+            tagPrefixAddon.classList.remove('text-muted');
+            tagValueInput.setAttribute('required', 'required');
+        } else {
+            tagValueContainer.classList.add('text-muted');
+            tagPrefixAddon.classList.add('text-muted');
+            tagValueInput.removeAttribute('required');
+        }
+    }
+
+    taggingSupportCheckbox.addEventListener('change', updateTaggingFields);
+    updateTaggingFields();
+</script>

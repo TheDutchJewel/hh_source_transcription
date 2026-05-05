@@ -49,7 +49,8 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryForm;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryLanguage;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryScript;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderLabel;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderPresentation;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\RevisionOriginType;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\TranscriptionStatus;
 
 $note = null;
@@ -57,6 +58,22 @@ if ($transcription->current_note_xref !== null) {
     $note = Registry::noteFactory()->make($transcription->current_note_xref, $tree);
 }
 
+$badge_class = match ($transcription->status) {
+    'draft'     => 'bg-secondary',
+    'in_work'   => 'bg-warning text-dark',
+    'review'    => 'bg-info text-dark',
+    'final'     => 'bg-success',
+    default     => 'bg-light text-dark',
+};
+
+// formatting options - CSS class
+$cell_format = 'text-decoration-none d-block';
+$muted = 'text-secondary fst-italic';
+
+$provider_label = ProviderPresentation::label($transcription->provider_key);
+$provider_url   = ProviderPresentation::url($transcription->provider_key, $tree);
+$provider_icon  = ProviderPresentation::icon($transcription->provider_key);
+$provider_title = ProviderPresentation::title($transcription->provider_key);
 ?>
 
 <h2><?= e($title) ?>: <?= e($transcription->title) ?></h2>
@@ -73,63 +90,97 @@ if ($transcription->current_note_xref !== null) {
 
 <div class="card mb-3">
     <div class="card-header">
-        <?= I18N::translate('Source') ?>
+        <?= I18N::translate('Information') ?>
     </div>
 
     <div class="card-body">
         <div class="row">
             <div class="col-md-4">
-                <dl class="mb-0">
-                    <dt><?= I18N::translate('Source') ?></dt>
-                    <dd>
-                        <?php if ($source) : ?>
-                            <a href="<?= e($source->url()) ?>">
-                                <?= $source->fullName() ?>
-                            </a>
-                        <?php endif ?>
-                    </dd>
-
-                    <dt><?= I18N::translate('Media file') ?></dt>
-                    <dd>
-                        <?php if ($media_object) : ?>
-                            <a href="<?= e($media_object->url()) ?>">
-                                <?= $media_object->fullName() ?>
-                            </a>
-                        <?php else : ?>
-                            <span class="text-muted"><?= I18N::translate('No media object selected.') ?></span>
-                        <?php endif ?>
-                    </dd>
-                </dl>
+                <table class="table table-sm table-borderless mb-0">
+                    <tbody>
+                        <tr>
+                            <th style="width: 33%"><?= I18N::translate('Source') ?></th>
+                            <td>
+                                <?php if ($source) : ?>
+                                    <a href="<?= e($source->url()) ?>">
+                                        <?= $source->fullName() ?>
+                                    </a>
+                                <?php endif ?>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><?= I18N::translate('Media file') ?></th>
+                            <td>
+                                <?php if ($media_object) : ?>
+                                    <a href="<?= e($media_object->url()) ?>">
+                                        <?= $media_object->fullName() ?>
+                                    </a>
+                                <?php else : ?>
+                                    <span class="<?= $muted ?>">
+                                        <?= I18N::translate('No media object selected.') ?>
+                                    </span>
+                                <?php endif ?>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="col-md-4">
-                <dl class="mb-0">
-                    <dt><?= I18N::translate('Provider') ?></dt>
-                    <dd><?= e(ProviderLabel::label($transcription->provider_key)) ?></dd>
-
-                    <dt><?= I18N::translate('Status') ?></dt>
-                    <dd><?= e(TranscriptionStatus::labels()[$transcription->status]) ?></dd>
-
-                    <dt><?= I18N::translate('Current NOTE') ?></dt>
-                    <dd>
-                        <?php if ($transcription->current_note_xref !== null) : ?>
-                            <code><?= $note->fullName() ?></code>
-                        <?php else : ?>
-                            <span class="text-muted"><?= I18N::translate('None') ?></span>
-                        <?php endif ?>
-                    </dd>
-                </dl>
+            <div class="col-md-4 border-start">
+                <table class="table table-sm table-borderless mb-0">
+                    <tbody>
+                        <tr>
+                            <th style="width: 33%"><?= I18N::translate('Provider') ?></th>
+                            <td>
+                                <a href="<?= e($provider_url) ?>" title="<?= e($provider_title) ?>" class="<?= $cell_format ?>">
+                                    <?php if ($provider_icon !== '') : ?>
+                                        <img src="<?= e($provider_icon) ?>" alt="" width="16" height="16" class="me-1">
+                                    <?php endif ?>
+                                    <?= e($provider_label) ?>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><?= I18N::translate('Status') ?></th>
+                            <td>
+                                <span class="badge <?= $badge_class ?>">
+                                    <?= e(TranscriptionStatus::labels()[$transcription->status]) ?>
+                                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th><?= I18N::translate('Current NOTE') ?></th>
+                            <td>
+                                <?php if ($transcription->current_note_xref !== null) : ?>
+                                    <a href="<?= e($note->url()) ?>" class="<?= $cell_format ?>">
+                                        <?= $note->fullName() ?>
+                                    </a>
+                                <?php else : ?>
+                                    <span class="<?= $muted ?>">
+                                        <?= I18N::translate('None') ?>
+                                    </span>
+                                <?php endif ?>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="col-md-4">
-                <dl class="mb-0">
-                    <dt><?= I18N::translate('Primary language') ?></dt>
-                    <dd><?= e(PrimaryLanguage::label($transcription->primary_language_tag)) ?></dd>
-
-                    <dt><?= I18N::translate('Primary script') ?></dt>
-                    <dd><?= e(PrimaryScript::label($transcription->primary_script_tag)) ?></dd>
-
-                    <dt><?= I18N::translate('Primary form') ?></dt>
-                    <dd><?= e(PrimaryForm::label($transcription->primary_form)) ?></dd>
-                </dl>
+            <div class="col-md-4 border-start">
+                <table class="table table-sm table-borderless mb-0">
+                    <tbody>
+                        <tr>
+                            <th style="width: 33%"><?= I18N::translate('Primary language') ?></th>
+                            <td><?= e(PrimaryLanguage::label($transcription->primary_language_tag)) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= I18N::translate('Primary script') ?></th>
+                            <td><?= e(PrimaryScript::label($transcription->primary_script_tag)) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= I18N::translate('Primary form') ?></th>
+                            <td><?= e(PrimaryForm::label($transcription->primary_form)) ?></td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -215,7 +266,7 @@ if ($transcription->current_note_xref !== null) {
     <div class="col-md-6">
         <div class="card h-100">
             <div class="card-header">
-                <?= I18N::translate('Active webtrees NOTE') ?>
+                <?= I18N::translate('Active NOTE') ?>
             </div>
 
             <div class="card-body">
@@ -224,7 +275,7 @@ if ($transcription->current_note_xref !== null) {
 
                     <textarea
                         class="form-control font-monospace"
-                        id="note_text"
+                        id="current_note_text"
                         name="note_text"
                         rows="24"
                     ><?= e((string) $note_text) ?></textarea>
@@ -233,15 +284,10 @@ if ($transcription->current_note_xref !== null) {
                         <button class="btn btn-primary" type="submit">
                             <?= I18N::translate('Save NOTE') ?>
                         </button>
+                        <button class="btn btn-success" type="submit" formaction="<?= e(route('source-transcription-save-note-as-revision', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>">
+                            <?= I18N::translate('Archive as new revision') ?>
+                        </button>
                     </div>
-                </form>
-
-                <form method="post" class="mt-2" action="<?= e(route('source-transcription-save-note-as-revision', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>">
-                    <?= csrf_field() ?>
-
-                    <button class="btn btn-success" type="submit">
-                        <?= I18N::translate('Archive as new revision') ?>
-                    </button>
                 </form>
             </div>
         </div>
@@ -255,10 +301,9 @@ if ($transcription->current_note_xref !== null) {
 <table class="table table-bordered table-sm">
     <thead>
         <tr>
-            <th><?= I18N::translate('Revision') ?></th>
-            <th><?= I18N::translate('Transcription Provider') ?></th>
-            <th><?= I18N::translate('Origin') ?></th>
             <th><?= I18N::translate('Current') ?></th>
+            <th><?= I18N::translate('Revision') ?></th>
+            <th><?= I18N::translate('Origin') ?></th>
             <th><?= I18N::translate('Text') ?></th>
         </tr>
     </thead>
@@ -266,13 +311,10 @@ if ($transcription->current_note_xref !== null) {
     <tbody>
         <?php foreach ($revisions as $revision) : ?>
             <tr>
-                <td><?= e((string) $revision->revision_no) ?></td>
-                <td><?= e(ProviderLabel::label($revision->provider_key)) ?></td>
-                <td><?= e($revision->origin_type) ?></td>
                 <td><?= $revision->is_current_revision ? '✓' : '' ?></td>
-                <td>
-                    <pre class="mb-0"><?= e(mb_substr($revision->content_text, 0, 500)) ?></pre>
-                </td>
+                <td><?= e((string) $revision->revision_no) ?></td>
+                <td><?= e(RevisionOriginType::labels()[$revision->origin_type] ?? $revision->origin_type) ?></td>
+                <td><pre class="mb-0"><?= e(mb_substr($revision->content_text, 0, 500)) ?></pre></td>
             </tr>
         <?php endforeach ?>
     </tbody>

@@ -29,10 +29,12 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\WhatsNew;
 
+use Fisharebest\Webtrees\I18N;
+
 class WhatsNew0 implements WhatsNewInterface
 {
     public function getMessage(): string
     {
-        return "First transcription provider available: manual.";
+        return I18N::translate("First transcription provider available: manual transcription.");
     }
 }

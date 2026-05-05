@@ -41,7 +41,7 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\Provider
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\TranscriptionStatus;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Support\TranscriptionSlug;
 
-// formatting options
+// formatting options - CSS class
 $cell_format = 'text-decoration-none d-block';
 $muted = 'text-secondary fst-italic';
 ?>
@@ -61,7 +61,7 @@ $muted = 'text-secondary fst-italic';
 
     <div class="text-secondary">
         <?php if (count($transcriptions) > 0) : ?>
-            <?= I18N::plural('%s transcription', '%s transcriptions', count($transcriptions), I18N::number(count($transcriptions))) ?>
+            <?= I18N::plural('%d transcription', '%d transcriptions', count($transcriptions), (string)count($transcriptions)) ?>
         <?php endif ?>
     </div>
 </div>
@@ -163,7 +163,7 @@ $muted = 'text-secondary fst-italic';
                 <td>
                     <?php if ($note !== null) : ?>
                         <a href="<?= e($note->url()) ?>" class="<?= $cell_format ?>">
-                            <?= e('NOTE') ?>
+                            <?= $note->fullName() ?>
                         </a>
                     <?php else : ?>
                         <span class="<?= $muted ?>">

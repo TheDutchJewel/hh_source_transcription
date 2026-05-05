@@ -22,6 +22,7 @@ This Readme contains the following main sections
 * [Discussion points](#Discussion)
 * [Current status](#Current)
 * [Discussion points](#Discussion)
+* [Screenshots](#Screenshots) 
 * [Literature](#Literature)
 * [Requirements](#Requirements)
 * [Installation](#Installation)
@@ -267,46 +268,44 @@ This will be replaced by a webtrees-compliant record update mechanism.
 
 1. Manual
 - must be stable first
+- support webtrees internal collaboration as a good basis for review workflow
 
-2. Internal webtrees
-- good basis for review workflow
-
-3. Discourse
+2. Discourse
 Strategically very interesting for CompGen
 - uses existing crowd
 - fits with Lesehilfe
 - makes webtrees connectable to community knowledge
 
-4. Transkribus
+3. Transkribus
 - strong automated specialist
 
-5. File import
+4. File import
 - import of PAGE XML, and ALTO XML
 
-6. eScriptorium
+5. eScriptorium
 - very interesting for self-hosting/open source, but probably more installation and operational effort
 
-7. LLM-/Vision-API
+6. LLM-/Vision-API (e.g. Kraken HTR, Tesseract)
 - Very flexible, but privacy, costs, prompting, and reproducibility must be properly resolved
 
 ### Roadmap
-- V1.0 
-  - actual development version
+- V1.0 (actual development version)
+  - test TinyMDE
+  - implement state machine and enable status "in work"
 - V1.1
   - Context display directly at the source
   - switch to Provider Factory model
   - new information: who edited what when (in database tables and as CHAN tag in NOTE)
   - Dashboard shows small thumbnail for media files
 - V1.2
-  - Media Viewer (incl. audio/video)
-  - TinyMCE or CKEditor as text editor (ask Bernd Schwendinger)
+  - Media Viewer (incl. audio/video) supporting Zoom
   - Dashboard: sort table (title, status, provider_key, created_at / updated_at); pagination; filter (status/, provider)
   - Diff Revision
   - Restore Revision
+  - add status "review" and "final" (per button)
+  - use rights of active user
 - V1.3
   - webtrees internal collaboration
-  - configuration: support tagging yes/no
-  - use rights of active user
   - backup/restore of database tables
   - first GitHub release version
 - V1.4
@@ -349,21 +348,38 @@ The following points are still open for discussion
 - How to integrate named entities, links to persons and to locations in future versions?
 - How to indicate the confidence about a transcription or parts of it?
 
+<a name="Screenshots"></a>
+## Screenshots
+
+### Dashboard
+![Screenshot 1](docs/images/ui/dashboard.png)
+
+### Create manual transcription
+![Screenshot 1](docs/images/ui/create_manual.png)
+
+### Details
+![Screenshot 1](docs/images/ui/details.png)
+
+### Control panel
+![Screenshot 1](docs/images/ui/control_panel.png)
+
 <a name="Literature"></a>
 ## Literature and links
 
-- Zedlitz, Jesper: "Gedbas4all - neues Datenmodell für die Genealogie", in COMPUTERGENEALOGIE 4/2009, S. 15-18, 2009, https://doi.org/10.5281/zenodo.33958 (checked 23.04.2026).
-- GENTECH Genealogical Data Model, 29.05.2000, https://xml.coverpages.org/GENTECH-DataModelV11.pdf (checked 23.04.2026).
+- [Zedlitz, Jesper: "Gedbas4all - neues Datenmodell für die Genealogie"](https://doi.org/10.5281/zenodo.33958), in COMPUTERGENEALOGIE 4/2009, S. 15-18, 2009 (checked 23.04.2026).
+- [GENTECH Genealogical Data Model](https://xml.coverpages.org/GENTECH-DataModelV11.pdf), 29.05.2000 (checked 23.04.2026).
 - [ResearchSpace](https://researchspace.org/argument/) (checked 4.05.2026).
 - [CRMinf (CIDOC CRM)](https://cidoc-crm.org/crminf/) (checked 4.05.2026).
 - [Transkribus](https://transkribus.org/) (checked 4.05.2026).
-- [Transkribus API](https://transkribus.org/api/) (checked 4.05.2026).
+- [Transkribus API](https://www.transkribus.org/metagrapho#documentation) (checked 5.05.2026).
 - [eScriptorium](https://escriptorium.eu/) (checked 4.05.2026).
 - [Wikisource](https://wikisource.org/) (checked 4.05.2026).
 - [Discourse](https://discourse.genealogy.net/) (checked 4.05.2026).
 - [TEI P5](https://tei-c.org/guidelines/p5/) (checked 4.05.2026).
 - [Documentation of the PAGE XML Format for Page Content](https://ocr-d.de/en/gt-guidelines/trans/trPage.html) (checked 4.05.2026).
 - [ALTO: Technical Metadata for Layout and Text Objects](https://www.loc.gov/standards/alto/) (checked 4.05.2026).
+- [Gramps: Create a Transkribus addon](https://gramps.discourse.group/t/please-create-a-transkribus-addon/8196) (checked 5.05.2026).
+- [Gramps: Text recognition](https://gramps.discourse.group/t/text-recognition/9450) (checked 5.05.2026).
 
 <a name="Requirements"></a>
 ## Requirements
@@ -376,6 +392,8 @@ and all available themes and all other custom modules.
 
 <a name="Installation"></a>
 ## Installation
+
+At the current time, install the development version from GitHub. After V1.3:
 
 Install and use [Custom Module Manager](https://github.com/Jefferson49/CustomModuleManager) for an easy and convenient installation of **webtrees** custom modules.
 + Open the Custom Module Manager view in **webtrees**, scroll to "Source Transcription", and click on the "Install Module" button.

@@ -62,7 +62,7 @@ use Hartenthaler\{Webtrees\Module\SourceTranscription\Infrastructure\Persistence
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\StoreManualAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\UpdateCurrentNoteAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\MediaForSourceAction,
-    };
+    Webtrees\Module\SourceTranscription\Infrastructure\WhatsNew\WhatsNewInterface};
 
 final class SourceTranscription extends AbstractModule implements
     ModuleCustomInterface, ModuleConfigInterface, ModuleMenuInterface
@@ -99,17 +99,32 @@ final class SourceTranscription extends AbstractModule implements
     public const int CURRENT_SCHEMA_VERSION = 1;
 
     //Default tag values for transcriptions (NOTE <tag_prefix><tag_value>)
-    //tbd should the tag prefix be configurable?
     public const string DEFAULT_TAG_PREFIX = 'TAG: ';
     public const string DEFAULT_TAG_VALUE = 'Transcription';
+    public const string DEFAULT_TAG = self::DEFAULT_TAG_PREFIX . self::DEFAULT_TAG_VALUE;
+
+
+    //Options
+    public const string DEFAULT_NOTE_STRATEGY = 'default_note_strategy';
+    public const string DEFAULT_TAG_TEXT = 'default_tag_text';
+    public const string TINY_MDE = 'tiny_mde';
+    public const string TAGGING_SUPPORT = 'tagging_support';
+    public const string WHATS_NEW = 'whats_new';
 
     //ROUTE
-    private const string ROUTE_DASHBOARD = '/tree/{tree}/source-transcriptions';
-    private const string ROUTE_CREATE_MANUAL = '/tree/{tree}/source-transcriptions/create-manual';
-    private const string ROUTE_UPDATE_NOTE = '/tree/{tree}/source-transcriptions/{transcription_id}/update-note';
-    private const string ROUTE_SAVE_NOTE_AS_REVISION = '/tree/{tree}/source-transcriptions/{transcription_id}/save-note-as-revision';
-    private const string ROUTE_MEDIA_FOR_SOURCE = '/tree/{tree}/source-transcriptions/media-for-source';
-    private const string ROUTE_DETAIL = '/tree/{tree}/source-transcriptions/{transcription_id}/{slug}';
+    private const string ROUTE_GET_NAME_DASHBOARD = 'source-transcription-dashboard';
+    private const string ROUTE_PATH_DASHBOARD = '/tree/{tree}/source-transcriptions';
+    private const string ROUTE_GET_NAME_CREATE_MANUAL = 'source-transcription-create-manual';
+    private const string ROUTE_POST_NAME_STORE_MANUAL = 'source-transcription-store-manual';
+    private const string ROUTE_PATH_CREATE_MANUAL = '/tree/{tree}/source-transcriptions/create-manual';
+    private const string ROUTE_POST_NAME_UPDATE_NOTE = 'source-transcription-update-note';
+    private const string ROUTE_PATH_UPDATE_NOTE = '/tree/{tree}/source-transcriptions/{transcription_id}/update-note';
+    private const string ROUTE_POST_NAME_SAVE_NOTE_AS_REVISION = 'source-transcription-save-note-as-revision';
+    private const string ROUTE_PATH_SAVE_NOTE_AS_REVISION = '/tree/{tree}/source-transcriptions/{transcription_id}/save-note-as-revision';
+    //private const string ROUTE_GET_NAME_MEDIA_FOR_SOURCE = 'source-transcription-media-for-source';
+    private const string ROUTE_PATH_MEDIA_FOR_SOURCE = '/tree/{tree}/source-transcriptions/media-for-source';
+    private const string ROUTE_GET_NAME_DETAIL = 'source-transcription-detail';
+    private const string ROUTE_PATH_DETAIL = '/tree/{tree}/source-transcriptions/{transcription_id}/{slug}';
 
     /**
      * SourceTranscription constructor.
@@ -147,53 +162,88 @@ final class SourceTranscription extends AbstractModule implements
         View::registerNamespace('hh_source_transcription', $this->resourcesFolder() . 'views/');
 
         //Enable the TinyMDE editor of custom module linkenhancer
-        $this->enableTinyMde();
+        $settingsRepository = Registry::container()->get(SettingsRepository::class);
+        if ($settingsRepository->get('tiny_mde') == 'enabled') {
+           $this->enableTinyMde();
+        }
 
         //Register routes
         $router = Registry::routeFactory()->routeMap();
 
         $router->get(
-            'source-transcription-dashboard',
-            self::ROUTE_DASHBOARD,
+            self::ROUTE_GET_NAME_DASHBOARD,
+            self::ROUTE_PATH_DASHBOARD,
             DashboardAction::class
         );
 
         $router->get(
-            'source-transcription-create-manual',
-            self::ROUTE_CREATE_MANUAL,
+            self::ROUTE_GET_NAME_CREATE_MANUAL,
+            self::ROUTE_PATH_CREATE_MANUAL,
             CreateManualAction::class
         );
 
         $router->post(
-            'source-transcription-store-manual',
-            self::ROUTE_CREATE_MANUAL,
+            self::ROUTE_POST_NAME_STORE_MANUAL,
+            self::ROUTE_PATH_CREATE_MANUAL,
             StoreManualAction::class
         );
 
         $router->post(
-            'source-transcription-update-note',
-            self::ROUTE_UPDATE_NOTE,
+            self::ROUTE_POST_NAME_UPDATE_NOTE,
+            self::ROUTE_PATH_UPDATE_NOTE,
             UpdateCurrentNoteAction::class
         );
 
         $router->post(
-            'source-transcription-save-note-as-revision',
-            self::ROUTE_SAVE_NOTE_AS_REVISION,
+            self::ROUTE_POST_NAME_SAVE_NOTE_AS_REVISION,
+            self::ROUTE_PATH_SAVE_NOTE_AS_REVISION,
             SaveNoteAsRevisionAction::class
         );
 
         $router->get(
             MediaForSourceAction::class,
-            self::ROUTE_MEDIA_FOR_SOURCE,
+            self::ROUTE_PATH_MEDIA_FOR_SOURCE,
             MediaForSourceAction::class
         );
 
         //Generic Route at the end!
         $router->get(
-            'source-transcription-detail',
-            self::ROUTE_DETAIL,
+            self::ROUTE_GET_NAME_DETAIL,
+            self::ROUTE_PATH_DETAIL,
             DetailAction::class
         );
+
+        $this->flashWhatsNew();
+    }
+
+    /**
+     * Display "What's new" messages as flash messages.
+     *
+     * @return void
+     */
+    private function flashWhatsNew(): void
+    {
+        $namespace = 'Hartenthaler\\Webtrees\\Module\\SourceTranscription\\Infrastructure\\WhatsNew';
+        $pref = self::WHATS_NEW;
+        $current_version = (int) $this->getPreference($pref, '0');
+
+        $target_version = $current_version;
+        while (class_exists($namespace . '\\WhatsNew' . $target_version)) {
+            $target_version++;
+        }
+
+        while ($current_version < $target_version) {
+            $class = $namespace . '\\WhatsNew' . $current_version;
+
+            if (class_exists($class)) {
+                /** @var WhatsNewInterface $whatsNew */
+                $whatsNew = new $class();
+                FlashMessages::addMessage(I18N::translate("What's new?") . " " . $whatsNew->getMessage());
+            }
+            $current_version++;
+
+            $this->setPreference($pref, (string) $current_version);
+        }
     }
 
     /**
@@ -207,8 +257,11 @@ final class SourceTranscription extends AbstractModule implements
     {
         $settingsRepository = Registry::container()->get(SettingsRepository::class);
         $settingsRepository->setSchemaVersion(0);
-        $settingsRepository->set('default_note_strategy', 'update_if_unchanged');
-        $settingsRepository->set('default_tag_text', 'TAG: Transcription');
+        $settingsRepository->set(self::DEFAULT_NOTE_STRATEGY, 'update_if_unchanged');
+        $settingsRepository->set(self::DEFAULT_TAG_TEXT, self::DEFAULT_TAG);
+        $settingsRepository->set(self::TINY_MDE, 'enabled');
+        $settingsRepository->set(self::TAGGING_SUPPORT, 'enabled');
+        $settingsRepository->set(self::WHATS_NEW, "");
     }
 
     private function enableTinyMde(): void
@@ -217,11 +270,11 @@ final class SourceTranscription extends AbstractModule implements
         if (Registry::container()->has($class)) {
             /** @var Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService $mde_service */
             $mde_service = Registry::container()->get($class);
-            //if (!$mde_service->getCustomRule(self::CUSTOM_TITLE)) {
+            //if (!$mde_service->getCustomRule(self::CUSTOM_TITLE)) { // why was that condition suggested by bschwend ?
                 $mde_service->setCustomRule(
                     self::CUSTOM_TITLE,  // module name as key
                     ["source-transcription-detail", "source-transcription-create-manual"], // handler: usually the short class name / last part of the route name - see js console with enabled debug info
-                    ["textarea[id='note_text']"] // filter: querySelector filter expressions
+                    ["textarea[id$='_text']"] // filter: querySelector filter expressions; here: textarea id ends with "_text"
                 );
             //}
         }
@@ -415,15 +468,17 @@ final class SourceTranscription extends AbstractModule implements
 
         return $this->viewResponse(self::CUSTOM_TITLE . '::' . 'admin-settings', [
             'title'                         => $this->title(),
+            'module'                        => $this,
             'runs_with_webtrees_version'    => SourceTranscription::runsWithInstalledWebtreesVersion(),
-            'tag_prefix'                    => self::DEFAULT_TAG_PREFIX,
-            'tag_value'                     => $tag_value,
             'default_note_strategy'         => $settings->get(
                 'default_note_strategy',
                 NoteStrategy::default()
             ),
             'note_strategies'               => NoteStrategy::labels(),
-            'module'                        => $this,
+            'tiny_mde'                      => $settings->get('tiny_mde', ''),
+            'tagging_support'               => $settings->get('tagging_support', 'enabled'),
+            'tag_prefix'                    => self::DEFAULT_TAG_PREFIX,
+            'tag_value'                     => $tag_value,
         ]);
     }
 
@@ -455,6 +510,8 @@ final class SourceTranscription extends AbstractModule implements
             $settings = Registry::container()->get(SettingsRepository::class);
             $settings->set('default_tag_text', self::DEFAULT_TAG_PREFIX . $tag_value);
             $settings->set('default_note_strategy', $note_strategy);
+            $settings->set('tiny_mde', (string) ($params['tiny_mde'] ?? ''));
+            $settings->set('tagging_support', (string) ($params['tagging_support'] ?? ''));
 
             //Finally, show a success message
             FlashMessages::addMessage(

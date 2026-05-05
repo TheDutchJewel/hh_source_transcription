@@ -32,6 +32,7 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Factory;
 
 use Fisharebest\Webtrees\I18N;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\TranscriptionRevision;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\RevisionOriginType;
 
 final class NoteContentFactory
 {
@@ -46,7 +47,7 @@ final class NoteContentFactory
             I18N::translate('Title') . $separator . $title . PHP_EOL .
             I18N::translate('Revision') . $separator . $revision->revision_no . PHP_EOL .
             I18N::translate('Provider') . $separator . $revision->provider_key . PHP_EOL .
-            I18N::translate('Origin') . $separator . $revision->origin_type . PHP_EOL .
+            I18N::translate('Origin') . $separator . (RevisionOriginType::labels()[$revision->origin_type] ?? $revision->origin_type) . PHP_EOL .
             PHP_EOL .
             '--- ' . I18N::translate('Begin transcription') .' ---' . PHP_EOL .
             PHP_EOL .

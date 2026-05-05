@@ -1,4 +1,6 @@
-Zur Dokumentation! Tabellen-Prefix "wt_" ist ggf. auch anders definiert!
+This is a documentation of the database schema!
+
+the table prefix "wt_" may be different in your installation!
 
 CREATE TABLE wt_transcription_metadata (
                                            setting_name  VARCHAR(64) PRIMARY KEY,
@@ -6,20 +8,26 @@ CREATE TABLE wt_transcription_metadata (
 );
 
 CREATE TABLE wt_transcriptions (
-                                   id                  INT AUTO_INCREMENT PRIMARY KEY,
-                                   tree_id             INT NOT NULL,
-                                   source_xref         VARCHAR(20) NOT NULL,
-                                   media_xref          VARCHAR(20) NULL,
-                                   title               VARCHAR(255) NOT NULL,
-                                   transcription_type  VARCHAR(32) NOT NULL,
-                                   provider_key        VARCHAR(32) NOT NULL,
-                                   status              VARCHAR(32) NOT NULL,
-                                   tag_note_xref       VARCHAR(20) NULL,
-                                   current_note_xref   VARCHAR(20) NULL,
-                                   created_by_user_id  INT NOT NULL,
-                                   created_at          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                                   updated_at          TIMESTAMP NULL DEFAULT NULL,
-                                   is_active           TINYINT(1) NOT NULL DEFAULT 1
+                                   id                   INT AUTO_INCREMENT PRIMARY KEY,
+                                   tree_id              INT NOT NULL,
+                                   source_xref          VARCHAR(20) NOT NULL,
+                                   media_xref           VARCHAR(20) NULL,
+                                   title                VARCHAR(255) NOT NULL,
+                                   interaction_model    VARCHAR(32) NOT NULL,
+                                   transcription_type   VARCHAR(32) NOT NULL,
+                                   provider_key         VARCHAR(32) NOT NULL,
+                                   status               VARCHAR(32) NOT NULL,
+                                   primary_language_tag VARCHAR(32) NULL,
+                                   primary_script_tag   VARCHAR(32) NULL,
+                                   primary_form         VARCHAR(32) NULL,
+                                   tag_note_xref        VARCHAR(20) NULL,
+                                   current_note_xref    VARCHAR(20) NULL,
+                                   created_by_user_id   INT NOT NULL,
+                                   created_at           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                   updated_at           TIMESTAMP NULL DEFAULT NULL,
+                                   is_active            TINYINT(1) NOT NULL DEFAULT 1,
+                                   INDEX idx_transcriptions_source (tree_id, source_xref),
+                                   INDEX idx_transcriptions_media (tree_id, media_xref)
 );
 
 CREATE TABLE wt_transcription_revisions (
@@ -36,7 +44,9 @@ CREATE TABLE wt_transcription_revisions (
                                             created_at            TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                             import_comment        TEXT NULL,
                                             generated_note_xref   VARCHAR(20) NULL,
-                                            is_current_revision   TINYINT(1) NOT NULL DEFAULT 0
+                                            is_current_revision   TINYINT(1) NOT NULL DEFAULT 0,
+                                            INDEX idx_revisions_transcription (transcription_id),
+                                            INDEX idx_revisions_hash (content_hash)
 );
 
 CREATE TABLE wt_transcription_note_links (
@@ -48,5 +58,7 @@ CREATE TABLE wt_transcription_note_links (
                                              created_at              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                                              created_by_user_id      INT NOT NULL,
                                              is_current              TINYINT(1) NOT NULL DEFAULT 0,
-                                             note_hash_at_link_time  CHAR(64) NULL
+                                             note_hash_at_link_time  CHAR(64) NULL,
+                                             INDEX idx_note_links_transcription (transcription_id),
+                                             INDEX idx_note_links_note (note_xref)
 );
