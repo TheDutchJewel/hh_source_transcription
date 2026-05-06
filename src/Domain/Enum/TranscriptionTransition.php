@@ -28,27 +28,22 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject;
+namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum;
 
-use Fisharebest\Webtrees\I18N;
-
-final class InteractionModel
+enum TranscriptionTransition: string
 {
-    public const string MANUAL_DIRECT = 'manual_direct';
-    public const string AUTOMATED_ASYNC = 'automated_async';
-    public const string CROWD_ASYNC = 'crowd_async';
-    public const string INTERNAL_COLLABORATIVE = 'internal_collaborative';
+    /** Startet die Bearbeitung. */
+    case START = 'start';
 
-    /**
-     * @return array<string,string>
-     */
-    public static function labels(): array
-    {
-        return [
-            self::MANUAL_DIRECT => I18N::translate('Manual (direct editing)'),
-            self::AUTOMATED_ASYNC => I18N::translate('Automated (asynchronous)'),
-            self::CROWD_ASYNC => I18N::translate('Crowd-based (asynchronous)'),
-            self::INTERNAL_COLLABORATIVE => I18N::translate('Internal collaboration'),
-        ];
-    }
+    /** Reicht die Transkription zur Prüfung ein. */
+    case SUBMIT_FOR_REVIEW = 'submit_for_review';
+
+    /** Genehmigt und schließt die Transkription. */
+    case APPROVE = 'approve';
+
+    /** Öffnet eine bereits abgeschlossene oder abgebrochene Transkription erneut. */
+    case REOPEN = 'reopen';
+
+    /** Bricht die Transkription ab. */
+    case CANCEL = 'cancel';
 }

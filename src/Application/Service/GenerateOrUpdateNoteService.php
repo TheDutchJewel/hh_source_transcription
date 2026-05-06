@@ -33,6 +33,9 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service;
 use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\I18N;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Factory\NoteContentFactory;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\TranscriptionStatus;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\TranscriptionTransition;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Service\TranscriptionStateMachine;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\NoteStrategy;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\NoteLinkRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\RevisionRepository;
@@ -53,9 +56,38 @@ final class GenerateOrUpdateNoteService
         private readonly SharedNoteGateway       $sharedNoteGateway,
         private readonly NoteContentFactory      $noteContentFactory,
         private readonly HashService             $hashService,
-        private readonly SourceGateway $sourceGateway,
+        private readonly SourceGateway           $sourceGateway,
+        private readonly TranscriptionStateMachine $stateMachine,
     )
     {
+    }
+
+    /**
+     * @param int $transcription_id
+     * @param string $note_text
+     * @return void
+     */
+    public function updateNoteText(int $transcription_id, string $note_text): void
+    {
+        $transcription = $this->transcriptionRepository->find($transcription_id);
+        if ($transcription === null || $transcription->current_note_xref === null) {
+            return;
+        }
+
+        $this->sharedNoteGateway->updateSharedNote(
+            $transcription->tree,
+            $transcription->current_note_xref,
+            $note_text
+        );
+
+        $status = TranscriptionStatus::from($transcription->status);
+        if ($status === TranscriptionStatus::NEW) {
+            $new_status = $this->stateMachine->apply(
+                $status,
+                TranscriptionTransition::START
+            );
+            $this->transcriptionRepository->updateStatus($transcription_id, $new_status->value);
+        }
     }
 
     public function applyRevisionToCurrentNote(

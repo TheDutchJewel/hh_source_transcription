@@ -51,19 +51,21 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryL
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\PrimaryScript;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderPresentation;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\RevisionOriginType;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\TranscriptionStatus;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\TranscriptionStatus;
 
 $note = null;
 if ($transcription->current_note_xref !== null) {
     $note = Registry::noteFactory()->make($transcription->current_note_xref, $tree);
 }
 
-$badge_class = match ($transcription->status) {
-    'draft'     => 'bg-secondary',
-    'in_work'   => 'bg-warning text-dark',
-    'review'    => 'bg-info text-dark',
-    'final'     => 'bg-success',
-    default     => 'bg-light text-dark',
+$badge_class = match (TranscriptionStatus::tryFrom($transcription->status)) {
+    TranscriptionStatus::NEW              => 'bg-secondary',
+    TranscriptionStatus::IN_PROGRESS      => 'bg-warning text-dark',
+    TranscriptionStatus::READY_FOR_REVIEW => 'bg-info text-dark',
+    TranscriptionStatus::FINAL            => 'bg-success',
+    TranscriptionStatus::REOPENED         => 'bg-primary',
+    TranscriptionStatus::CANCELED        => 'bg-light text-dark',
+    null                                  => 'bg-light text-dark',
 };
 
 // formatting options - CSS class

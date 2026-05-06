@@ -27,17 +27,30 @@
  */
 
 declare(strict_types=1);
-
-namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject;
+ 
+namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum;
 
 use Fisharebest\Webtrees\I18N;
 
-final class TranscriptionStatus
+enum TranscriptionStatus: string
 {
-    public const string NEW = 'new';
-    public const string IN_PROGRESS = 'in_progress';
-    public const string COMPLETED = 'completed';
-    public const string ARCHIVED = 'archived';
+    /** Initial state after creation, before work has started. */
+    case NEW = 'new';
+
+    /** The transcription is currently being edited. */
+    case IN_PROGRESS = 'in_progress';
+
+    /** The transcription is complete and waiting for review/approval. */
+    case READY_FOR_REVIEW = 'ready_for_review';
+
+    /** The transcription has been approved and is finalized. */
+    case FINAL = 'final';
+
+    /** A previously finalized, pending, or canceled transcription has been reopened for editing. */
+    case REOPENED = 'reopened';
+
+    /** The transcription process was canceled. */
+    case CANCELED = 'canceled';
 
     /**
      * @return array<string,string>
@@ -45,10 +58,12 @@ final class TranscriptionStatus
     public static function labels(): array
     {
         return [
-            self::NEW => I18N::translate('New'),
-            self::IN_PROGRESS => I18N::translate('In progress'),
-            self::COMPLETED => I18N::translate('Completed'),
-            self::ARCHIVED => I18N::translate('Archived'),
+            self::NEW->value              => I18N::translate('New'),
+            self::IN_PROGRESS->value      => I18N::translate('In progress'),
+            self::READY_FOR_REVIEW->value => I18N::translate('Ready for review'),
+            self::FINAL->value            => I18N::translate('Final'),
+            self::REOPENED->value         => I18N::translate('Reopened'),
+            self::CANCELED->value        => I18N::translate('Canceled'),
         ];
     }
 }

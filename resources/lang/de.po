@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SourceTranscription\n"
-"POT-Creation-Date: 2026-05-05 19:53+0200\n"
+"POT-Creation-Date: 2026-05-06 01:56+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
 "Language-Team: \n"
@@ -45,19 +45,43 @@ msgstr "Beginn der Transkription"
 msgid "End transcription"
 msgstr "Ende der Transkription"
 
-#: src/Domain/ValueObject/InteractionModel.php:22
+#: src/Domain/Enum/TranscriptionStatus.php:61
+msgid "New"
+msgstr "Neu"
+
+#: src/Domain/Enum/TranscriptionStatus.php:62
+msgid "In progress"
+msgstr "In Arbeit"
+
+#: src/Domain/Enum/TranscriptionStatus.php:63
+msgid "Ready for review"
+msgstr "Bereit für Review"
+
+#: src/Domain/Enum/TranscriptionStatus.php:64
+msgid "Final"
+msgstr "Beendet"
+
+#: src/Domain/Enum/TranscriptionStatus.php:65
+msgid "Reopened"
+msgstr "Wiedereröffnet"
+
+#: src/Domain/Enum/TranscriptionStatus.php:66
+msgid "Canceled"
+msgstr "Abgebrochen"
+
+#: src/Domain/ValueObject/InteractionModel.php:48
 msgid "Manual (direct editing)"
 msgstr "Manuell (direktes Bearbeiten)"
 
-#: src/Domain/ValueObject/InteractionModel.php:23
+#: src/Domain/ValueObject/InteractionModel.php:49
 msgid "Automated (asynchronous)"
 msgstr "Automatisiert (asynchron)"
 
-#: src/Domain/ValueObject/InteractionModel.php:24
+#: src/Domain/ValueObject/InteractionModel.php:50
 msgid "Crowd-based (asynchronous)"
 msgstr "Crowd-basiert (asynchron)"
 
-#: src/Domain/ValueObject/InteractionModel.php:25
+#: src/Domain/ValueObject/InteractionModel.php:51
 msgid "Internal collaboration"
 msgstr "Interne Zusammenarbeit"
 
@@ -233,22 +257,6 @@ msgstr "Transkribus Import"
 msgid "Transkribus sync"
 msgstr "Transkribus Synchronisation"
 
-#: src/Domain/ValueObject/TranscriptionStatus.php:48
-msgid "New"
-msgstr "Neu"
-
-#: src/Domain/ValueObject/TranscriptionStatus.php:49
-msgid "In progress"
-msgstr "In Arbeit"
-
-#: src/Domain/ValueObject/TranscriptionStatus.php:50
-msgid "Completed"
-msgstr "Abgeschlossen"
-
-#: src/Domain/ValueObject/TranscriptionStatus.php:51
-msgid "Archived"
-msgstr "Archiviert"
-
 #: src/Domain/ValueObject/TranscriptionType.php:48
 msgid "Translation"
 msgstr "Übersetzung"
@@ -266,11 +274,11 @@ msgstr "Start einer manuellen Transkription"
 msgid "Transcriptions"
 msgstr "Transkriptionen"
 
-#: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:77
+#: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:69
 msgid "Saved from UI"
 msgstr "Gesichert von der Bedienoberfläche"
 
-#: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:86
+#: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:78
 #, php-format
 msgid "The current NOTE has been saved as revision %s."
 msgstr "Die aktuelle NOTE wurde als Revision %s gespeichert."
@@ -283,7 +291,7 @@ msgstr "Von der Bedienoberfläche erzeugt"
 msgid "The transcription has been created."
 msgstr "Die Transkription wurde erzeugt."
 
-#: src/Http/RequestHandlers/UpdateCurrentNoteAction.php:64
+#: src/Http/RequestHandlers/UpdateCurrentNoteAction.php:58
 msgid "The NOTE has been updated."
 msgstr "Die NOTE wurde aktualisiert."
 
@@ -346,7 +354,7 @@ msgid "save"
 msgstr ""
 
 #: resources/views/create-manual.phtml:36 resources/views/dashboard.phtml:73
-#: resources/views/detail.phtml:102
+#: resources/views/detail.phtml:104
 msgid "Source"
 msgstr ""
 
@@ -358,7 +366,7 @@ msgstr "Keine Ergebnisse gefunden"
 msgid "Search for a source"
 msgstr "Suche nach einer Quelle"
 
-#: resources/views/create-manual.phtml:56 resources/views/dashboard.phtml:137
+#: resources/views/create-manual.phtml:56 resources/views/dashboard.phtml:139
 msgid "Media object"
 msgstr "Medienobjekt"
 
@@ -374,15 +382,15 @@ msgstr ""
 "Es werden nur Medienobjekte angezeigt, die mit der gewählten Quelle "
 "verknüpft sind."
 
-#: resources/views/create-manual.phtml:77 resources/views/detail.phtml:171
+#: resources/views/create-manual.phtml:77 resources/views/detail.phtml:173
 msgid "Primary language"
 msgstr "Primäre Sprache"
 
-#: resources/views/create-manual.phtml:91 resources/views/detail.phtml:175
+#: resources/views/create-manual.phtml:91 resources/views/detail.phtml:177
 msgid "Primary script"
 msgstr "Primäre Schriftart"
 
-#: resources/views/create-manual.phtml:105 resources/views/detail.phtml:179
+#: resources/views/create-manual.phtml:105 resources/views/detail.phtml:181
 msgid "Primary form"
 msgstr "Primäre Form"
 
@@ -418,7 +426,7 @@ msgstr ""
 msgid "Transcription provider"
 msgstr "Anbieter der Transkription"
 
-#: resources/views/dashboard.phtml:77 resources/views/detail.phtml:143
+#: resources/views/dashboard.phtml:77 resources/views/detail.phtml:145
 msgid "Status"
 msgstr "Status"
 
@@ -430,28 +438,28 @@ msgstr ""
 msgid "Actions"
 msgstr "Aktionen"
 
-#: resources/views/dashboard.phtml:126
+#: resources/views/dashboard.phtml:128
 msgid "Source record"
 msgstr "Quellendatensatz"
 
-#: resources/views/dashboard.phtml:130
+#: resources/views/dashboard.phtml:132
 msgid "Deleted"
 msgstr "Gelöscht"
 
-#: resources/views/dashboard.phtml:141 resources/views/dashboard.phtml:170
-#: resources/views/detail.phtml:159
+#: resources/views/dashboard.phtml:143 resources/views/dashboard.phtml:172
+#: resources/views/detail.phtml:161
 msgid "None"
 msgstr "Nichts"
 
-#: resources/views/dashboard.phtml:176
+#: resources/views/dashboard.phtml:178
 msgid "Open"
 msgstr "Öffnen"
 
-#: resources/views/detail.phtml:83
+#: resources/views/detail.phtml:85
 msgid "Back to dashboard"
 msgstr "Zurück zum Dashboard"
 
-#: resources/views/detail.phtml:88
+#: resources/views/detail.phtml:90
 msgid ""
 "The current webtrees NOTE is used as a working copy. Changes are only "
 "archived when saved as a new revision."
@@ -459,57 +467,63 @@ msgstr ""
 "Die aktuelle NOTE dient als Arbeitskopie. Änderungen werden erst archiviert, "
 "wenn sie als neue Revision gespeichert werden."
 
-#: resources/views/detail.phtml:93
+#: resources/views/detail.phtml:95
 msgid "Information"
 msgstr ""
 
-#: resources/views/detail.phtml:112 resources/views/detail.phtml:209
+#: resources/views/detail.phtml:114 resources/views/detail.phtml:211
 msgid "Media file"
 msgstr "Mediendatei"
 
-#: resources/views/detail.phtml:120 resources/views/detail.phtml:199
+#: resources/views/detail.phtml:122 resources/views/detail.phtml:201
 msgid "No media object selected."
 msgstr "Es wurde kein Medienobjekt ausgewählt."
 
-#: resources/views/detail.phtml:151
+#: resources/views/detail.phtml:153
 msgid "Current NOTE"
 msgstr "Aktuelle NOTE"
 
-#: resources/views/detail.phtml:193
+#: resources/views/detail.phtml:195
 msgid "Media preview"
 msgstr "Medienvorschau"
 
-#: resources/views/detail.phtml:203
+#: resources/views/detail.phtml:205
 msgid "No media files found for this media object."
 msgstr "Für dieses Medienobjekt wurden keine Mediendateien gefunden."
 
-#: resources/views/detail.phtml:236
+#: resources/views/detail.phtml:238
 msgid "This media file cannot be previewed here."
 msgstr "Diese Mediendatei kann hier nicht angezeigt werden."
 
-#: resources/views/detail.phtml:269
+#: resources/views/detail.phtml:271
 msgid "Active NOTE"
 msgstr "Aktive NOTE"
 
-#: resources/views/detail.phtml:285
+#: resources/views/detail.phtml:287
 msgid "Save NOTE"
 msgstr "Speichere NOTE"
 
-#: resources/views/detail.phtml:288
+#: resources/views/detail.phtml:290
 msgid "Archive as new revision"
 msgstr "Archivieren als neue Revision"
 
-#: resources/views/detail.phtml:299
+#: resources/views/detail.phtml:301
 msgid "Revision history"
 msgstr "Revisionshistorie"
 
-#: resources/views/detail.phtml:304
+#: resources/views/detail.phtml:306
 msgid "Current"
 msgstr "Aktuell"
 
-#: resources/views/detail.phtml:307
+#: resources/views/detail.phtml:309
 msgid "Text"
 msgstr "Text"
+
+#~ msgid "Completed"
+#~ msgstr "Abgeschlossen"
+
+#~ msgid "Archived"
+#~ msgstr "Archiviert"
 
 #~ msgid "%d transcription"
 #~ msgstr "% Transkription"

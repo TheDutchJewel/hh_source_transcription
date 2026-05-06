@@ -33,6 +33,7 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers;
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\GenerateOrUpdateNoteService;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\SaveNoteAsRevisionService;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\RevisionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
@@ -57,17 +58,8 @@ class SaveNoteAsRevisionAction implements RequestHandlerInterface
 
         if (array_key_exists('note_text', $params)) {
             $note_text = (string) $params['note_text'];
-            $repo = Registry::container()->get(TranscriptionRepository::class);
-            $gateway = Registry::container()->get(SharedNoteGateway::class);
-
-            $transcription = $repo->find($transcription_id);
-            if ($transcription !== null && $transcription->current_note_xref !== null) {
-                $gateway->updateSharedNote(
-                    $transcription->tree,
-                    $transcription->current_note_xref,
-                    $note_text
-                );
-            }
+            $service = Registry::container()->get(GenerateOrUpdateNoteService::class);
+            $service->updateNoteText($transcription_id, $note_text);
         }
 
         $service = Registry::container()->get(SaveNoteAsRevisionService::class);

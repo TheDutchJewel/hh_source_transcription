@@ -291,7 +291,6 @@ Strategically very interesting for CompGen
 ### Roadmap
 - V1.0 (actual development version)
   - test TinyMDE
-  - implement state machine and enable status "in work"
 - V1.1
   - Context display directly at the source
   - switch to Provider Factory model

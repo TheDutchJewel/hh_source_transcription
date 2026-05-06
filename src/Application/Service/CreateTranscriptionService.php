@@ -37,7 +37,7 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider\Provid
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\InteractionModel;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\RevisionOriginType;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\TranscriptionStatus;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\TranscriptionStatus;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\TranscriptionType;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\RevisionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
@@ -89,7 +89,7 @@ final class CreateTranscriptionService
                 'primary_form' => $command->primary_form,
                 'transcription_type' => TranscriptionType::TRANSCRIPTION,
                 'provider_key' => ProviderKey::MANUAL,
-                'status' => TranscriptionStatus::NEW,
+                'status' => TranscriptionStatus::NEW->value,
                 'tag_note_xref' => null,
                 'current_note_xref' => null,
                 'created_by_user_id' => $command->user_id,
