@@ -34,11 +34,11 @@ use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\I18N;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Dto\CreateTranscriptionCommand;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider\ProviderMetadata;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\InteractionModel;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\InteractionModel;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\RevisionOriginType;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\RevisionOriginType;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\TranscriptionStatus;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\TranscriptionType;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\TranscriptionType;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\RevisionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Support\HashService;
@@ -87,7 +87,7 @@ final class CreateTranscriptionService
                 'primary_language_tag' => $command->primary_language_tag,
                 'primary_script_tag' => $command->primary_script_tag,
                 'primary_form' => $command->primary_form,
-                'transcription_type' => TranscriptionType::TRANSCRIPTION,
+                'transcription_type' => TranscriptionType::TRANSCRIPTION->value,
                 'provider_key' => ProviderKey::MANUAL,
                 'status' => TranscriptionStatus::NEW->value,
                 'tag_note_xref' => null,
@@ -100,7 +100,7 @@ final class CreateTranscriptionService
                 'transcription_id' => $transcription_id,
                 'revision_no' => 1,
                 'provider_key' => ProviderKey::MANUAL,
-                'origin_type' => RevisionOriginType::MANUAL_ENTRY,
+                'origin_type' => RevisionOriginType::MANUAL_ENTRY->value,
                 'origin_reference' => null,
                 'content_format' => 'text/plain',
                 'content_text' => $command->initial_text,

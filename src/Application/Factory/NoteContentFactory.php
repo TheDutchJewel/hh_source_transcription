@@ -32,7 +32,7 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Factory;
 
 use Fisharebest\Webtrees\I18N;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\TranscriptionRevision;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\RevisionOriginType;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\RevisionOriginType;
 
 final class NoteContentFactory
 {

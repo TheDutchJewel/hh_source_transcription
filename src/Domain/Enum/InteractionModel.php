@@ -28,16 +28,16 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject;
+namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum;
 
 use Fisharebest\Webtrees\I18N;
 
-final class InteractionModel
+enum InteractionModel: string
 {
-    public const string MANUAL_DIRECT = 'manual_direct';
-    public const string AUTOMATED_ASYNC = 'automated_async';
-    public const string CROWD_ASYNC = 'crowd_async';
-    public const string INTERNAL_COLLABORATIVE = 'internal_collaborative';
+    case MANUAL_DIRECT = 'manual_direct';
+    case AUTOMATED_ASYNC = 'automated_async';
+    case CROWD_ASYNC = 'crowd_async';
+    case INTERNAL_COLLABORATIVE = 'internal_collaborative';
 
     /**
      * @return array<string,string>
@@ -45,10 +45,34 @@ final class InteractionModel
     public static function labels(): array
     {
         return [
-            self::MANUAL_DIRECT => I18N::translate('Manual (direct editing)'),
-            self::AUTOMATED_ASYNC => I18N::translate('Automated (asynchronous)'),
-            self::CROWD_ASYNC => I18N::translate('Crowd-based (asynchronous)'),
-            self::INTERNAL_COLLABORATIVE => I18N::translate('Internal collaboration'),
+            self::MANUAL_DIRECT->value           => I18N::translate('Manual (direct editing)'),
+            self::AUTOMATED_ASYNC->value         => I18N::translate('Automated (asynchronous)'),
+            self::CROWD_ASYNC->value             => I18N::translate('Crowd-based (asynchronous)'),
+            self::INTERNAL_COLLABORATIVE->value  => I18N::translate('Internal collaboration'),
         ];
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public static function label(?string $value): string
+    {
+        if ($value === null || $value === '') {
+            return I18N::translate('Interaction model not specified');
+        }
+
+        return self::labels()[$value] ?? $value;
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return bool
+     */
+    public static function isValid(?string $value): bool
+    {
+        return $value === null || $value === '' || array_key_exists($value, self::labels());
     }
 }

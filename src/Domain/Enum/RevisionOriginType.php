@@ -28,16 +28,16 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject;
+namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum;
 
 use Fisharebest\Webtrees\I18N;
 
-final class RevisionOriginType
+enum RevisionOriginType: string
 {
-    public const string MANUAL_ENTRY = 'manual_entry';
-    public const string MANUAL_NOTE_SAVE = 'manual_note_save';
-    public const string TRANSKRIBUS_IMPORT = 'transkribus_import';
-    public const string TRANSKRIBUS_SYNC = 'transkribus_sync';
+    case MANUAL_ENTRY = 'manual_entry';
+    case MANUAL_NOTE_SAVE = 'manual_note_save';
+    case TRANSKRIBUS_IMPORT = 'transkribus_import';
+    case TRANSKRIBUS_SYNC = 'transkribus_sync';
 
     /**
      * @return array<string,string>
@@ -45,10 +45,34 @@ final class RevisionOriginType
     public static function labels(): array
     {
         return [
-            self::MANUAL_ENTRY => I18N::translate('Manual entry'),
-            self::MANUAL_NOTE_SAVE => I18N::translate('Manual note save'),
-            self::TRANSKRIBUS_IMPORT => I18N::translate('Transkribus import'),
-            self::TRANSKRIBUS_SYNC => I18N::translate('Transkribus sync'),
+            self::MANUAL_ENTRY->value       => I18N::translate('Manual entry'),
+            self::MANUAL_NOTE_SAVE->value   => I18N::translate('Manual note save'),
+            self::TRANSKRIBUS_IMPORT->value => I18N::translate('Transkribus import'),
+            self::TRANSKRIBUS_SYNC->value   => I18N::translate('Transkribus sync'),
         ];
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public static function label(?string $value): string
+    {
+        if ($value === null || $value === '') {
+            return I18N::translate('Origin not specified');
+        }
+
+        return self::labels()[$value] ?? $value;
+    }
+
+    /**
+     * @param string|null $value
+     *
+     * @return bool
+     */
+    public static function isValid(?string $value): bool
+    {
+        return $value === null || $value === '' || array_key_exists($value, self::labels());
     }
 }

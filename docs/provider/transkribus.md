@@ -44,7 +44,7 @@ Scope:
 - Optional username
 
 Requirements:
-- Stored securely (encrypted if possible)
+- Stored securely (encrypted)
 - Editable via control panel page
 
 ---
@@ -136,7 +136,6 @@ If not available:
 For V1:
 
 - Only first image file in selected media object
-- Only first page in that media file
 
 ---
 
@@ -175,7 +174,7 @@ If job fails:
 
 ---
 
-#### Step 7: Cancelation
+#### Step 7: Cancellation
 
 User can:
 
@@ -203,9 +202,8 @@ Initial:
 - Multi-page support
 - Media file conversion (resize, format)
 - Output handling (PAGE XML, TEI, structured extraction)
-- Multiple Transkribus collections
+- Multiple Transkribus collections to group transcriptions
 - Model selection based on script, language, date of source
-- Integration with translation workflows
 
 ---
 

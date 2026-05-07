@@ -177,6 +177,8 @@ The module tracks which NOTE was generated from which revision and whether that 
 
 ### Manual provider
 
+Detailed documentation: [docs/provider/manual.md](docs/provider/manual.md)
+
 The manual provider supports
 
 - creating a new transcription in webtrees
@@ -188,6 +190,8 @@ The manual provider supports
 tbd
 
 ### Transkribus provider
+
+Detailed documentation: [docs/provider/transkribus.md](docs/provider/transkribus.md)
 
 The Transkribus provider supports
 

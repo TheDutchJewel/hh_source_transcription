@@ -29,7 +29,7 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider;
 
-use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\InteractionModel;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\InteractionModel;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
 
 final class ProviderMetadata
@@ -37,11 +37,11 @@ final class ProviderMetadata
     public static function interactionModel(string $provider_key): string
     {
         return match ($provider_key) {
-            ProviderKey::MANUAL => InteractionModel::MANUAL_DIRECT,
-            ProviderKey::TRANSKRIBUS => InteractionModel::AUTOMATED_ASYNC,
-            ProviderKey::DISCOURSE => InteractionModel::CROWD_ASYNC,
-            ProviderKey::INTERNAL => InteractionModel::INTERNAL_COLLABORATIVE,
-            default => InteractionModel::MANUAL_DIRECT,
+            ProviderKey::MANUAL => InteractionModel::MANUAL_DIRECT->value,
+            ProviderKey::TRANSKRIBUS => InteractionModel::AUTOMATED_ASYNC->value,
+            ProviderKey::DISCOURSE => InteractionModel::CROWD_ASYNC->value,
+            ProviderKey::INTERNAL => InteractionModel::INTERNAL_COLLABORATIVE->value,
+            default => InteractionModel::MANUAL_DIRECT->value,
         };
     }
 }

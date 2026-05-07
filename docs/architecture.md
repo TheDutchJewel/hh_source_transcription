@@ -167,12 +167,15 @@ case CANCEL = 'cancel';
 │   ├── architecture.md
 │   ├── database/
 │   │   └── schema-1.sql.txt
-│   └── images/
-│       └── ui/
-│           ├── control_panel.png
-│           ├── create_manual.png
-│           ├── dashboard.png
-│           └── details.png
+│   ├── images/
+│   │   └── ui/
+│   │       ├── control_panel.png
+│   │       ├── create_manual.png
+│   │       ├── dashboard.png
+│   │       └── details.png
+│   └── provider/
+│       ├── manual.md
+│       └── transkribus.md
 ├── resources/
 │   ├── lang/
 │   │   ├── de.mo
@@ -205,17 +208,19 @@ case CANCEL = 'cancel';
     │   │   ├── Transcription.php
     │   │   └── TranscriptionRevision.php
     │   └── ValueObject/
-    │       ├── InteractionModel.php
     │       ├── NoteStrategy.php
-    │       ├── PrimaryForm.php
-    │       ├── PrimaryLanguage.php
-    │       ├── PrimaryScript.php
     │       ├── ProviderKey.php
     │       ├── ProviderLabel.php
-    │       ├── ProviderPresentation.php
-    │       ├── RevisionOriginType.php
-    │       ├── TranscriptionStatus.php
-    │       └── TranscriptionType.php
+    │       └── ProviderPresentation.php
+    ├── Enum/
+    │   ├── InteractionModel.php
+    │   ├── PrimaryForm.php
+    │   ├── PrimaryLanguage.php
+    │   ├── PrimaryScript.php
+    │   ├── RevisionOriginType.php
+    │   ├── TranscriptionStatus.php
+    │   ├── TranscriptionTransition.php
+    │   └── TranscriptionType.php
     ├── Http/
     │   └── RequestHandlers/
     │       ├── CreateManualAction.php

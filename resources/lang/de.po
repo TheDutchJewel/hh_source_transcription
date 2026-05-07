@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SourceTranscription\n"
-"POT-Creation-Date: 2026-05-06 01:56+0200\n"
+"POT-Creation-Date: 2026-05-08 00:35+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
 "Language-Team: \n"
@@ -16,7 +16,7 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 #: src/Application/Factory/NoteContentFactory.php:46
-#: src/Domain/ValueObject/TranscriptionType.php:47
+#: src/Domain/Enum/TranscriptionType.php:47
 #: src/Http/RequestHandlers/DetailAction.php:49
 msgid "Transcription"
 msgstr "Transkription"
@@ -45,6 +45,306 @@ msgstr "Beginn der Transkription"
 msgid "End transcription"
 msgstr "Ende der Transkription"
 
+#: src/Domain/Enum/InteractionModel.php:48
+msgid "Manual (direct editing)"
+msgstr "Manuell (direktes Bearbeiten)"
+
+#: src/Domain/Enum/InteractionModel.php:49
+msgid "Automated (asynchronous)"
+msgstr "Automatisiert (asynchron)"
+
+#: src/Domain/Enum/InteractionModel.php:50
+msgid "Crowd-based (asynchronous)"
+msgstr "Crowd-basiert (asynchron)"
+
+#: src/Domain/Enum/InteractionModel.php:51
+msgid "Internal collaboration"
+msgstr "Interne Zusammenarbeit"
+
+#: src/Domain/Enum/InteractionModel.php:63
+msgid "Interaction model not specified"
+msgstr "Interaktionsmodell nicht spezifiziert"
+
+#: src/Domain/Enum/PrimaryForm.php:95
+msgid "Handwritten church register"
+msgstr "Handschriftliches Kirchenbuch"
+
+#: src/Domain/Enum/PrimaryForm.php:98
+msgid "Handwritten deed/charter"
+msgstr "Handschriftliche Urkunde"
+
+#: src/Domain/Enum/PrimaryForm.php:99
+msgid "Printed deed/charter"
+msgstr "Gedruckte Urkunde"
+
+#: src/Domain/Enum/PrimaryForm.php:102
+msgid "Handwritten letter"
+msgstr "Handschriftlicher Brief"
+
+#: src/Domain/Enum/PrimaryForm.php:105
+msgid "Printed newspaper"
+msgstr "Gedruckte Zeitung"
+
+#: src/Domain/Enum/PrimaryForm.php:106
+msgid "Printed journal/magazine"
+msgstr "Gedruckte Zeitschrift"
+
+#: src/Domain/Enum/PrimaryForm.php:107
+msgid "Printed book"
+msgstr "Gedrucktes Buch"
+
+#: src/Domain/Enum/PrimaryForm.php:110
+msgid "Memorial record / Minutes from memory"
+msgstr "Gedächtnisprotokoll"
+
+#: src/Domain/Enum/PrimaryForm.php:111
+msgid "Stenographic record"
+msgstr "Stenografisches Protokoll"
+
+#: src/Domain/Enum/PrimaryForm.php:112
+msgid "Typewritten document"
+msgstr "Maschinengeschriebenes Dokument"
+
+#: src/Domain/Enum/PrimaryForm.php:113
+msgid "Digital text document"
+msgstr "Digitales Textdokument"
+
+#: src/Domain/Enum/PrimaryForm.php:114
+msgid "Digitized manuscript"
+msgstr "Digitalisiertes Manuskript"
+
+#: src/Domain/Enum/PrimaryForm.php:117
+msgid "Annotated photograph"
+msgstr "Fotografie mit Beschriftung"
+
+#: src/Domain/Enum/PrimaryForm.php:118
+msgid "Microfilm / Microfiche"
+msgstr "Mikrofilm / Mikrofiche"
+
+#: src/Domain/Enum/PrimaryForm.php:121
+msgid "Gravestone inscription"
+msgstr "Grabinschrift"
+
+#: src/Domain/Enum/PrimaryForm.php:122
+msgid "Building inscription"
+msgstr "Gebäudeinschrift"
+
+#: src/Domain/Enum/PrimaryForm.php:125
+msgid "Audio recording"
+msgstr "Tonaufnahme (Audio)"
+
+#: src/Domain/Enum/PrimaryForm.php:126
+msgid "Video recording"
+msgstr "Filmaufnahme (Video)"
+
+#: src/Domain/Enum/PrimaryForm.php:127
+msgid "Video interview"
+msgstr "Interview als Video"
+
+#: src/Domain/Enum/PrimaryForm.php:130
+msgid "Mixed"
+msgstr "Gemischt"
+
+#: src/Domain/Enum/PrimaryForm.php:131
+msgid "Other"
+msgstr "Anderes"
+
+#: src/Domain/Enum/PrimaryForm.php:143
+msgid "Form not specified"
+msgstr "Form: keine Angabe"
+
+#: src/Domain/Enum/PrimaryLanguage.php:70
+msgid "German"
+msgstr "Deutsch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:71
+msgid "Middle High German"
+msgstr "Mittelhochdeutsch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:72
+msgid "Low German"
+msgstr "Niederdeutsch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:73
+msgid "Western Frisian"
+msgstr "Westfriesisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:74
+msgid "Latin"
+msgstr "Latein"
+
+#: src/Domain/Enum/PrimaryLanguage.php:75
+msgid "English"
+msgstr "Englisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:76
+msgid "French"
+msgstr "Französisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:77
+msgid "Old French"
+msgstr "Altfranzösisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:78
+msgid "Spanish"
+msgstr "Spanisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:79
+msgid "Russian"
+msgstr "Russisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:80
+msgid "Polish"
+msgstr "Polnisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:81
+msgid "Italian"
+msgstr "Italienisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:82
+msgid "Portuguese"
+msgstr "Portugiesisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:83
+msgid "Dutch"
+msgstr "Niederländisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:84
+msgid "Hebrew"
+msgstr "Hebräisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:85
+msgid "Yiddish"
+msgstr "Jiddisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:86
+msgid "Church Slavonic"
+msgstr "Kirchenslawisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:87
+msgid "Arabic"
+msgstr "Arabisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:88
+msgid "Swedish"
+msgstr "Schwedisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:89
+msgid "Hungarian"
+msgstr "Ungarisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:90
+msgid "Czech"
+msgstr "Tschechisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:91
+msgid "Greek"
+msgstr "Griechisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:92
+msgid "Akkadian"
+msgstr "Akkadisch"
+
+#: src/Domain/Enum/PrimaryLanguage.php:93
+msgid "Undetermined"
+msgstr "Unbestimmt"
+
+#: src/Domain/Enum/PrimaryLanguage.php:105
+msgid "Language not specified"
+msgstr "Sprache: keine Angabe"
+
+#: src/Domain/Enum/PrimaryScript.php:64
+msgid "Latin script"
+msgstr "Lateinische Schrift"
+
+#: src/Domain/Enum/PrimaryScript.php:65
+msgid "Fraktur (Latin Fraktur)"
+msgstr "Fraktur (Gebrochene Schrift)"
+
+#: src/Domain/Enum/PrimaryScript.php:66
+msgid "Cyrillic script"
+msgstr "Kyrillische Schrift"
+
+#: src/Domain/Enum/PrimaryScript.php:67
+msgid "Hebrew script"
+msgstr "Hebräische Schrift"
+
+#: src/Domain/Enum/PrimaryScript.php:68
+msgid "Arabic script"
+msgstr "Arabische Schrift"
+
+#: src/Domain/Enum/PrimaryScript.php:69
+msgid "Greek script"
+msgstr "Griechische Schriftart"
+
+#: src/Domain/Enum/PrimaryScript.php:70
+msgid "Georgian script"
+msgstr "Georgische Schrift"
+
+#: src/Domain/Enum/PrimaryScript.php:71
+msgid "Armenian script"
+msgstr "Armenische Schrift"
+
+#: src/Domain/Enum/PrimaryScript.php:72
+msgid "Glagolitic script"
+msgstr "Glagolitische Schrift"
+
+#: src/Domain/Enum/PrimaryScript.php:73
+msgid "Coptic script"
+msgstr "Koptische Schrift"
+
+#: src/Domain/Enum/PrimaryScript.php:74
+msgid "Syriac script"
+msgstr "Syrische Schrift"
+
+#: src/Domain/Enum/PrimaryScript.php:75
+msgid "Old Italic script"
+msgstr "Lateinische Kursive (Altlatein)"
+
+#: src/Domain/Enum/PrimaryScript.php:76
+msgid "Runic script"
+msgstr "Runenschrift"
+
+#: src/Domain/Enum/PrimaryScript.php:77
+msgid "Osmanya script"
+msgstr "Osmanya-Schrift"
+
+#: src/Domain/Enum/PrimaryScript.php:78
+msgid "Gujarati script"
+msgstr "Gujarati-Schrift"
+
+#: src/Domain/Enum/PrimaryScript.php:79
+msgid "Cuneiform script"
+msgstr "Keilschrift"
+
+#: src/Domain/Enum/PrimaryScript.php:80
+msgid "Unknown script"
+msgstr "Unbekannte Schriftart"
+
+#: src/Domain/Enum/PrimaryScript.php:92
+msgid "Script not specified"
+msgstr "Schriftart: keine Angabe"
+
+#: src/Domain/Enum/RevisionOriginType.php:48
+msgid "Manual entry"
+msgstr "Manuelle Eingabe"
+
+#: src/Domain/Enum/RevisionOriginType.php:49
+msgid "Manual note save"
+msgstr "Manuelle Sicherung der NOTE"
+
+#: src/Domain/Enum/RevisionOriginType.php:50
+msgid "Transkribus import"
+msgstr "Transkribus Import"
+
+#: src/Domain/Enum/RevisionOriginType.php:51
+msgid "Transkribus sync"
+msgstr "Transkribus Synchronisation"
+
+#: src/Domain/Enum/RevisionOriginType.php:63
+msgid "Origin not specified"
+msgstr "Ursprung nicht spezifiziert"
+
 #: src/Domain/Enum/TranscriptionStatus.php:61
 msgid "New"
 msgstr "Neu"
@@ -69,21 +369,17 @@ msgstr "Wiedereröffnet"
 msgid "Canceled"
 msgstr "Abgebrochen"
 
-#: src/Domain/ValueObject/InteractionModel.php:48
-msgid "Manual (direct editing)"
-msgstr "Manuell (direktes Bearbeiten)"
+#: src/Domain/Enum/TranscriptionType.php:48
+msgid "Translation"
+msgstr "Übersetzung"
 
-#: src/Domain/ValueObject/InteractionModel.php:49
-msgid "Automated (asynchronous)"
-msgstr "Automatisiert (asynchron)"
+#: src/Domain/Enum/TranscriptionType.php:49
+msgid "Normalized text"
+msgstr "Normalisierter Text"
 
-#: src/Domain/ValueObject/InteractionModel.php:50
-msgid "Crowd-based (asynchronous)"
-msgstr "Crowd-basiert (asynchron)"
-
-#: src/Domain/ValueObject/InteractionModel.php:51
-msgid "Internal collaboration"
-msgstr "Interne Zusammenarbeit"
+#: src/Domain/Enum/TranscriptionType.php:61
+msgid "Type not specified"
+msgstr "Typ nicht spezifiziert"
 
 #: src/Domain/ValueObject/NoteStrategy.php:48
 msgid "Always create a new NOTE"
@@ -96,126 +392,6 @@ msgstr "Existierende NOTE nur aktualisieren, wenn sie nicht geändert wurde"
 #: src/Domain/ValueObject/NoteStrategy.php:50
 msgid "Always update existing NOTE"
 msgstr "Existierende NOTE immer aktualisieren"
-
-#: src/Domain/ValueObject/PrimaryForm.php:57
-msgid "Handwritten Kurrent"
-msgstr "Handschriftliches Kurrent"
-
-#: src/Domain/ValueObject/PrimaryForm.php:58
-msgid "Handwritten Sütterlin"
-msgstr "Handschriftliches Sütterlin"
-
-#: src/Domain/ValueObject/PrimaryForm.php:59
-msgid "Handwritten Latin script"
-msgstr "Handschriftliche lateinische Schrift"
-
-#: src/Domain/ValueObject/PrimaryForm.php:60
-msgid "Printed Fraktur"
-msgstr "Gedruckte Fraktur"
-
-#: src/Domain/ValueObject/PrimaryForm.php:61
-msgid "Printed Antiqua"
-msgstr "Gedruckte Antiqua"
-
-#: src/Domain/ValueObject/PrimaryForm.php:62
-msgid "Inscription on gravestone"
-msgstr "Grabsteininschrift"
-
-#: src/Domain/ValueObject/PrimaryForm.php:63
-msgid "Audio interview"
-msgstr "Ton - Interview"
-
-#: src/Domain/ValueObject/PrimaryForm.php:64
-msgid "Audio lecture"
-msgstr "Ton - Vortrag"
-
-#: src/Domain/ValueObject/PrimaryForm.php:65
-msgid "Video interview"
-msgstr "Video - Interview"
-
-#: src/Domain/ValueObject/PrimaryForm.php:66
-msgid "Video lecture"
-msgstr "Video - Vortrag"
-
-#: src/Domain/ValueObject/PrimaryForm.php:67
-msgid "Mixed"
-msgstr "Gemischt"
-
-#: src/Domain/ValueObject/PrimaryForm.php:68
-msgid "Other"
-msgstr "Anderes"
-
-#: src/Domain/ValueObject/PrimaryForm.php:69
-msgid "Unknown"
-msgstr "Unbekannt"
-
-#: src/Domain/ValueObject/PrimaryForm.php:76
-msgid "Form not specified"
-msgstr "Form: keine Angabe"
-
-#: src/Domain/ValueObject/PrimaryLanguage.php:52
-msgid "German"
-msgstr "Deutsch"
-
-#: src/Domain/ValueObject/PrimaryLanguage.php:53
-msgid "Low German"
-msgstr "Niederdeutsch"
-
-#: src/Domain/ValueObject/PrimaryLanguage.php:54
-msgid "Western Frisian"
-msgstr "Westfriesisch"
-
-#: src/Domain/ValueObject/PrimaryLanguage.php:55
-msgid "Latin"
-msgstr "Latein"
-
-#: src/Domain/ValueObject/PrimaryLanguage.php:56
-msgid "English"
-msgstr "Englisch"
-
-#: src/Domain/ValueObject/PrimaryLanguage.php:57
-msgid "French"
-msgstr "Französisch"
-
-#: src/Domain/ValueObject/PrimaryLanguage.php:58
-msgid "Dutch"
-msgstr "Niederländisch"
-
-#: src/Domain/ValueObject/PrimaryLanguage.php:59
-msgid "Undetermined"
-msgstr "Unbestimmt"
-
-#: src/Domain/ValueObject/PrimaryLanguage.php:66
-msgid "Language not specified"
-msgstr "Sprache: keine Angabe"
-
-#: src/Domain/ValueObject/PrimaryScript.php:51
-msgid "Latin script"
-msgstr "Lateinische Schriftart"
-
-#: src/Domain/ValueObject/PrimaryScript.php:52
-msgid "Latin script, Fraktur variant"
-msgstr "Lateinische Schriftart, Variante Fraktur"
-
-#: src/Domain/ValueObject/PrimaryScript.php:53
-msgid "Cyrillic script"
-msgstr "Kyrillische Schriftart"
-
-#: src/Domain/ValueObject/PrimaryScript.php:54
-msgid "Greek script"
-msgstr "Griechische Schriftart"
-
-#: src/Domain/ValueObject/PrimaryScript.php:55
-msgid "Hebrew script"
-msgstr "Hebräische Schriftart"
-
-#: src/Domain/ValueObject/PrimaryScript.php:56
-msgid "Unknown script"
-msgstr "Unbekannte Schriftart"
-
-#: src/Domain/ValueObject/PrimaryScript.php:63
-msgid "Script not specified"
-msgstr "Schriftart: keine Angabe"
 
 #: src/Domain/ValueObject/ProviderLabel.php:47
 #: src/Domain/ValueObject/ProviderLabel.php:56
@@ -241,36 +417,12 @@ msgstr "Manuelle Transkription in dieser webtrees-Installation"
 msgid "Community discussion on Discourse"
 msgstr "Lesehilfe in Discourse"
 
-#: src/Domain/ValueObject/RevisionOriginType.php:48
-msgid "Manual entry"
-msgstr "Manuelle Eingabe"
-
-#: src/Domain/ValueObject/RevisionOriginType.php:49
-msgid "Manual note save"
-msgstr "Manuelle Sicherung der NOTE"
-
-#: src/Domain/ValueObject/RevisionOriginType.php:50
-msgid "Transkribus import"
-msgstr "Transkribus Import"
-
-#: src/Domain/ValueObject/RevisionOriginType.php:51
-msgid "Transkribus sync"
-msgstr "Transkribus Synchronisation"
-
-#: src/Domain/ValueObject/TranscriptionType.php:48
-msgid "Translation"
-msgstr "Übersetzung"
-
-#: src/Domain/ValueObject/TranscriptionType.php:49
-msgid "Normalized text"
-msgstr "Normalisierter Text"
-
 #: src/Http/RequestHandlers/CreateManualAction.php:46
 msgid "Create manual transcription"
 msgstr "Start einer manuellen Transkription"
 
 #: src/Http/RequestHandlers/DashboardAction.php:47
-#: src/SourceTranscription.php:409
+#: src/SourceTranscription.php:414
 msgid "Transcriptions"
 msgstr "Transkriptionen"
 
@@ -299,21 +451,21 @@ msgstr "Die NOTE wurde aktualisiert."
 msgid "First transcription provider available: manual transcription."
 msgstr "Erster Transkriptionsanbieter verfügbar: manuelle Transkription."
 
-#: src/SourceTranscription.php:241
+#: src/SourceTranscription.php:242
 msgid "What's new?"
 msgstr "Was gibt es Neues?"
 
-#: src/SourceTranscription.php:319
+#: src/SourceTranscription.php:324
 msgid "Source Transcription"
 msgstr "Transkription von Quellen"
 
-#: src/SourceTranscription.php:331
+#: src/SourceTranscription.php:336
 msgid "Manage source transcriptions with manual and provider-based workflows."
 msgstr ""
 "Verwaltung von Quellen-Transkriptionen mit einem manuellen oder Anbieter-"
 "Arbeitsablauf."
 
-#: src/SourceTranscription.php:518
+#: src/SourceTranscription.php:523
 #, php-format
 msgid "The preferences for the module “%s” have been updated."
 msgstr ""
@@ -518,6 +670,24 @@ msgstr "Aktuell"
 #: resources/views/detail.phtml:309
 msgid "Text"
 msgstr "Text"
+
+#~ msgid "Handwritten Latin script"
+#~ msgstr "Handschriftliche lateinische Schrift"
+
+#~ msgid "Printed Antiqua"
+#~ msgstr "Gedruckte Antiqua"
+
+#~ msgid "Inscription on gravestone"
+#~ msgstr "Grabsteininschrift"
+
+#~ msgid "Audio interview"
+#~ msgstr "Ton - Interview"
+
+#~ msgid "Unknown"
+#~ msgstr "Unbekannt"
+
+#~ msgid "Latin script, Fraktur variant"
+#~ msgstr "Lateinische Schriftart, Variante Fraktur"
 
 #~ msgid "Completed"
 #~ msgstr "Abgeschlossen"

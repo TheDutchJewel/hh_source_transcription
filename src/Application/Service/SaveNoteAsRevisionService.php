@@ -31,7 +31,7 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service;
 
 use Fisharebest\Webtrees\DB;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\RevisionOriginType;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\RevisionOriginType;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\NoteLinkRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\RevisionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
@@ -95,7 +95,7 @@ final class SaveNoteAsRevisionService
                 'transcription_id' => $transcription->id,
                 'revision_no' => $revision_no,
                 'provider_key' => ProviderKey::MANUAL,
-                'origin_type' => RevisionOriginType::MANUAL_NOTE_SAVE,
+                'origin_type' => RevisionOriginType::MANUAL_NOTE_SAVE->value,
                 'origin_reference' => $transcription->current_note_xref,
                 'content_format' => 'text/plain',
                 'content_text' => $note_text,

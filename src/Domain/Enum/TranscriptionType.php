@@ -28,19 +28,15 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject;
+namespace Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum;
 
 use Fisharebest\Webtrees\I18N;
 
-final class PrimaryScript
+enum TranscriptionType: string
 {
-    public const string LATIN = 'Latn';
-    public const string LATIN_FRAKTUR = 'Latf';
-    public const string CYRILLIC = 'Cyrl';
-    public const string GREEK = 'Grek';
-    public const string HEBREW = 'Hebr';
-
-    public const string UNKNOWN = '?';
+    case TRANSCRIPTION = 'transcription';
+    case TRANSLATION = 'translation';
+    case NORMALIZED_TEXT = 'normalized_text';
 
     /**
      * @return array<string,string>
@@ -48,26 +44,33 @@ final class PrimaryScript
     public static function labels(): array
     {
         return [
-            self::LATIN => I18N::translate('Latin script'),
-            self::LATIN_FRAKTUR => I18N::translate('Latin script, Fraktur variant'),
-            self::CYRILLIC => I18N::translate('Cyrillic script'),
-            self::GREEK => I18N::translate('Greek script'),
-            self::HEBREW => I18N::translate('Hebrew script'),
-            self::UNKNOWN => I18N::translate('Unknown script'),
+            self::TRANSCRIPTION->value   => I18N::translate('Transcription'),
+            self::TRANSLATION->value     => I18N::translate('Translation'),
+            self::NORMALIZED_TEXT->value => I18N::translate('Normalized text'),
         ];
     }
 
-    public static function label(?string $tag): string
+    /**
+     * @param string|null $value
+     *
+     * @return string
+     */
+    public static function label(?string $value): string
     {
-        if ($tag === null || $tag === '') {
-            return I18N::translate('Script not specified');
+        if ($value === null || $value === '') {
+            return I18N::translate('Type not specified');
         }
 
-        return self::labels()[$tag] ?? $tag;
+        return self::labels()[$value] ?? $value;
     }
 
-    public static function isValid(?string $tag): bool
+    /**
+     * @param string|null $value
+     *
+     * @return bool
+     */
+    public static function isValid(?string $value): bool
     {
-        return $tag === null || $tag === '' || array_key_exists($tag, self::labels());
+        return $value === null || $value === '' || array_key_exists($value, self::labels());
     }
 }

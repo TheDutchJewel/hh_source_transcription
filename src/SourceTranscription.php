@@ -52,6 +52,7 @@ use Psr\{Container\ContainerExceptionInterface,
     Container\NotFoundExceptionInterface,
     Http\Message\ResponseInterface,
     Http\Message\ServerRequestInterface};
+use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
 use Hartenthaler\{Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\SettingsRepository,
     Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Schema\SchemaManager,
     Webtrees\Module\SourceTranscription\Domain\ValueObject\NoteStrategy,
@@ -261,20 +262,24 @@ final class SourceTranscription extends AbstractModule implements
         $settingsRepository->set(self::DEFAULT_TAG_TEXT, self::DEFAULT_TAG);
         $settingsRepository->set(self::TINY_MDE, 'enabled');
         $settingsRepository->set(self::TAGGING_SUPPORT, 'enabled');
-        $settingsRepository->set(self::WHATS_NEW, "");
     }
 
+    /**
+     * @return void
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     private function enableTinyMde(): void
     {
         $class = "Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\MarkdownEditorActivationService";
         if (Registry::container()->has($class)) {
-            /** @var Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService $mde_service */
+            /** @var MarkdownEditorActivationService $mde_service */
             $mde_service = Registry::container()->get($class);
             //if (!$mde_service->getCustomRule(self::CUSTOM_TITLE)) { // why was that condition suggested by bschwend ?
                 $mde_service->setCustomRule(
                     self::CUSTOM_TITLE,  // module name as key
                     ["source-transcription-detail", "source-transcription-create-manual"], // handler: usually the short class name / last part of the route name - see js console with enabled debug info
-                    ["textarea[id$='_text']"] // filter: querySelector filter expressions; here: textarea id ends with "_text"
+                    ["textarea[id='initial_text']"] // filter: querySelector filter expressions; here: textarea id ends with "_text"
                 );
             //}
         }
