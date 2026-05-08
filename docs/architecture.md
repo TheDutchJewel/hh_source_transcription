@@ -37,7 +37,7 @@ NOTE (new working state)
 
 ## Data Model
 
-An overview of the database schema can be found in [docs/database/schema-1.sql.txt](database/schema-1.sql.txt).
+An overview of the current database schema can be found in [docs/database/schema-2.sql.txt](database/schema-2.sql.txt).
 
 ### transcription_requests (planned)
 id  
@@ -76,7 +76,7 @@ interaction_model = crowd_async
 
 Manual:
 1. Create transcription  
-2. Create NOTE  
+2. Create NOTE and link it to the selected media object  
 3. Edit NOTE  
 4. Save as revision  
 
@@ -95,16 +95,16 @@ Crowd:
 - **CreateTranscriptionService**: Initialisiert eine neue Transkription für eine Quelle und ein Medienobjekt.
 - **GetTranscriptionDetailService**: Lädt die vollständigen Daten einer Transkription inklusive Metadaten und Revisionshistorie.
 - **SaveNoteAsRevisionService**: Erstellt einen Snapshot des aktuellen NOTE-Inhalts als unveränderliche Revision.
-- **GenerateOrUpdateNoteService**: Synchronisiert den Inhalt einer webtrees NOTE mit den Daten aus dem Modul.
-- **EnsureTagNoteService**: Stellt sicher, dass das entsprechende webtrees-Tag (NOTE) für die Verknüpfung existiert.
+- **GenerateOrUpdateNoteService**: Synchronisiert den Inhalt einer webtrees NOTE mit den Daten aus dem Modul und verknüpft die NOTE primär mit dem ausgewählten Medienobjekt. Ohne Medienobjekt wird die Quelle als Fallback verwendet.
+- **EnsureTagNoteService**: Stellt sicher, dass das entsprechende webtrees-Tag (NOTE) für die Verknüpfung existiert und demselben Ziel wie die Transkription zugeordnet ist.
 
 ---
 
 ## Gateways
 
-- **SharedNoteGateway**: Abstraktionsschicht für den Zugriff auf webtrees NOTE-Datensätze (Shared Notes).
-- **SourceGateway**: Ermöglicht den Zugriff auf webtrees Quellen (SOURce-Records) und deren Struktur.
-- **MediaFileGateway**: Dient zum Abrufen von Informationen über Medienobjekte, die mit Quellen verknüpft sind.
+- **SharedNoteGateway**: Abstraktionsschicht für den Zugriff auf webtrees NOTE-Datensätze (Shared Notes). NOTE-Datensätze werden über webtrees-Record-APIs erzeugt und aktualisiert, damit CHAN-Daten, Pending Changes und interne Links korrekt entstehen.
+- **SourceGateway**: Ermöglicht den Zugriff auf webtrees Quellen (SOURce-Records), deren Struktur und den Fallback-Link einer NOTE zur Quelle.
+- **MediaObjectGateway**: Dient zum Abrufen von Informationen über Medienobjekte (Sichtbarkeit) und deren Mediendateien (Metadaten) sowie zum primären Verknüpfen von NOTEs mit OBJE-Datensätzen.
 
 ---
 
@@ -113,7 +113,7 @@ Crowd:
 ### Pages
 - **Dashboard**: Zentrale Übersicht über alle vorhandenen Transkriptionen.
 - **Create**: Interface zur manuellen Erstellung einer Transkription (Auswahl von Quelle und Medium).
-- **Detail**: Die Hauptarbeitsansicht. Enthält den Text-Editor für die aktuelle NOTE, zeigt das verknüpfte Medium an und listet die Revisionshistorie auf.
+- **Detail**: Die Hauptarbeitsansicht. Enthält den Text-Editor für die aktuelle NOTE, zeigt das verknüpfte Medium an und listet die Revisionshistorie inklusive erzeugter NOTE und protokollierter NOTE-Änderung auf.
 
 ### Actions / API
 - **UpdateCurrentNoteAction**: Speichert den aktuellen Text des Editors in der webtrees NOTE.
@@ -166,7 +166,8 @@ case CANCEL = 'cancel';
 ├── docs/
 │   ├── architecture.md
 │   ├── database/
-│   │   └── schema-1.sql.txt
+│   │   ├── schema-1.sql.txt
+│   │   └── schema-2.sql.txt
 │   ├── images/
 │   │   └── ui/
 │   │       ├── control_panel.png
@@ -238,10 +239,11 @@ case CANCEL = 'cancel';
     │   │   │   ├── SettingsRepository.php
     │   │   │   └── TranscriptionRepository.php
     │   │   └── Schema/
-    │   │       ├── Migration0.php
-    │   │       └── SchemaManager.php
+│   │       ├── Migration0.php
+│   │       ├── Migration1.php
+│   │       └── SchemaManager.php
     │   ├── Webtrees/
-    │   │   ├── MediaFileGateway.php
+    │   │   ├── MediaObjectGateway.php
     │   │   ├── SharedNoteGateway.php
     │   │   └── SourceGateway.php
     │   └── WhatsNew/
@@ -256,5 +258,5 @@ case CANCEL = 'cancel';
 
 ## Known Limitations
 
-- Direct GEDCOM updates  
-- No permission checks
+- Permission checks are still implemented at the UI/action level and should be reviewed before production use.
+- Existing data created by earlier development versions may still contain old NOTE links to sources until the affected transcription or tag NOTE is saved again.

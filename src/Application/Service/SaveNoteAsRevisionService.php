@@ -107,6 +107,10 @@ final class SaveNoteAsRevisionService
             ]);
 
             $this->revisionRepository->markCurrent($transcription->id, $revision_id);
+            $this->revisionRepository->recordGeneratedNoteChange(
+                $revision_id,
+                $transcription->current_note_xref
+            );
 
             $this->noteLinkRepository->createLink([
                 'transcription_id' => $transcription->id,

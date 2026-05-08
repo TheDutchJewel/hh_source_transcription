@@ -33,6 +33,7 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository;
 
+use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\DB;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\TranscriptionRevision;
 
@@ -97,6 +98,18 @@ final class RevisionRepository
         });
     }
 
+    public function recordGeneratedNoteChange(int $revision_id, string $note_xref): void
+    {
+        DB::table(self::TABLE)
+            ->where('id', '=', $revision_id)
+            ->update([
+                'generated_note_xref' => $note_xref,
+                'generated_note_changed_by_user_id' => Auth::id(),
+                'generated_note_changed_by_user_name' => Auth::user()->userName(),
+                'generated_note_changed_at' => date('Y-m-d H:i:s'),
+            ]);
+    }
+
     private function map(object $row): TranscriptionRevision
     {
         return new TranscriptionRevision(
@@ -111,6 +124,9 @@ final class RevisionRepository
             content_hash: (string)$row->content_hash,
             created_by_user_id: (int)$row->created_by_user_id,
             generated_note_xref: $row->generated_note_xref !== null ? (string)$row->generated_note_xref : null,
+            generated_note_changed_by_user_id: isset($row->generated_note_changed_by_user_id) && $row->generated_note_changed_by_user_id !== null ? (int)$row->generated_note_changed_by_user_id : null,
+            generated_note_changed_by_user_name: isset($row->generated_note_changed_by_user_name) && $row->generated_note_changed_by_user_name !== null ? (string)$row->generated_note_changed_by_user_name : null,
+            generated_note_changed_at: isset($row->generated_note_changed_at) && $row->generated_note_changed_at !== null ? (string)$row->generated_note_changed_at : null,
             is_current_revision: (bool)$row->is_current_revision,
         );
     }

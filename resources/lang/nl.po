@@ -5,14 +5,14 @@ msgstr ""
 "PO-Revision-Date: \n"
 "Last-Translator: TheDutchJewel <thedutchjewel@gmail.com>\n"
 "Language-Team: \n"
-"Language: de\n"
+"Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.9\n"
 "X-Poedit-Basepath: ../..\n"
-"X-Poedit-KeywordsList: translate\n"
+"X-Poedit-KeywordsList: translate;noop;plural:1,2;translateContext:2,1c\n"
 "X-Poedit-SearchPath-0: .\n"
 
 msgid "Transcription"
@@ -32,6 +32,9 @@ msgstr "Oorsprong"
 
 msgid "Begin transcription"
 msgstr "Begin transcriptie"
+
+msgid "Transcription text"
+msgstr ""
 
 msgid "End transcription"
 msgstr "Einde transcriptie"
@@ -472,11 +475,21 @@ msgstr "Mediavoorvertoning"
 msgid "No media files found for this media object."
 msgstr "Geen mediabestanden gevonden voor dit mediaobject."
 
+msgid "Media file"
+msgid_plural "Media files"
+msgstr[0] "Mediabestand"
+msgstr[1] "Mediabestanden"
+
+msgctxt "Label for selecting one media file"
+msgid "Media file"
+msgstr "Mediabestand"
+
+msgctxt "Heading for one media file in a generated note"
+msgid "Media file"
+msgstr "Mediabestand"
+
 msgid "This media file cannot be previewed here."
 msgstr "Van dit mediabestand kan geen voorbeeld worden bekeken."
-
-msgid "Active NOTE"
-msgstr "Actieve NOTE"
 
 msgid "Save NOTE"
 msgstr "Opslaan NOTE"
@@ -489,6 +502,12 @@ msgstr "Revisiegeschiedenis"
 
 msgid "Current"
 msgstr "Huidig"
+
+msgid "Generated NOTE"
+msgstr ""
+
+msgid "NOTE change"
+msgstr ""
 
 msgid "Text"
 msgstr "Tekst"

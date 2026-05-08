@@ -34,15 +34,15 @@ use Fisharebest\Webtrees\Tree;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\RevisionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SharedNoteGateway;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\MediaFileGateway;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\MediaObjectGateway;
 
 final class GetTranscriptionDetailService
 {
     public function __construct(
         private readonly TranscriptionRepository $transcriptionRepository,
-        private readonly RevisionRepository $revisionRepository,
-        private readonly SharedNoteGateway $sharedNoteGateway,
-        private readonly MediaFileGateway $mediaFileGateway,
+        private readonly RevisionRepository      $revisionRepository,
+        private readonly SharedNoteGateway       $sharedNoteGateway,
+        private readonly MediaObjectGateway      $mediaObjectGateway,
     ) {
     }
 
@@ -61,11 +61,16 @@ final class GetTranscriptionDetailService
         );
 
         $media_object = null;
+        $media_restriction = '';
         if ($transcription->media_xref !== null) {
             $media_object = Registry::mediaFactory()->make(
                 $transcription->media_xref,
                 $transcription->tree
             );
+
+            if ($media_object !== null) {
+                $media_restriction = $this->mediaObjectGateway->restriction($media_object);
+            }
         }
 
         if ($transcription->current_note_xref !== null) {
@@ -75,7 +80,7 @@ final class GetTranscriptionDetailService
             );
         }
         $media_files = $media_object !== null
-            ? $this->mediaFileGateway->files($media_object)
+            ? $this->mediaObjectGateway->files($media_object)
             : [];
 
         return [
@@ -84,6 +89,7 @@ final class GetTranscriptionDetailService
             'note_text' => $note_text,
             'source' => $source,
             'media_object' => $media_object,
+            'media_restriction' => $media_restriction,
             'media_files' => $media_files,
         ];
     }

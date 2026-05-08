@@ -49,10 +49,11 @@ like Transkribus, Discourse, and AI tools.
 The module links transcriptions to
 
 - a **source** (`SOUR`)
-- optionally a specific **media object** (`OBJE`) attached to a source
+- usually a specific **media object** (`OBJE`) attached to a source
 
 The media object contains a media file with one or more pages of images (jpg, pdf, tiff, ...)
 or a media file with a single audio or video file (mp3, ...).
+If no media object exists or none is selected, the transcription can be attached directly to the source.
 
 A transcription is not just a note.  
 It is treated as a structured object with
@@ -61,7 +62,7 @@ It is treated as a structured object with
 - a provider
 - a status
 - a revision history
-- a current working note in **webtrees** (`SOUR:NOTE` or `SOUR:OBJE:NOTE`)
+- a current working shared NOTE in **webtrees**, linked to `OBJE` if a media object is selected, otherwise to `SOUR`
 
 <a name="Main"></a>
 ## Main ideas
@@ -111,7 +112,7 @@ This means that revisions remain stable even if the associated webtrees note is 
 
 ### 3. webtrees NOTE as working copy
 
-The module can generate or update a shared NOTE linked to the source.
+The module can generate or update a shared NOTE linked to the selected transcription target.
 This NOTE is the current working version shown and edited in webtrees.
 Only that NOTE is exported via GEDCOM.
 
@@ -121,25 +122,21 @@ Important
 - the revision history is stored separately in database tables
 - the NOTE may be edited manually by users
 - edited notes can optionally be saved as new manual revisions
+- NOTE records are created and updated through webtrees record APIs, so CHAN data, pending changes, and reverse links are handled by webtrees
+- generated NOTE metadata is also stored in the module revision table
 
 #### Structure of NOTE
-```text
-  Transcription
-  Title: Test
-  Revision: 1
-  Provider: manual
-  Origin: manual_entry
-  --- Begin transcription ---
-  ...
-  --- End transcription ---
-```
+The generated NOTE uses a compact Markdown structure with translated labels. It includes the transcription title, source, provider, language/script/form metadata, the selected media object, and a section for each media file when multiple files exist. Revision numbers are not written into the NOTE body.
+
 If the custom modul [linkenhancer](https://codeberg.org/bschwede/linkenhancer) is installed, the advanced editor TinyMDE is used.
 
-### 4. Tagging of sources
+### 4. Tagging of transcription targets
 
-Sources with at least one transcription can be marked by an additional shared NOTE, such as:
+Records with at least one transcription can be marked by an additional shared NOTE, such as:
 
 `TAG: Transcription`
+
+The tag NOTE is linked to the selected media object when available. If no media object is selected, it is linked to the source.
 
 This supports genealogical workflow management and filtering.
 
@@ -168,6 +165,7 @@ Typical properties
 ### Revision
 
 A revision is a specific text state of a transcription.
+The revision table also stores the generated NOTE XREF and the user/time information from the most recent NOTE generation or update.
 
 ### Note link
 
@@ -203,7 +201,7 @@ The Transkribus provider supports
 <a name="Database"></a>
 ## Database schema
 
-The module uses an explicit schema version to allow future migrations.
+The module uses an explicit schema version to allow future migrations. The current schema is documented in [docs/database/schema-2.sql.txt](docs/database/schema-2.sql.txt).
 
 <a name="Design"></a>
 ## Design principles
@@ -258,15 +256,13 @@ The first implementation goal is
 - schema installation and migration support (done)
 - revision storage (done)
 - note generation (done)
-- tagging of sources (done)
+- tagging of media objects or sources (done)
 - UI for manual provider (work in progress)
 
 ### Current limitations
-There are no permissions of the user checked yet.
+Permission checks are currently handled in the UI and request handlers. They should be reviewed before production use.
 
-The current implementation directly updates GEDCOM records in database tables.
-This may not update all webtrees reverse-reference indexes immediately.
-This will be replaced by a webtrees-compliant record update mechanism.
+Older development data may still contain NOTE links at the source that are moved to the selected media object only after the affected transcription or tag NOTE is saved again.
 
 ### Implementation of provider candidates by priority
 
@@ -293,34 +289,47 @@ Strategically very interesting for CompGen
 - Very flexible, but privacy, costs, prompting, and reproducibility must be properly resolved
 
 ### Roadmap
-- V1.0 (actual development version)
-  - test TinyMDE
-- V1.1
-  - Context display directly at the source
+- V1.0 (development done; only tests are open)
+  - Bestehende ältere Testdaten: alte NOTE-Links an SOUR werden beim erneuten Speichern korrekt nach OBJE verschoben.
+  - Rechteprüfung aus Nutzersicht: Admin, Editor, Member, Gast.
+  - Test Zugriffsrechte: Darstellung der NOTE für Member
+
+- V1.1 (actual development version)
+  - Feedback-getriebene UI-Glättung nach V1.0-Test
   - switch to Provider Factory model
-  - new information: who edited what when (in database tables and as CHAN tag in NOTE)
-  - Dashboard shows small thumbnail for media files
+  - Context display directly at the source
+  - TinyMDE einsetzbar machen
+  - Diagnose-/Statusanzeige im Adminbereich: Schema-Version, erkannte linkenhancer/TinyMDE-Verfügbarkeit, Markdown-Status je Tree.
+  
 - V1.2
   - Media Viewer (incl. audio/video) supporting Zoom
+
+- V1.3
   - Dashboard: sort table (title, status, provider_key, created_at / updated_at); pagination; filter (status/, provider)
   - Diff Revision
   - Restore Revision
+  - Eine Funktion oder Admin-Aktion zur Konsistenzprüfung: Transkription hat aktuelle NOTE, NOTE ist korrekt an OBJE/SOUR verlinkt, Revisionsdaten zeigen auf existierende NOTE.
   - add status "review" and "final" (per button)
-  - use rights of active user
-- V1.3
+
+- V1.4
   - webtrees internal collaboration
   - backup/restore of database tables
+  - update screenshots in README.md
   - first GitHub release version
-- V1.4
-  - Discourse integration
+
 - V1.5
-  - Transkribus integration
+  - Discourse integration
+
 - V1.6
+  - Transkribus integration
+
+- V1.7
   - test concept
   - File import
   - use metadata in TIFF, PDF, JPEG, PNG, and WebP (XMP/IPTC) like dc:language
   - store metadata in source images (EXIF/XMP)
   - delete transcriptions (manual as user or as admin for sources that are no longer linked to a source media object)
+
 - V2
   - support for transliteration (and diplomatic transcription and modern transcription)
   - virtual keyboard for manual transliteration (supporting special Latf charcaters)
@@ -329,12 +338,14 @@ Strategically very interesting for CompGen
   - full text search in all transcriptions and revisions
   - templates as plugins for vital records (Personenstandsurkunden)
   - templates for census as a replacement for the core census module
+
 - V3
   - Named Entity Recognition
   - Findings and interpretation
   - Position specifications in the source image / audio file
   - Uncertainty markers
   - TEI as new output format
+  
 - New custom module
   - Derivation of claims from the source following the Genealogical Proof Standard (GPS)
   - assisted workflow to link or generate GEDCOM records (INDI, FAM, _LOC, ...)
@@ -429,6 +440,8 @@ There are the following translations available
 - English by @Hartenthaler
 - German by @Hartenthaler
 - Dutch by @TheDutchJewel
+- Spanish template
+- Catalan template
 
 <a name="Support"></a>
 ## Support

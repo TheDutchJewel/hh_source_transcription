@@ -26,89 +26,78 @@
  * A webtrees (https://webtrees.net) 2.2 custom module to transcribe sources
  */
 
-//tbd: support for pending changes
-//tbd: XREF nicht von Hand erzeugen, sondern webtrees-Funktion nutzen
-//tbd: NOTE record nicht von Hand erzeugen, sondern Standardfunktion nutzen
-//tbd: NOTE:CHAN:... erzeugen
-
 declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees;
 
-use Fisharebest\Webtrees\DB;
-use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
+use RuntimeException;
 
 final class SharedNoteGateway
 {
     public function createSharedNote(Tree $tree, string $text): string
     {
-        for ($attempt = 0; $attempt < 20; $attempt++) {
-            $xref = $this->newModuleNoteXref();
+        $record = $tree->createRecord($this->buildNewNoteGedcom($text));
 
-            if ($this->xrefExists($tree, $xref)) {
-                continue;
-            }
-
-            DB::table('other')->insert([
-                'o_file'   => $tree->id(),
-                'o_type'   => 'NOTE',
-                'o_id'     => $xref,
-                'o_gedcom' => $this->buildNoteGedcom($xref, $text),
-            ]);
-
-            return $xref;
-        }
-
-        throw new \RuntimeException('Could not create a unique shared NOTE XREF.');
-    }
-
-    private function newModuleNoteXref(): string
-    {
-        return 'STN' . strtoupper(bin2hex(random_bytes(8)));
+        return $record->xref();
     }
 
     public function readSharedNote(Tree $tree, string $note_xref): ?string
     {
-        $gedcom = DB::table('other')
-            ->where('o_file', '=', $tree->id())
-            ->where('o_type', '=', 'NOTE')
-            ->where('o_id', '=', $note_xref)
-            ->value('o_gedcom');
+        $note = Registry::noteFactory()->make($note_xref, $tree);
 
-        return $gedcom === null ? null : $this->extractNoteText((string)$gedcom);
+        return $note === null ? null : $this->extractNoteText($note->gedcom());
     }
 
     public function updateSharedNote(Tree $tree, string $note_xref, string $text): void
     {
-        DB::table('other')
-            ->where('o_file', '=', $tree->id())
-            ->where('o_type', '=', 'NOTE')
-            ->where('o_id', '=', $note_xref)
-            ->update([
-                'o_gedcom' => $this->buildNoteGedcom($note_xref, $text),
-            ]);
+        $note = Registry::noteFactory()->make($note_xref, $tree);
+
+        if ($note === null) {
+            throw new RuntimeException('Shared NOTE not found: ' . $note_xref);
+        }
+
+        $note->updateRecord(
+            $this->replaceNoteText($note->gedcom(), $note_xref, $text),
+            true
+        );
     }
 
-    public function buildNoteGedcom(string $xref, string $text): string
+    public function buildNewNoteGedcom(string $text): string
     {
-        $text = trim($text);
+        return $this->buildNoteGedcom('@@', $text);
+    }
 
-        // Single-line NOTE, e.g.
-        // 0 @N123@ NOTE TAG: Transcription
-        if (!str_contains($text, "\n") && !str_contains($text, "\r")) {
-            return '0 @' . $xref . '@ NOTE ' . $text;
+    private function replaceNoteText(string $gedcom, string $xref, string $text): string
+    {
+        $replacement = str_replace(['\\', '$'], ['\\\\', '\\$'], $this->buildNoteGedcom('@' . $xref . '@', $text));
+
+        $count = 0;
+        $updated = preg_replace(
+            '/^0 @' . preg_quote($xref, '/') . '@ NOTE.*(?:\n1 (?:CONT|CONC).*)*/u',
+            $replacement,
+            $gedcom,
+            1,
+            $count
+        );
+
+        if ($updated === null || $count === 0) {
+            throw new RuntimeException('Could not update shared NOTE text: ' . $xref);
         }
 
-        $lines = preg_split('/\R/u', $text) ?: [];
+        return $updated;
+    }
 
-        $gedcom = '0 @' . $xref . '@ NOTE';
+    private function buildNoteGedcom(string $xref, string $text): string
+    {
+        $text = trim(Registry::elementFactory()->make('NOTE:CONT')->canonical($text));
 
-        foreach ($lines as $line) {
-            $gedcom .= PHP_EOL . '1 CONT ' . $line;
+        if ($text === '') {
+            return '0 ' . $xref . ' NOTE';
         }
 
-        return $gedcom;
+        return '0 ' . $xref . ' NOTE ' . strtr($text, ["\n" => "\n1 CONT "]);
     }
 
     private function extractNoteText(string $gedcom): string
@@ -149,13 +138,5 @@ final class SharedNoteGateway
         }
 
         return '';
-    }
-
-    private function xrefExists(Tree $tree, string $xref): bool
-    {
-        return DB::table('other')
-            ->where('o_file', '=', $tree->id())
-            ->where('o_id', '=', $xref)
-            ->exists();
     }
 }

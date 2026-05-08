@@ -32,6 +32,7 @@ declare(strict_types=1);
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers;
 
 use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Registry;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\GetTranscriptionDetailService;
 use Psr\Http\Message\ResponseInterface;
@@ -46,6 +47,9 @@ class DetailAction implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $tree = $request->getAttribute('tree');
+
+        if (!Auth::isMember($tree)) return response('');
+
         $title = I18N::translate('Transcription');
 
         $transcription_id = (int) $request->getAttribute('transcription_id');
@@ -61,6 +65,7 @@ class DetailAction implements RequestHandlerInterface
             'source'        => $data['source'],
             'media_object'  => $data['media_object'],
             'media_files'   => $data['media_files'],
+            'media_restriction' => $data['media_restriction'],
         ]);
 
         return response(view('layouts/default', [

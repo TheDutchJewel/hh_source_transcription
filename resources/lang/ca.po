@@ -1,489 +1,476 @@
-msgid ""
+﻿msgid ""
 msgstr ""
 "Project-Id-Version: SourceTranscription\n"
-"POT-Creation-Date: 2026-05-09 00:52+0200\n"
+"POT-Creation-Date: 2026-05-08 21:47+0200\n"
 "PO-Revision-Date: \n"
-"Last-Translator: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
+"Last-Translator: \n"
 "Language-Team: \n"
-"Language: de\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 3.9\n"
 "X-Poedit-Basepath: ../..\n"
 "X-Poedit-KeywordsList: translate;noop;plural:1,2;translateContext:2,1c\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: src/Application/Factory/NoteContentFactory.php:51
+#: src/Application/Factory/NoteContentFactory.php:46
 #: src/Domain/Enum/TranscriptionType.php:47
 #: src/Http/RequestHandlers/DetailAction.php:53
 msgid "Transcription"
-msgstr "Transkription"
-
-#: src/Application/Factory/NoteContentFactory.php:53
-msgid "Title"
-msgstr "Titel"
-
-#: src/Application/Factory/NoteContentFactory.php:58
-msgid "Source"
 msgstr ""
 
-#: src/Application/Factory/NoteContentFactory.php:61
+#: src/Application/Factory/NoteContentFactory.php:47
+msgid "Title"
+msgstr ""
+
+#: src/Application/Factory/NoteContentFactory.php:48
+msgid "Revision"
+msgstr ""
+
+#: src/Application/Factory/NoteContentFactory.php:49
 msgid "Provider"
-msgstr "Anbieter"
+msgstr ""
 
-#: src/Application/Factory/NoteContentFactory.php:64
-msgid "Primary language"
-msgstr "Primäre Sprache"
+#: src/Application/Factory/NoteContentFactory.php:50
+msgid "Origin"
+msgstr ""
 
-#: src/Application/Factory/NoteContentFactory.php:68
-msgid "Primary script"
-msgstr "Primäre Schriftart"
+#: src/Application/Factory/NoteContentFactory.php:52
+msgid "Begin transcription"
+msgstr ""
 
 #: src/Application/Factory/NoteContentFactory.php:72
-msgid "Primary form"
-msgstr "Primäre Form"
-
-#: src/Application/Factory/NoteContentFactory.php:80
-msgid "Media object"
-msgstr "Medienobjekt"
-
-#: src/Application/Factory/NoteContentFactory.php:85
-#: src/Application/Factory/NoteContentFactory.php:103
 msgid "Transcription text"
-msgstr "Transkriptionstext"
+msgstr ""
 
-#: src/Application/Factory/NoteContentFactory.php:92
-msgctxt "Heading for one media file in a generated note"
-msgid "Media file"
-msgstr "Mediendatei"
+#: src/Application/Factory/NoteContentFactory.php:56
+msgid "End transcription"
+msgstr ""
 
 #: src/Domain/Enum/InteractionModel.php:48
 msgid "Manual (direct editing)"
-msgstr "Manuell (direktes Bearbeiten)"
+msgstr ""
 
 #: src/Domain/Enum/InteractionModel.php:49
 msgid "Automated (asynchronous)"
-msgstr "Automatisiert (asynchron)"
+msgstr ""
 
 #: src/Domain/Enum/InteractionModel.php:50
 msgid "Crowd-based (asynchronous)"
-msgstr "Crowd-basiert (asynchron)"
+msgstr ""
 
 #: src/Domain/Enum/InteractionModel.php:51
 msgid "Internal collaboration"
-msgstr "Interne Zusammenarbeit"
+msgstr ""
 
 #: src/Domain/Enum/InteractionModel.php:63
 msgid "Interaction model not specified"
-msgstr "Interaktionsmodell nicht spezifiziert"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:95
 msgid "Handwritten church register"
-msgstr "Handschriftliches Kirchenbuch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:98
 msgid "Handwritten deed/charter"
-msgstr "Handschriftliche Urkunde"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:99
 msgid "Printed deed/charter"
-msgstr "Gedruckte Urkunde"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:102
 msgid "Handwritten letter"
-msgstr "Handschriftlicher Brief"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:105
 msgid "Printed newspaper"
-msgstr "Gedruckte Zeitung"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:106
 msgid "Printed journal/magazine"
-msgstr "Gedruckte Zeitschrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:107
 msgid "Printed book"
-msgstr "Gedrucktes Buch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:110
 msgid "Memorial record / Minutes from memory"
-msgstr "Gedächtnisprotokoll"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:111
 msgid "Stenographic record"
-msgstr "Stenografisches Protokoll"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:112
 msgid "Typewritten document"
-msgstr "Maschinengeschriebenes Dokument"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:113
 msgid "Digital text document"
-msgstr "Digitales Textdokument"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:114
 msgid "Digitized manuscript"
-msgstr "Digitalisiertes Manuskript"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:117
 msgid "Annotated photograph"
-msgstr "Fotografie mit Beschriftung"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:118
 msgid "Microfilm / Microfiche"
-msgstr "Mikrofilm / Mikrofiche"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:121
 msgid "Gravestone inscription"
-msgstr "Grabinschrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:122
 msgid "Building inscription"
-msgstr "Gebäudeinschrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:125
 msgid "Audio recording"
-msgstr "Tonaufnahme (Audio)"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:126
 msgid "Video recording"
-msgstr "Filmaufnahme (Video)"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:127
 msgid "Video interview"
-msgstr "Interview als Video"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:130
 msgid "Mixed"
-msgstr "Gemischt"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:131
 msgid "Other"
-msgstr "Anderes"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryForm.php:143
 msgid "Form not specified"
-msgstr "Form: keine Angabe"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:70
 msgid "German"
-msgstr "Deutsch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:71
 msgid "Middle High German"
-msgstr "Mittelhochdeutsch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:72
 msgid "Low German"
-msgstr "Niederdeutsch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:73
 msgid "Western Frisian"
-msgstr "Westfriesisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:74
 msgid "Latin"
-msgstr "Latein"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:75
 msgid "English"
-msgstr "Englisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:76
 msgid "French"
-msgstr "Französisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:77
 msgid "Old French"
-msgstr "Altfranzösisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:78
 msgid "Spanish"
-msgstr "Spanisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:79
 msgid "Russian"
-msgstr "Russisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:80
 msgid "Polish"
-msgstr "Polnisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:81
 msgid "Italian"
-msgstr "Italienisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:82
 msgid "Portuguese"
-msgstr "Portugiesisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:83
 msgid "Dutch"
-msgstr "Niederländisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:84
 msgid "Hebrew"
-msgstr "Hebräisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:85
 msgid "Yiddish"
-msgstr "Jiddisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:86
 msgid "Church Slavonic"
-msgstr "Kirchenslawisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:87
 msgid "Arabic"
-msgstr "Arabisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:88
 msgid "Swedish"
-msgstr "Schwedisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:89
 msgid "Hungarian"
-msgstr "Ungarisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:90
 msgid "Czech"
-msgstr "Tschechisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:91
 msgid "Greek"
-msgstr "Griechisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:92
 msgid "Akkadian"
-msgstr "Akkadisch"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:93
 msgid "Undetermined"
-msgstr "Unbestimmt"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryLanguage.php:105
 msgid "Language not specified"
-msgstr "Sprache: keine Angabe"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:64
 msgid "Latin script"
-msgstr "Lateinische Schrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:65
 msgid "Fraktur (Latin Fraktur)"
-msgstr "Fraktur (Gebrochene Schrift)"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:66
 msgid "Cyrillic script"
-msgstr "Kyrillische Schrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:67
 msgid "Hebrew script"
-msgstr "Hebräische Schrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:68
 msgid "Arabic script"
-msgstr "Arabische Schrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:69
 msgid "Greek script"
-msgstr "Griechische Schriftart"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:70
 msgid "Georgian script"
-msgstr "Georgische Schrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:71
 msgid "Armenian script"
-msgstr "Armenische Schrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:72
 msgid "Glagolitic script"
-msgstr "Glagolitische Schrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:73
 msgid "Coptic script"
-msgstr "Koptische Schrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:74
 msgid "Syriac script"
-msgstr "Syrische Schrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:75
 msgid "Old Italic script"
-msgstr "Lateinische Kursive (Altlatein)"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:76
 msgid "Runic script"
-msgstr "Runenschrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:77
 msgid "Osmanya script"
-msgstr "Osmanya-Schrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:78
 msgid "Gujarati script"
-msgstr "Gujarati-Schrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:79
 msgid "Cuneiform script"
-msgstr "Keilschrift"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:80
 msgid "Unknown script"
-msgstr "Unbekannte Schriftart"
+msgstr ""
 
 #: src/Domain/Enum/PrimaryScript.php:92
 msgid "Script not specified"
-msgstr "Schriftart: keine Angabe"
+msgstr ""
 
 #: src/Domain/Enum/RevisionOriginType.php:48
 msgid "Manual entry"
-msgstr "Manuelle Eingabe"
+msgstr ""
 
 #: src/Domain/Enum/RevisionOriginType.php:49
 msgid "Manual note save"
-msgstr "Manuelle Sicherung der NOTE"
+msgstr ""
 
 #: src/Domain/Enum/RevisionOriginType.php:50
 msgid "Transkribus import"
-msgstr "Transkribus Import"
+msgstr ""
 
 #: src/Domain/Enum/RevisionOriginType.php:51
 msgid "Transkribus sync"
-msgstr "Transkribus Synchronisation"
+msgstr ""
 
 #: src/Domain/Enum/RevisionOriginType.php:63
 msgid "Origin not specified"
-msgstr "Ursprung nicht spezifiziert"
+msgstr ""
 
 #: src/Domain/Enum/TranscriptionStatus.php:61
 msgid "New"
-msgstr "Neu"
+msgstr ""
 
 #: src/Domain/Enum/TranscriptionStatus.php:62
 msgid "In progress"
-msgstr "In Arbeit"
+msgstr ""
 
 #: src/Domain/Enum/TranscriptionStatus.php:63
 msgid "Ready for review"
-msgstr "Bereit für Review"
+msgstr ""
 
 #: src/Domain/Enum/TranscriptionStatus.php:64
 msgid "Final"
-msgstr "Beendet"
+msgstr ""
 
 #: src/Domain/Enum/TranscriptionStatus.php:65
 msgid "Reopened"
-msgstr "Wiedereröffnet"
+msgstr ""
 
 #: src/Domain/Enum/TranscriptionStatus.php:66
 msgid "Canceled"
-msgstr "Abgebrochen"
+msgstr ""
 
 #: src/Domain/Enum/TranscriptionType.php:48
 msgid "Translation"
-msgstr "Übersetzung"
+msgstr ""
 
 #: src/Domain/Enum/TranscriptionType.php:49
 msgid "Normalized text"
-msgstr "Normalisierter Text"
+msgstr ""
 
 #: src/Domain/Enum/TranscriptionType.php:61
 msgid "Type not specified"
-msgstr "Typ nicht spezifiziert"
+msgstr ""
 
 #: src/Domain/ValueObject/NoteStrategy.php:48
 msgid "Always create a new NOTE"
-msgstr "Immer eine neue NOTE erzeugen"
+msgstr ""
 
 #: src/Domain/ValueObject/NoteStrategy.php:49
 msgid "Update existing NOTE only if unchanged"
-msgstr "Existierende NOTE nur aktualisieren, wenn sie nicht geändert wurde"
+msgstr ""
 
 #: src/Domain/ValueObject/NoteStrategy.php:50
 msgid "Always update existing NOTE"
-msgstr "Existierende NOTE immer aktualisieren"
+msgstr ""
 
 #: src/Domain/ValueObject/ProviderLabel.php:47
 #: src/Domain/ValueObject/ProviderLabel.php:56
 msgid "Manual"
-msgstr "Manuelle Eingabe"
+msgstr ""
 
 #: src/Domain/ValueObject/ProviderLabel.php:48
 #: src/Domain/ValueObject/ProviderLabel.php:57
 #: src/Domain/ValueObject/ProviderPresentation.php:76
 msgid "Transkribus"
-msgstr "Transkribus"
+msgstr ""
 
 #: src/Domain/ValueObject/ProviderLabel.php:49
 #: src/Domain/ValueObject/ProviderLabel.php:58
 msgid "Community (Discourse)"
-msgstr "Gemeinschaft (Discourse)"
+msgstr ""
 
 #: src/Domain/ValueObject/ProviderPresentation.php:75
 msgid "Manual transcription in this webtrees installation"
-msgstr "Manuelle Transkription in dieser webtrees-Installation"
+msgstr ""
 
 #: src/Domain/ValueObject/ProviderPresentation.php:77
 msgid "Community discussion on Discourse"
-msgstr "Lesehilfe in Discourse"
+msgstr ""
 
 #: src/Http/RequestHandlers/CreateManualAction.php:50
 msgid "Create manual transcription"
-msgstr "Start einer manuellen Transkription"
+msgstr ""
 
 #: src/Http/RequestHandlers/DashboardAction.php:51
 #: src/SourceTranscription.php:433
 msgid "Transcriptions"
-msgstr "Transkriptionen"
+msgstr ""
 
 #: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:73
 msgid "Saved from UI"
-msgstr "Gesichert von der Bedienoberfläche"
+msgstr ""
 
 #: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:82
 #, php-format
 msgid "The current NOTE has been saved as revision %s."
-msgstr "Die aktuelle NOTE wurde als Revision %s gespeichert."
+msgstr ""
 
 #: src/Http/RequestHandlers/StoreManualAction.php:96
 msgid "Created from UI"
-msgstr "Von der Bedienoberfläche erzeugt"
+msgstr ""
 
 #: src/Http/RequestHandlers/StoreManualAction.php:99
 msgid "The transcription has been created."
-msgstr "Die Transkription wurde erzeugt."
+msgstr ""
 
 #: src/Http/RequestHandlers/UpdateCurrentNoteAction.php:62
 msgid "The NOTE has been updated."
-msgstr "Die NOTE wurde aktualisiert."
+msgstr ""
 
 #: src/Infrastructure/WhatsNew/WhatsNew0.php:38
 msgid "First transcription provider available: manual transcription."
-msgstr "Erster Transkriptionsanbieter verfügbar: manuelle Transkription."
+msgstr ""
 
 #: src/SourceTranscription.php:247
 msgid "What's new?"
-msgstr "Was gibt es Neues?"
+msgstr ""
 
 #: src/SourceTranscription.php:329
 msgid "Source Transcription"
-msgstr "Transkription von Quellen"
+msgstr ""
 
 #: src/SourceTranscription.php:341
 msgid "Manage source transcriptions with manual and provider-based workflows."
 msgstr ""
-"Verwaltung von Quellen-Transkriptionen mit einem manuellen oder Anbieter-"
-"Arbeitsablauf."
 
 #: src/SourceTranscription.php:542
 #, php-format
-msgid "The preferences for the module “%s” have been updated."
+msgid "The preferences for the module â€œ%sâ€ have been updated."
 msgstr ""
-"Die Einstellungen für das Erweiterungsmodul \"%s\" wurden aktualisiert."
 
 #: resources/views/admin-settings.phtml:27
 #, php-format
@@ -491,84 +478,100 @@ msgid ""
 "This module can only be used with a webtrees version greater or equal than "
 "%s."
 msgstr ""
-"Dieses Erweiterungsmodul kann nur mit einer webtrees-Version verwendet "
-"werden, die größer oder gleich %s ist."
 
 #: resources/views/admin-settings.phtml:37
 msgid "NOTE update strategy"
-msgstr "NOTE Aktualisierungsstrategie"
+msgstr ""
 
 #: resources/views/admin-settings.phtml:62
 msgid "Use of TinyMDE as the editor for transcription notes"
-msgstr "Verwendung von TinyMDE als Editor für Transkriptions-Notizen"
+msgstr ""
 
 #: resources/views/admin-settings.phtml:81
 msgid "Should tagging be supported"
-msgstr "Soll Tagging unterstützt werden"
+msgstr ""
 
 #: resources/views/admin-settings.phtml:100
 msgid "Tag value for tagging all sources with at least one transcription"
 msgstr ""
-"Tag-Kennzeichen zum Taggen aller Quellen mit wenigstens einer Transkription"
 
 #: resources/views/admin-settings.phtml:117
 msgid "Default"
-msgstr "Standard"
+msgstr ""
 
 #: resources/views/admin-settings.phtml:125
 msgid "save"
 msgstr ""
 
+#: resources/views/create-manual.phtml:36 resources/views/dashboard.phtml:78
+#: resources/views/detail.phtml:108
+msgid "Source"
+msgstr ""
+
 #: resources/views/create-manual.phtml:46
 msgid "No results found"
-msgstr "Keine Ergebnisse gefunden"
+msgstr ""
 
 #: resources/views/create-manual.phtml:47
 msgid "Search for a source"
-msgstr "Suche nach einer Quelle"
+msgstr ""
+
+#: resources/views/create-manual.phtml:56 resources/views/dashboard.phtml:146
+msgid "Media object"
+msgstr ""
 
 #: resources/views/create-manual.phtml:66
 #: resources/views/create-manual.phtml:158
 #: resources/views/create-manual.phtml:209
 msgid "Select a source first"
-msgstr "Wähle zuerst eine Quelle"
+msgstr ""
 
 #: resources/views/create-manual.phtml:70
 msgid "Only media objects linked to the selected source are shown."
 msgstr ""
-"Es werden nur Medienobjekte angezeigt, die mit der gewählten Quelle "
-"verknüpft sind."
+
+#: resources/views/create-manual.phtml:77 resources/views/detail.phtml:203
+msgid "Primary language"
+msgstr ""
+
+#: resources/views/create-manual.phtml:91 resources/views/detail.phtml:207
+msgid "Primary script"
+msgstr ""
+
+#: resources/views/create-manual.phtml:105 resources/views/detail.phtml:211
+msgid "Primary form"
+msgstr ""
 
 #: resources/views/create-manual.phtml:119
 msgid "Initial text"
-msgstr "Ausgangstext"
+msgstr ""
 
 #: resources/views/create-manual.phtml:127
 msgid "Create transcription"
-msgstr "Starte Transkription"
+msgstr ""
 
 #: resources/views/create-manual.phtml:162
-msgid "Loading media objects…"
-msgstr "Laden der Medienobjekte…"
+msgid "Loading media objectsâ€¦"
+msgstr ""
 
 #: resources/views/create-manual.phtml:179
 msgid "No linked media objects found"
-msgstr "Es wurde kein verknüpftes Medienobjekt gefunden."
+msgstr ""
 
 #: resources/views/create-manual.phtml:185
 msgid "No media object selected"
-msgstr "Es wurde kein Medienobjekt ausgewählt"
+msgstr ""
 
 #: resources/views/create-manual.phtml:200
 msgid "Could not load media objects"
-msgstr "Es konnten keine Medienobjekte geladen werden"
+msgstr ""
 
 #: resources/views/dashboard.phtml:68
 #, php-format
 msgid "%s transcription"
 msgid_plural "%s transcriptions"
-msgstr[0] "%s Transkription"
-msgstr[1] "%s Transkriptionen"
+msgstr[0] ""
+msgstr[1] ""
 
 #: resources/views/dashboard.phtml:79
 msgid "Media"
@@ -576,11 +579,11 @@ msgstr ""
 
 #: resources/views/dashboard.phtml:81
 msgid "Transcription provider"
-msgstr "Anbieter der Transkription"
+msgstr ""
 
 #: resources/views/dashboard.phtml:82 resources/views/detail.phtml:175
 msgid "Status"
-msgstr "Status"
+msgstr ""
 
 #: resources/views/dashboard.phtml:83
 msgid "Note"
@@ -588,36 +591,34 @@ msgstr ""
 
 #: resources/views/dashboard.phtml:84
 msgid "Actions"
-msgstr "Aktionen"
+msgstr ""
 
 #: resources/views/dashboard.phtml:133
 msgid "Source record"
-msgstr "Quellendatensatz"
+msgstr ""
 
 #: resources/views/dashboard.phtml:137
 msgid "Deleted"
-msgstr "Gelöscht"
+msgstr ""
 
 #: resources/views/dashboard.phtml:164 resources/views/dashboard.phtml:193
-#: resources/views/detail.phtml:193
+#: resources/views/detail.phtml:191
 msgid "None"
-msgstr "Nichts"
+msgstr ""
 
 #: resources/views/dashboard.phtml:199
 msgid "Open"
-msgstr "Öffnen"
+msgstr ""
 
 #: resources/views/detail.phtml:87
 msgid "Back to dashboard"
-msgstr "Zurück zum Dashboard"
+msgstr ""
 
 #: resources/views/detail.phtml:93
 msgid ""
 "The current webtrees NOTE is used as a working copy. Changes are only "
 "archived when saved as a new revision."
 msgstr ""
-"Die aktuelle NOTE dient als Arbeitskopie. Änderungen werden erst archiviert, "
-"wenn sie als neue Revision gespeichert werden."
 
 #: resources/views/detail.phtml:99
 msgid "Information"
@@ -626,156 +627,145 @@ msgstr ""
 #: resources/views/detail.phtml:118
 msgid "Media file"
 msgid_plural "Media files"
-msgstr[0] "Mediendatei"
-msgstr[1] "Mediendateien"
+msgstr[0] ""
+msgstr[1] ""
 
-#: resources/views/detail.phtml:152 resources/views/detail.phtml:233
-msgid "No media object selected."
-msgstr "Es wurde kein Medienobjekt ausgewählt."
-
-#: resources/views/detail.phtml:183 resources/views/detail.phtml:304
-msgid "Current NOTE"
-msgstr "Aktuelle NOTE"
-
-#: resources/views/detail.phtml:227
-msgid "Media preview"
-msgstr "Medienvorschau"
-
-#: resources/views/detail.phtml:237
-msgid "No media files found for this media object."
-msgstr "Für dieses Medienobjekt wurden keine Mediendateien gefunden."
-
-#: resources/views/detail.phtml:243
+#: resources/views/detail.phtml:241
 msgctxt "Label for selecting one media file"
 msgid "Media file"
-msgstr "Mediendatei"
+msgstr ""
 
-#: resources/views/detail.phtml:271
+#: src/Application/Factory/NoteContentFactory.php:92
+msgctxt "Heading for one media file in a generated note"
+msgid "Media file"
+msgstr ""
+
+#: resources/views/detail.phtml:152 resources/views/detail.phtml:231
+msgid "No media object selected."
+msgstr ""
+
+#: resources/views/detail.phtml:183
+msgid "Current NOTE"
+msgstr ""
+
+#: resources/views/detail.phtml:225
+msgid "Media preview"
+msgstr ""
+
+#: resources/views/detail.phtml:235
+msgid "No media files found for this media object."
+msgstr ""
+
+#: resources/views/detail.phtml:269
 msgid "This media file cannot be previewed here."
-msgstr "Diese Mediendatei kann hier nicht angezeigt werden."
+msgstr ""
 
-#: resources/views/detail.phtml:321
+#: resources/views/detail.phtml:319
 msgid "Save NOTE"
-msgstr "Speichere NOTE"
+msgstr ""
 
-#: resources/views/detail.phtml:324
+#: resources/views/detail.phtml:322
 msgid "Archive as new revision"
-msgstr "Archivieren als neue Revision"
+msgstr ""
 
-#: resources/views/detail.phtml:340
+#: resources/views/detail.phtml:338
 msgid "Revision history"
-msgstr "Revisionshistorie"
+msgstr ""
 
-#: resources/views/detail.phtml:345
+#: resources/views/detail.phtml:343
 msgid "Current"
-msgstr "Aktuell"
+msgstr ""
+
+msgid "Generated NOTE"
+msgstr ""
+
+msgid "NOTE change"
+msgstr ""
 
 #: resources/views/detail.phtml:346
-msgid "Revision"
-msgstr "Revision"
-
-#: resources/views/detail.phtml:347
-msgid "Origin"
-msgstr "Ursprung"
-
-#: resources/views/detail.phtml:348
-msgid "Generated NOTE"
-msgstr "Erzeugte NOTE"
-
-#: resources/views/detail.phtml:349
-msgid "NOTE change"
-msgstr "NOTE-Änderung"
-
-#: resources/views/detail.phtml:350
 msgid "Text"
-msgstr "Text"
-
-#~ msgid "Begin transcription"
-#~ msgstr "Beginn der Transkription"
-
-#~ msgid "End transcription"
-#~ msgstr "Ende der Transkription"
+msgstr ""
 
 #~ msgid "Restriction"
-#~ msgstr "Einschränkung"
+#~ msgstr ""
 
 #~ msgid "Handwritten Latin script"
-#~ msgstr "Handschriftliche lateinische Schrift"
+#~ msgstr ""
 
 #~ msgid "Printed Antiqua"
-#~ msgstr "Gedruckte Antiqua"
+#~ msgstr ""
 
 #~ msgid "Inscription on gravestone"
-#~ msgstr "Grabsteininschrift"
+#~ msgstr ""
 
 #~ msgid "Audio interview"
-#~ msgstr "Ton - Interview"
+#~ msgstr ""
 
 #~ msgid "Unknown"
-#~ msgstr "Unbekannt"
+#~ msgstr ""
 
 #~ msgid "Latin script, Fraktur variant"
-#~ msgstr "Lateinische Schriftart, Variante Fraktur"
+#~ msgstr ""
 
 #~ msgid "Completed"
-#~ msgstr "Abgeschlossen"
+#~ msgstr ""
 
 #~ msgid "Archived"
-#~ msgstr "Archiviert"
+#~ msgstr ""
 
 #~ msgid "%d transcription"
-#~ msgstr "% Transkription"
+#~ msgstr ""
 
 #~ msgid "Media XREF"
-#~ msgstr "Medien XREF"
+#~ msgstr ""
 
 #~ msgid "Tag NOTE"
-#~ msgstr "Tag NOTE"
+#~ msgstr ""
 
 #~ msgid "Transcription Provider"
-#~ msgstr "Anbieter der Transkription"
+#~ msgstr ""
 
 #~ msgid "ID"
-#~ msgstr "ID"
+#~ msgstr ""
 
 #~ msgid "Open media file"
-#~ msgstr "Öffne Mediendatei"
+#~ msgstr ""
 
 #~ msgid "Media preview will be added later."
-#~ msgstr "Medienvorschau wird später ergänzt werden."
+#~ msgstr ""
 
 #~ msgid "Not specified"
-#~ msgstr "keine Angabe"
+#~ msgstr ""
 
 #~ msgid "Source XREF"
-#~ msgstr "Quellen XREF"
+#~ msgstr ""
 
 #~ msgid "Hash"
-#~ msgstr "Prüfsumme"
+#~ msgstr ""
 
 #~ msgid "Tree ID"
-#~ msgstr "Baum-ID"
+#~ msgstr ""
 
 #~ msgid "Only manual transcriptions are supported by createManual()."
-#~ msgstr "Von createManual() werden nur manuelle Transkriptionen unterstützt."
+#~ msgstr ""
 
 #~ msgid "source_xref must not be empty."
-#~ msgstr "Quellen-XREF darf nicht leer sein."
+#~ msgstr ""
 
 #~ msgid "title must not be empty."
-#~ msgstr "Titel darf nicht leer sein."
+#~ msgstr ""
 
 #, php-format
 #~ msgid "Transcription not found: %s"
-#~ msgstr "Transkription nicht gefunden: %s"
+#~ msgstr ""
 
 #, php-format
 #~ msgid "Source not found: %s"
-#~ msgstr "Quelle nicht gefunden: %s"
+#~ msgstr ""
 
 #, php-format
 #~ msgid "Revision not found: %s"
-#~ msgstr "Revision nicht gefunden: %s"
+#~ msgstr ""
 
 #~ msgid ""
 #~ "Source Transcriptions database schema is newer than this module version."
@@ -785,7 +775,7 @@ msgstr "Text"
 
 #, php-format
 #~ msgid "No migration defined from schema version %s"
-#~ msgstr "Aus der Schemaversion %s wurde keine Migration definiert"
+#~ msgstr ""
 
 #, fuzzy
 #~| msgid ""
@@ -795,5 +785,5 @@ msgstr "Text"
 #~ "Manage transcriptions for sources and media objects with support for "
 #~ "multiple providers."
 #~ msgstr ""
-#~ "Verwaltung der Transkriptionen für Quellen und Medienobjekte mit Hilfe "
+#~ "Verwaltung der Transkriptionen fÃ¼r Quellen und Medienobjekte mit Hilfe "
 #~ "verschiedener Anbieter."

@@ -35,6 +35,7 @@ use Aura\Router\Exception\RouteAlreadyExists;
 use Fisharebest\{Localization\Translation,
     Webtrees\FlashMessages,
     Webtrees\I18N,
+    Webtrees\Auth,
     Webtrees\Module\AbstractModule,
     Webtrees\Module\ModuleConfigInterface,
     Webtrees\Module\ModuleConfigTrait,
@@ -97,7 +98,7 @@ final class SourceTranscription extends AbstractModule implements
 	public const string CUSTOM_AUTHOR = 'Hermann Hartenthaler';
 
     //Used database schema version
-    public const int CURRENT_SCHEMA_VERSION = 1;
+    public const int CURRENT_SCHEMA_VERSION = 2;
 
     //Default tag values for transcriptions (NOTE <tag_prefix><tag_value>)
     public const string DEFAULT_TAG_PREFIX = 'TAG: ';
@@ -224,6 +225,10 @@ final class SourceTranscription extends AbstractModule implements
      */
     private function flashWhatsNew(): void
     {
+        if (!Auth::check()) {
+            return;
+        }
+
         $namespace = 'Hartenthaler\\Webtrees\\Module\\SourceTranscription\\Infrastructure\\WhatsNew';
         $pref = self::WHATS_NEW;
         $current_version = (int) $this->getPreference($pref, '0');
@@ -279,7 +284,7 @@ final class SourceTranscription extends AbstractModule implements
                 $mde_service->setCustomRule(
                     self::CUSTOM_TITLE,  // module name as key
                     ["source-transcription-detail", "source-transcription-create-manual"], // handler: usually the short class name / last part of the route name - see js console with enabled debug info
-                    ["textarea[id='initial_text']"] // filter: querySelector filter expressions; here: textarea id ends with "_text"
+                    ["textarea[id$='_text']"] // filter: querySelector filter expressions; here: textarea id ends with "_text"
                 );
             //}
         }
@@ -403,6 +408,16 @@ final class SourceTranscription extends AbstractModule implements
     }
 
     /**
+     * @param Tree $tree
+     *
+     * @return bool
+     */
+    public function canAccess(Tree $tree): bool
+    {
+        return Auth::accessLevel($tree) >= Auth::ACCESS_MEMBER;
+    }
+
+    /**
      * set the main menu entry
      *
      * @param Tree $tree
@@ -410,6 +425,10 @@ final class SourceTranscription extends AbstractModule implements
      */
     public function getMenu(Tree $tree): ?Menu
     {
+        if (!Auth::isMember($tree)) {
+            return null;
+        }
+
         return new Menu(
             I18N::translate('Transcriptions'),
             e(route('source-transcription-dashboard', [

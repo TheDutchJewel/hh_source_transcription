@@ -28,37 +28,30 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers;
+namespace Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Schema;
 
-use Fisharebest\Webtrees\I18N;
-use Fisharebest\Webtrees\Auth;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
-use Psr\Http\Server\RequestHandlerInterface;
+use Fisharebest\Webtrees\Schema\MigrationInterface;
+use Illuminate\Database\Capsule\Manager as DB;
 
-use function response;
-use function view;
-
-class CreateManualAction implements RequestHandlerInterface
+/**
+ * Upgrade the database schema from version 1 to version 2.
+ */
+class Migration1 implements MigrationInterface
 {
-    public function handle(ServerRequestInterface $request): ResponseInterface
+    public function upgrade(): void
     {
-        $tree = $request->getAttribute('tree');
+        DB::schema()->table(SchemaManager::TABLE_REVISIONS, static function ($table): void {
+            if (!DB::schema()->hasColumn(SchemaManager::TABLE_REVISIONS, 'generated_note_changed_by_user_id')) {
+                $table->integer('generated_note_changed_by_user_id')->nullable();
+            }
 
-        if (!Auth::isMember($tree)) return response('');
+            if (!DB::schema()->hasColumn(SchemaManager::TABLE_REVISIONS, 'generated_note_changed_by_user_name')) {
+                $table->string('generated_note_changed_by_user_name', 255)->nullable();
+            }
 
-        $title = I18N::translate('Create manual transcription');
-
-        $content = view('hh_source_transcription::create-manual', [
-            'title'         => $title,
-            'tree'          => $tree,
-        ]);
-
-        return response(view('layouts/default', [
-            'title'   => $title,
-            'tree'    => $tree,
-            'request' => $request,
-            'content' => $content,
-        ]));
+            if (!DB::schema()->hasColumn(SchemaManager::TABLE_REVISIONS, 'generated_note_changed_at')) {
+                $table->timestamp('generated_note_changed_at')->nullable();
+            }
+        });
     }
 }

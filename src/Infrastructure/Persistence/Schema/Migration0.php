@@ -93,6 +93,9 @@ class Migration0 implements MigrationInterface
                 $table->timestamp('created_at')->useCurrent();
                 $table->text('import_comment')->nullable();
                 $table->string('generated_note_xref', 20)->nullable();
+                $table->integer('generated_note_changed_by_user_id')->nullable();
+                $table->string('generated_note_changed_by_user_name', 255)->nullable();
+                $table->timestamp('generated_note_changed_at')->nullable();
                 $table->boolean('is_current_revision')->default(false);
 
                 $table->index('transcription_id', 'idx_revisions_transcription');
