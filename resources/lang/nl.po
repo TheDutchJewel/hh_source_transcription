@@ -51,44 +51,65 @@ msgstr "Crowd-gebaseerd (asynchroon)"
 msgid "Internal collaboration"
 msgstr "Interne samenwerking"
 
-msgid "Always create a new NOTE"
-msgstr "Altijd een nieuwe NOTE aanmaken"
+msgid "Interaction model not specified"
+msgstr "Interactiemodel niet gespecificeerd"
 
-msgid "Update existing NOTE only if unchanged"
-msgstr "Bestaande NOTE alleen bijwerken als deze niet is gewijzigd"
+msgid "Handwritten church register"
+msgstr "Handgeschreven kerkregister"
 
-msgid "Always update existing NOTE"
-msgstr "Bestaande NOTE altijd bijwerken"
+msgid "Handwritten deed/charter"
+msgstr "Handgeschreven akte/oorkonde"
 
-msgid "Handwritten Kurrent"
-msgstr "Handgeschreven Kurrent"
+msgid "Printed deed/charter"
+msgstr "Gedrukte akte/oorkonde"
 
-msgid "Handwritten Sütterlin"
-msgstr "Handgeschreven Sütterlin"
+msgid "Handwritten letter"
+msgstr "Handgeschreven brief"
 
-msgid "Handwritten Latin script"
-msgstr "Handgeschreven Latijns schrift"
+msgid "Printed newspaper"
+msgstr "Gedrukte krant"
 
-msgid "Printed Fraktur"
-msgstr "Gedrukte Fraktur"
+msgid "Printed journal/magazine"
+msgstr "Gedrukt tijdschrift"
 
-msgid "Printed Antiqua"
-msgstr "Gedrukte Antiqua"
+msgid "Printed book"
+msgstr "Gedrukt boek"
 
-msgid "Inscription on gravestone"
+msgid "Memorial record / Minutes from memory"
+msgstr "Geheugenverslag"
+
+msgid "Stenographic record"
+msgstr "Stenografisch verslag"
+
+msgid "Typewritten document"
+msgstr "Getypt document"
+
+msgid "Digital text document"
+msgstr "Digitaal tekstdocument"
+
+msgid "Digitized manuscript"
+msgstr "Gedigitaliseerd manuscript"
+
+msgid "Annotated photograph"
+msgstr "Foto met tekst"
+
+msgid "Microfilm / Microfiche"
+msgstr "Microfilm / microfiche"
+
+msgid "Gravestone inscription"
 msgstr "Grafsteeninscriptie"
 
-msgid "Audio interview"
-msgstr "Audio-interview"
+msgid "Building inscription"
+msgstr "Gebouwinscriptie"
 
-msgid "Audio lecture"
-msgstr "Audiolezing"
+msgid "Audio recording"
+msgstr "Geluidsopname"
+
+msgid "Video recording"
+msgstr "Video-opname"
 
 msgid "Video interview"
 msgstr "Video-interview"
-
-msgid "Video lecture"
-msgstr "Videolezing"
 
 msgid "Mixed"
 msgstr "Gemengd"
@@ -96,14 +117,14 @@ msgstr "Gemengd"
 msgid "Other"
 msgstr "Overige"
 
-msgid "Unknown"
-msgstr "Onbekend"
-
 msgid "Form not specified"
 msgstr "Vorm niet gespecificeerd"
 
 msgid "German"
 msgstr "Duits"
+
+msgid "Middle High German"
+msgstr "Middenhoogduits"
 
 msgid "Low German"
 msgstr "Nederduits"
@@ -120,8 +141,53 @@ msgstr "Engels"
 msgid "French"
 msgstr "Frans"
 
+msgid "Old French"
+msgstr "Oudfrans"
+
+msgid "Spanish"
+msgstr "Spaans"
+
+msgid "Russian"
+msgstr "Russisch"
+
+msgid "Polish"
+msgstr "Pools"
+
+msgid "Italian"
+msgstr "Italiaans"
+
+msgid "Portuguese"
+msgstr "Portugees"
+
 msgid "Dutch"
 msgstr "Nederlands"
+
+msgid "Hebrew"
+msgstr "Hebreeuws"
+
+msgid "Yiddish"
+msgstr "Jiddisch"
+
+msgid "Church Slavonic"
+msgstr "Kerk-Slavisch"
+
+msgid "Arabic"
+msgstr "Arabisch"
+
+msgid "Swedish"
+msgstr "Zweeds"
+
+msgid "Hungarian"
+msgstr "Hongaars"
+
+msgid "Czech"
+msgstr "Tsjechisch"
+
+msgid "Greek"
+msgstr "Grieks"
+
+msgid "Akkadian"
+msgstr "Akkadisch"
 
 msgid "Undetermined"
 msgstr "Onbepaald"
@@ -132,23 +198,107 @@ msgstr "Taal niet gespecificeerd"
 msgid "Latin script"
 msgstr "Latijns schrift"
 
-msgid "Latin script, Fraktur variant"
-msgstr "Latijns schrift, Fraktur-variant"
+msgid "Fraktur (Latin Fraktur)"
+msgstr "Fraktur (Gothic script)"
 
 msgid "Cyrillic script"
 msgstr "Cyrillisch schrift"
 
+msgid "Hebrew script"
+msgstr "Hebreeuws schrift"
+
+msgid "Arabic script"
+msgstr "Arabisch schrift"
+
 msgid "Greek script"
 msgstr "Grieks schrift"
 
-msgid "Hebrew script"
-msgstr "Hebreeuws schrift"
+msgid "Georgian script"
+msgstr "Georgisch schrift"
+
+msgid "Armenian script"
+msgstr "Armeens schrift"
+
+msgid "Glagolitic script"
+msgstr "Glagolitisch schrift"
+
+msgid "Coptic script"
+msgstr "Koptisch schrift"
+
+msgid "Syriac script"
+msgstr "Syrisch schrift"
+
+msgid "Old Italic script"
+msgstr "Latijns cursief (Oudlatijn)"
+
+msgid "Runic script"
+msgstr "Runenschrift"
+
+msgid "Osmanya script"
+msgstr "Osmanya-schrift"
+
+msgid "Gujarati script"
+msgstr "Gujarati-schrift"
+
+msgid "Cuneiform script"
+msgstr "Spijkerschrift"
 
 msgid "Unknown script"
 msgstr "Onbekend schrift"
 
 msgid "Script not specified"
 msgstr "Schrift niet gespecificeerd"
+
+msgid "Manual entry"
+msgstr "Handmatige invoer"
+
+msgid "Manual note save"
+msgstr "NOTE handmatig opslaan"
+
+msgid "Transkribus import"
+msgstr "Transkribus importeren"
+
+msgid "Transkribus sync"
+msgstr "Transkribus-synchronisatie"
+
+msgid "Origin not specified"
+msgstr "Herkomst niet gespecificeerd"
+
+msgid "New"
+msgstr "Nieuw"
+
+msgid "In progress"
+msgstr "In uitvoering"
+
+msgid "Ready for review"
+msgstr "Gereed voor beoordeling"
+
+msgid "Final"
+msgstr "Voltooid"
+
+msgid "Reopened"
+msgstr "Heropend"
+
+msgid "Canceled"
+msgstr "Geannuleerd"
+
+msgid "Translation"
+msgstr "Vertaling"
+
+msgid "Normalized text"
+msgstr "Genormaliseerde tekst"
+
+msgid "Type not specified"
+msgstr "Type niet gespecificeerd"
+
+msgid "Always create a new NOTE"
+msgstr "Altijd een nieuwe NOTE aanmaken"
+
+msgid "Update existing NOTE only if unchanged"
+msgstr "Bestaande NOTE alleen bijwerken als deze niet is gewijzigd"
+
+msgid "Always update existing NOTE"
+msgstr "Bestaande NOTE altijd bijwerken"
 
 msgid "Manual"
 msgstr "Handmatige invoer"
@@ -164,36 +314,6 @@ msgstr "Handmatige transcriptie in deze webtrees-installatie"
 
 msgid "Community discussion on Discourse"
 msgstr "Discussiegroep op Discourse"
-
-msgid "Manual entry"
-msgstr "Handmatige invoer"
-
-msgid "Manual note save"
-msgstr "Handmatige NOTE opslaan"
-
-msgid "Transkribus import"
-msgstr "Transkribus importeren"
-
-msgid "Transkribus sync"
-msgstr "Transkribus-synchronisatie"
-
-msgid "New"
-msgstr "Nieuw"
-
-msgid "In progress"
-msgstr "In uitvoering"
-
-msgid "Completed"
-msgstr "Voltooid"
-
-msgid "Archived"
-msgstr "Gearchiveerd"
-
-msgid "Translation"
-msgstr "Vertaling"
-
-msgid "Normalized text"
-msgstr "Genormaliseerde tekst"
 
 msgid "Create manual transcription"
 msgstr "Start handmatige transcriptie"
@@ -217,6 +337,12 @@ msgstr "De transcriptie is gemaakt."
 msgid "The NOTE has been updated."
 msgstr "De NOTE is bijgewerkt."
 
+msgid "First transcription provider available: manual transcription."
+msgstr "Eerste transcriptieaanbieder beschikbaar: handmatige transcriptie."
+
+msgid "What's new?"
+msgstr "Wat is er nieuw?"
+
 msgid "Source Transcription"
 msgstr "Brontranscriptie"
 
@@ -233,6 +359,12 @@ msgstr "Deze module kan alleen worden gebruikt met een webtreesversie die gelijk
 
 msgid "NOTE update strategy"
 msgstr "NOTE-updatestrategie"
+
+msgid "Use of TinyMDE as the editor for transcription notes"
+msgstr "Gebruik van TinyMDE als editor voor transcriptienotities"
+
+msgid "Should tagging be supported"
+msgstr "Moet labeling worden ondersteund"
 
 msgid "Tag value for tagging all sources with at least one transcription"
 msgstr "Labelwaarde voor het labelen van alle bronnen met ten minste één transcriptie"
@@ -279,11 +411,11 @@ msgstr "Start transcriptie"
 msgid "Loading media objects…"
 msgstr "Mediaobjecten worden geladen…"
 
-msgid "No media object selected"
-msgstr "Geen mediaobject geselecteerd"
-
 msgid "No linked media objects found"
 msgstr "Geen gekoppelde mediaobjecten gevonden"
+
+msgid "No media object selected"
+msgstr "Geen mediaobject geselecteerd"
 
 msgid "Could not load media objects"
 msgstr "Mediaobjecten konden niet worden geladen"
@@ -325,17 +457,17 @@ msgstr ""
 "De huidige webtrees-NOTE wordt gebruikt als werkkopie. Wijzigingen worden pas gearchiveerd wanneer ze als "
 "nieuwe revisie worden opgeslagen."
 
-msgid "Media XREF"
-msgstr "Media-XREF"
+msgid "Information"
+msgstr "Informatie"
+
+msgid "Media file"
+msgstr "Mediabestand"
 
 msgid "No media object selected."
 msgstr "Geen mediaobject geselecteerd."
 
 msgid "Current NOTE"
 msgstr "Huidige NOTE"
-
-msgid "Tag NOTE"
-msgstr "Label NOTE"
 
 msgid "Media preview"
 msgstr "Mediavoorvertoning"
@@ -368,9 +500,6 @@ msgstr "Archiveren als nieuwe revisie"
 msgid "Revision history"
 msgstr "Revisiegeschiedenis"
 
-msgid "Transcription Provider"
-msgstr "Transcriptieaanbieder"
-
 msgid "Current"
 msgstr "Huidig"
 
@@ -382,6 +511,42 @@ msgstr ""
 
 msgid "Text"
 msgstr "Tekst"
+
+#~ msgid "Handwritten Latin script"
+#~ msgstr "Handschriftliche lateinische Schrift"
+
+#~ msgid "Printed Antiqua"
+#~ msgstr "Gedruckte Antiqua"
+
+#~ msgid "Inscription on gravestone"
+#~ msgstr "Grabsteininschrift"
+
+#~ msgid "Audio interview"
+#~ msgstr "Ton - Interview"
+
+#~ msgid "Unknown"
+#~ msgstr "Unbekannt"
+
+#~ msgid "Latin script, Fraktur variant"
+#~ msgstr "Lateinische Schriftart, Variante Fraktur"
+
+#~ msgid "Completed"
+#~ msgstr "Abgeschlossen"
+
+#~ msgid "Archived"
+#~ msgstr "Archiviert"
+
+#~ msgid "%d transcription"
+#~ msgstr "% Transkription"
+
+#~ msgid "Media XREF"
+#~ msgstr "Medien XREF"
+
+#~ msgid "Tag NOTE"
+#~ msgstr "Tag NOTE"
+
+#~ msgid "Transcription Provider"
+#~ msgstr "Anbieter der Transkription"
 
 #~ msgid "ID"
 #~ msgstr "ID"
