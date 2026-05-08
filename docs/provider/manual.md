@@ -73,6 +73,8 @@ The user provides metadata and the transcription text:
 - A new transcription record is created in the database
 - The initial text is stored as the first revision
 - Revision origin is marked as `manual_entry`
+- A shared NOTE is generated through the webtrees record API
+- If a media object is selected, the NOTE is linked to the `SOUR:OBJE` record; otherwise it is linked to the `SOUR` record
 
 ---
 
@@ -85,7 +87,7 @@ The transcription is immediately available for viewing, and the user is redirect
 ## Output Handling
 
 - Plain text
-- Stored as standard webtrees NOTE revisions
+- Stored as module revisions and as a standard webtrees shared NOTE working copy
 - optional integration of the Rich Text Editor TinyMDE (via custom module linkenhancer)
 - Side-by-side view of media image and editor
 

@@ -133,9 +133,10 @@ If not available:
 
 #### Step 2: Input Selection
 
-For V1:
+For the first implementation:
 
-- Only first image file in selected media object
+- One or more media files from the selected media object can be shown in the module UI
+- The provider implementation decides which supported media file is submitted to Transkribus
 
 ---
 
@@ -161,7 +162,8 @@ When job is finished:
 
 - Download TXT transcription
 - Store as new revision
-- Update NOTE via existing logic
+- Generate or update the shared NOTE through the webtrees record API
+- Link the NOTE to the selected `OBJE` record; use the source `SOUR` only if no media object is available
 
 ---
 

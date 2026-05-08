@@ -29,15 +29,13 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service;
 
-use Fisharebest\Webtrees\DB;
-use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Tree;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\SettingsRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\MediaObjectGateway;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SharedNoteGateway;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SourceGateway;
 use Hartenthaler\Webtrees\Module\SourceTranscription\SourceTranscription;
-
-use Fisharebest\Webtrees\Tree;
 
 final class EnsureTagNoteService
 {
@@ -46,12 +44,14 @@ final class EnsureTagNoteService
      * @param TranscriptionRepository $transcriptionRepository
      * @param SharedNoteGateway $sharedNoteGateway
      * @param SourceGateway $sourceGateway
+     * @param MediaObjectGateway $mediaObjectGateway
      */
     public function __construct(
         private readonly SettingsRepository $settingsRepository,
         private readonly TranscriptionRepository $transcriptionRepository,
         private readonly SharedNoteGateway $sharedNoteGateway,
         private readonly SourceGateway $sourceGateway,
+        private readonly MediaObjectGateway $mediaObjectGateway,
     ) {
     }
 
@@ -69,10 +69,17 @@ final class EnsureTagNoteService
         $existing_note_xref = $this->findExistingTagNote(
             $transcription->tree,
             $transcription->source_xref,
+            $transcription->media_xref,
             $tag_text
         );
 
         if ($existing_note_xref !== null) {
+            $this->linkNoteToTranscriptionTarget(
+                $transcription->tree,
+                $transcription->source_xref,
+                $transcription->media_xref,
+                $existing_note_xref
+            );
             $this->transcriptionRepository->setTagNoteXref($transcription_id, $existing_note_xref);
 
             return $existing_note_xref;
@@ -83,9 +90,10 @@ final class EnsureTagNoteService
             $tag_text
         );
 
-        $this->sourceGateway->linkNoteToSource(
+        $this->linkNoteToTranscriptionTarget(
             $transcription->tree,
             $transcription->source_xref,
+            $transcription->media_xref,
             $note_xref
         );
 
@@ -94,21 +102,61 @@ final class EnsureTagNoteService
         return $note_xref;
     }
 
+    private function linkNoteToTranscriptionTarget(
+        Tree $tree,
+        string $source_xref,
+        ?string $media_xref,
+        string $note_xref
+    ): void {
+        $linked_to_media = $media_xref !== null &&
+            $this->mediaObjectGateway->linkNoteToMedia(
+                $tree,
+                $media_xref,
+                $note_xref
+            );
+
+        if ($linked_to_media) {
+            $this->sourceGateway->unlinkNoteFromSource(
+                $tree,
+                $source_xref,
+                $note_xref
+            );
+        } else {
+            $this->sourceGateway->linkNoteToSource(
+                $tree,
+                $source_xref,
+                $note_xref
+            );
+        }
+    }
+
     private function findExistingTagNote(
         Tree $tree,
         string $source_xref,
+        ?string $media_xref,
         string $tag_text
     ): ?string {
-        $gedcom = DB::table('sources')
-            ->where('s_file', '=', $tree->id())
-            ->where('s_id', '=', $source_xref)
-            ->value('s_gedcom');
+        $media_gedcom = $media_xref === null ?
+            null :
+            $this->mediaObjectGateway->gedcom($tree, $media_xref);
+        $note_xref = $media_gedcom === null ?
+            null :
+            $this->findExistingTagNoteInGedcom($tree, $media_gedcom, $tag_text);
 
-        if ($gedcom === null) {
-            return null;
+        if ($note_xref !== null) {
+            return $note_xref;
         }
 
-        foreach (preg_split('/\R/u', (string) $gedcom) ?: [] as $line) {
+        $source_gedcom = $this->sourceGateway->gedcom($tree, $source_xref);
+
+        return $source_gedcom === null ?
+            null :
+            $this->findExistingTagNoteInGedcom($tree, $source_gedcom, $tag_text);
+    }
+
+    private function findExistingTagNoteInGedcom(Tree $tree, string $gedcom, string $tag_text): ?string
+    {
+        foreach (preg_split('/\R/u', $gedcom) ?: [] as $line) {
             if (!preg_match('/^\d+\s+NOTE\s+@([^@]+)@/u', $line, $match)) {
                 continue;
             }

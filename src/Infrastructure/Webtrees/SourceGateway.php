@@ -25,41 +25,50 @@
  * A webtrees (https://webtrees.net) 2.2 custom module to transcribe sources
  */
 
-//tbd: die Quelle wird mit der shared NOTE verknüpft, aber die webtrees-internen Querverweis-Tabellen werden nicht aktualisiert Daher umstellen auf Standard-webtrees-Methoden statt dem direkten Zugriff auf die Datenbank.
-
 declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees;
 
-use Fisharebest\Webtrees\DB;
+use Fisharebest\Webtrees\Auth;
+use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
+use RuntimeException;
 
 final class SourceGateway
 {
     public function linkNoteToSource(Tree $tree, string $source_xref, string $note_xref): void
     {
-        $gedcom = DB::table('sources')
-            ->where('s_file', '=', $tree->id())
-            ->where('s_id', '=', $source_xref)
-            ->value('s_gedcom');
+        $source = Registry::sourceFactory()->make($source_xref, $tree);
 
-        if ($gedcom === null) {
-            throw new \RuntimeException('Source not found: ' . $source_xref);
+        if ($source === null) {
+            throw new RuntimeException('Source not found: ' . $source_xref);
         }
 
-        $gedcom = rtrim((string) $gedcom);
-
-        if (preg_match('/^\d+\s+NOTE\s+@' . preg_quote($note_xref, '/') . '@/mu', $gedcom)) {
+        if (preg_match('/^\d+\s+NOTE\s+@' . preg_quote($note_xref, '/') . '@/mu', $source->gedcom())) {
             return;
         }
 
-        $gedcom .= PHP_EOL . '1 NOTE @' . $note_xref . '@';
+        $source->createFact('1 NOTE @' . $note_xref . '@', true);
+    }
 
-        DB::table('sources')
-            ->where('s_file', '=', $tree->id())
-            ->where('s_id', '=', $source_xref)
-            ->update([
-                's_gedcom' => $gedcom,
-            ]);
+    public function gedcom(Tree $tree, string $source_xref): ?string
+    {
+        return Registry::sourceFactory()->make($source_xref, $tree)?->gedcom();
+    }
+
+    public function unlinkNoteFromSource(Tree $tree, string $source_xref, string $note_xref): void
+    {
+        $source = Registry::sourceFactory()->make($source_xref, $tree);
+
+        if ($source === null) {
+            return;
+        }
+
+        foreach ($source->facts([], false, Auth::PRIV_HIDE, true) as $fact) {
+            if (preg_match('/^1 NOTE @' . preg_quote($note_xref, '/') . '@$/u', $fact->gedcom())) {
+                $source->deleteFact($fact->id(), true);
+                return;
+            }
+        }
     }
 }

@@ -35,10 +35,12 @@ declare(strict_types=1);
  * @var ?string $note_text
  * @var ?Source $source
  * @var ?Media $media_object
- * @var array<int,MediaFile> $media_files
+ * @var string $media_restriction
+ * @var array<int, array{file: MediaFile, filename: string, title: string, form: string, type: string}> $media_files
  */
 
 use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Media;
 use Fisharebest\Webtrees\MediaFile;
 use Fisharebest\Webtrees\Registry;
@@ -64,7 +66,7 @@ $badge_class = match (TranscriptionStatus::tryFrom($transcription->status)) {
     TranscriptionStatus::READY_FOR_REVIEW => 'bg-info text-dark',
     TranscriptionStatus::FINAL            => 'bg-success',
     TranscriptionStatus::REOPENED         => 'bg-primary',
-    TranscriptionStatus::CANCELED        => 'bg-light text-dark',
+    TranscriptionStatus::CANCELED         => 'bg-light text-dark',
     null                                  => 'bg-light text-dark',
 };
 
@@ -86,9 +88,11 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
     </a>
 </p>
 
-<div class="alert alert-info">
-    <?= I18N::translate('The current webtrees NOTE is used as a working copy. Changes are only archived when saved as a new revision.') ?>
-</div>
+<?php if (Auth::isEditor($tree) && $transcription->current_note_xref !== null) : ?>
+    <div class="alert alert-info">
+        <?= I18N::translate('The current webtrees NOTE is used as a working copy. Changes are only archived when saved as a new revision.') ?>
+    </div>
+<?php endif ?>
 
 <div class="card mb-3">
     <div class="card-header">
@@ -111,12 +115,38 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
                             </td>
                         </tr>
                         <tr>
-                            <th><?= I18N::translate('Media file') ?></th>
+                            <th><?= I18N::plural('Media file', 'Media files', count($media_files)) ?></th>
                             <td>
                                 <?php if ($media_object) : ?>
-                                    <a href="<?= e($media_object->url()) ?>">
-                                        <?= $media_object->fullName() ?>
-                                    </a>
+                                    <div>
+                                        <?php if ($media_files === []) : ?>
+                                            <a href="<?= e($media_object->url()) ?>" class="<?= $cell_format ?>">
+                                                <?= $media_object->fullName() ?>
+                                            </a>
+                                        <?php endif ?>
+
+                                        <?php foreach ($media_files as $index => $file_data) : ?>
+                                            <div class="<?= $index === 0 ? '' : 'mt-2 pt-2 border-top' ?>">
+                                                <a href="<?= e($media_object->url()) ?>" class="<?= $cell_format ?>">
+                                                    <?= e($file_data['title'] !== '' ? $file_data['title'] : $file_data['filename']) ?>
+                                                </a>
+                                                <div class="small text-muted">
+                                                    <div><strong>FILE:</strong> <?= e($file_data['filename']) ?></div>
+                                                    <?php if ($file_data['form'] !== '') : ?>
+                                                        <div><strong>FORM:</strong> <?= e($file_data['form']) ?></div>
+                                                    <?php endif ?>
+                                                    <?php if ($file_data['type'] !== '') : ?>
+                                                        <div><strong>TYPE:</strong> <?= e($file_data['type']) ?></div>
+                                                    <?php endif ?>
+                                                </div>
+                                            </div>
+                                        <?php endforeach ?>
+                                    </div>
+                                    <?php if ($media_restriction !== '') : ?>
+                                        <div class="small text-danger">
+                                            <?= Registry::elementFactory()->make('OBJE:RESN')->labelValue($media_restriction, $tree) ?>
+                                        </div>
+                                    <?php endif ?>
                                 <?php else : ?>
                                     <span class="<?= $muted ?>">
                                         <?= I18N::translate('No media object selected.') ?>
@@ -152,10 +182,12 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
                         <tr>
                             <th><?= I18N::translate('Current NOTE') ?></th>
                             <td>
-                                <?php if ($transcription->current_note_xref !== null) : ?>
+                                <?php if ($transcription->current_note_xref !== null && $note !== null) : ?>
                                     <a href="<?= e($note->url()) ?>" class="<?= $cell_format ?>">
                                         <?= $note->fullName() ?>
                                     </a>
+                                <?php elseif ($transcription->current_note_xref !== null) : ?>
+                                    <?= e($transcription->current_note_xref) ?>
                                 <?php else : ?>
                                     <span class="<?= $muted ?>">
                                         <?= I18N::translate('None') ?>
@@ -208,20 +240,21 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
                 <?php if (count($media_files) > 1) : ?>
                     <div class="mb-3">
                         <label class="form-label" for="media-file-select">
-                            <?= I18N::translate('Media file') ?>
+                            <?= I18N::translateContext('Label for selecting one media file', 'Media file') ?>
                         </label>
 
                         <select class="form-select" id="media-file-select">
-                            <?php foreach ($media_files as $index => $file) : ?>
+                            <?php foreach ($media_files as $index => $file_data) : ?>
                                 <option value="<?= e((string) $index) ?>">
-                                    <?= e($file->basename()) ?>
+                                    <?= e($file_data['filename']) ?>
                                 </option>
                             <?php endforeach ?>
                         </select>
                     </div>
                 <?php endif ?>
 
-                <?php foreach ($media_files as $index => $file) : ?>
+                <?php foreach ($media_files as $index => $file_data) : ?>
+                    <?php $file = $file_data['file']; ?>
                     <div
                             class="source-transcription-media-preview"
                             data-media-file-index="<?= e((string) $index) ?>"
@@ -238,7 +271,7 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
                                 <?= I18N::translate('This media file cannot be previewed here.') ?>
                             </div>
                             <p>
-                                <?= e($file->basename()) ?>
+                                <?= e($file_data['filename']) ?>
                             </p>
                         <?php endif ?>
                     </div>
@@ -268,29 +301,35 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
     <div class="col-md-6">
         <div class="card h-100">
             <div class="card-header">
-                <?= I18N::translate('Active NOTE') ?>
+                <?= I18N::translate('Current NOTE') ?>
             </div>
 
             <div class="card-body">
-                <form method="post" action="<?= e(route('source-transcription-update-note', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>">
-                    <?= csrf_field() ?>
+                <?php if (Auth::isEditor($tree)) : ?>
+                    <form method="post" action="<?= e(route('source-transcription-update-note', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>">
+                        <?= csrf_field() ?>
 
-                    <textarea
-                        class="form-control font-monospace"
-                        id="current_note_text"
-                        name="note_text"
-                        rows="24"
-                    ><?= e((string) $note_text) ?></textarea>
+                        <textarea
+                            class="form-control font-monospace"
+                            id="current_note_text"
+                            name="note_text"
+                            rows="24"
+                        ><?= e((string) $note_text) ?></textarea>
 
-                    <div class="mt-3 d-flex gap-2">
-                        <button class="btn btn-primary" type="submit">
-                            <?= I18N::translate('Save NOTE') ?>
-                        </button>
-                        <button class="btn btn-success" type="submit" formaction="<?= e(route('source-transcription-save-note-as-revision', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>">
-                            <?= I18N::translate('Archive as new revision') ?>
-                        </button>
+                        <div class="mt-3 d-flex gap-2">
+                            <button class="btn btn-primary" type="submit">
+                                <?= I18N::translate('Save NOTE') ?>
+                            </button>
+                            <button class="btn btn-success" type="submit" formaction="<?= e(route('source-transcription-save-note-as-revision', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>">
+                                <?= I18N::translate('Archive as new revision') ?>
+                            </button>
+                        </div>
+                    </form>
+                <?php else : ?>
+                    <div class="border p-2 bg-light font-monospace" style="white-space: pre-wrap; height: 500px; overflow-y: auto;">
+                        <?= e((string) $note_text) ?>
                     </div>
-                </form>
+                <?php endif ?>
             </div>
         </div>
     </div>
@@ -306,6 +345,8 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
             <th><?= I18N::translate('Current') ?></th>
             <th><?= I18N::translate('Revision') ?></th>
             <th><?= I18N::translate('Origin') ?></th>
+            <th><?= I18N::translate('Generated NOTE') ?></th>
+            <th><?= I18N::translate('NOTE change') ?></th>
             <th><?= I18N::translate('Text') ?></th>
         </tr>
     </thead>
@@ -316,6 +357,26 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
                 <td><?= $revision->is_current_revision ? '✓' : '' ?></td>
                 <td><?= e((string) $revision->revision_no) ?></td>
                 <td><?= e(RevisionOriginType::labels()[$revision->origin_type] ?? $revision->origin_type) ?></td>
+                <td>
+                    <?php if ($revision->generated_note_xref !== null) : ?>
+                        <?php $revision_note = Registry::noteFactory()->make($revision->generated_note_xref, $tree); ?>
+                        <?php if ($revision_note !== null) : ?>
+                            <a href="<?= e($revision_note->url()) ?>">
+                                <?= e($revision->generated_note_xref) ?>
+                            </a>
+                        <?php else : ?>
+                            <?= e($revision->generated_note_xref) ?>
+                        <?php endif ?>
+                    <?php endif ?>
+                </td>
+                <td>
+                    <?php if ($revision->generated_note_changed_by_user_name !== null) : ?>
+                        <div><?= e($revision->generated_note_changed_by_user_name) ?></div>
+                    <?php endif ?>
+                    <?php if ($revision->generated_note_changed_at !== null) : ?>
+                        <div class="text-muted small"><?= e($revision->generated_note_changed_at) ?></div>
+                    <?php endif ?>
+                </td>
                 <td><pre class="mb-0"><?= e(mb_substr($revision->content_text, 0, 500)) ?></pre></td>
             </tr>
         <?php endforeach ?>

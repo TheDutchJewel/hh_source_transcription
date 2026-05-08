@@ -34,6 +34,7 @@ declare(strict_types=1);
  */
 
 use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription;
@@ -48,20 +49,24 @@ $muted = 'text-secondary fst-italic';
 
 <h2><?= e($title) ?></h2>
 
+<?php if (Auth::isEditor($tree)) : ?>
 <p>
     <a class="btn btn-primary" href="<?= e(route('source-transcription-create-manual', ['tree' => $tree->name()])) ?>">
         <?= I18N::translate('Create manual transcription') ?>
     </a>
 </p>
+<?php endif ?>
 
 <div class="d-flex justify-content-between align-items-center mb-2">
     <div>
         <!-- später: Suche / Filter -->
     </div>
 
-    <div class="text-secondary">
+    <div>
         <?php if (count($transcriptions) > 0) : ?>
-            <?= I18N::plural('%d transcription', '%d transcriptions', count($transcriptions), (string)count($transcriptions)) ?>
+            <span class="badge bg-secondary">
+                <?= I18N::plural('%s transcription', '%s transcriptions', count($transcriptions), I18N::number(count($transcriptions))) ?>
+            </span>
         <?php endif ?>
     </div>
 </div>
@@ -116,12 +121,12 @@ $muted = 'text-secondary fst-italic';
                 TranscriptionStatus::READY_FOR_REVIEW => 'bg-info text-dark',
                 TranscriptionStatus::FINAL            => 'bg-success',
                 TranscriptionStatus::REOPENED         => 'bg-primary',
-                TranscriptionStatus::CANCELED        => 'bg-light text-dark',
+                TranscriptionStatus::CANCELED         => 'bg-light text-dark',
                 null                                  => 'bg-light text-dark',
             };
             ?>
 
-            <tr>
+            <tr class="align-top">
                 <td>
                     <?php if ($source !== null) : ?>
                         <a href="<?= e($source->url()) ?>" class="<?= $cell_format ?>">
@@ -135,9 +140,25 @@ $muted = 'text-secondary fst-italic';
                 </td>
                 <td>
                     <?php if ($media !== null) : ?>
-                        <a href="<?= e($media->url()) ?>" class="<?= $cell_format ?>">
-                            <?= $media->fullName() ?: I18N::translate('Media object') ?>
-                        </a>
+                        <?php $media_files = $media->mediaFiles() ?>
+                        <?php if ($media_files->isEmpty()) : ?>
+                            <a href="<?= e($media->url()) ?>" class="<?= $cell_format ?>">
+                                <?= $media->fullName() ?: I18N::translate('Media object') ?>
+                            </a>
+                        <?php endif ?>
+
+                        <?php foreach ($media_files as $media_file) : ?>
+                            <div class="d-flex align-items-start gap-2 mb-1">
+                                <div>
+                                    <?= $media_file->displayImage(30, 60, 'contain', []) ?>
+                                </div>
+                                <div>
+                                    <a href="<?= e($media->url()) ?>" class="<?= $cell_format ?>">
+                                        <?= e($media_file->title() !== '' ? $media_file->title() : $media_file->filename()) ?>
+                                    </a>
+                                </div>
+                            </div>
+                        <?php endforeach ?>
                     <?php else : ?>
                         <span class="<?= $muted ?>">
                             <?= e(I18N::translate('None')) ?>

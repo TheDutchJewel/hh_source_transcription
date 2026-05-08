@@ -31,7 +31,7 @@ declare(strict_types=1);
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service;
 
 use Fisharebest\Webtrees\DB;
-use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Tree;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Factory\NoteContentFactory;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\TranscriptionStatus;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\TranscriptionTransition;
@@ -40,12 +40,11 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\NoteStra
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\NoteLinkRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\RevisionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\MediaObjectGateway;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SharedNoteGateway;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SourceGateway;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Support\HashService;
 use RuntimeException;
-
-use Fisharebest\Webtrees\Tree;
 
 final class GenerateOrUpdateNoteService
 {
@@ -57,6 +56,7 @@ final class GenerateOrUpdateNoteService
         private readonly NoteContentFactory      $noteContentFactory,
         private readonly HashService             $hashService,
         private readonly SourceGateway           $sourceGateway,
+        private readonly MediaObjectGateway      $mediaObjectGateway,
         private readonly TranscriptionStateMachine $stateMachine,
     )
     {
@@ -108,7 +108,7 @@ final class GenerateOrUpdateNoteService
         }
 
         $note_text = $this->noteContentFactory->buildTranscriptNote(
-            $transcription->title,
+            $transcription,
             $revision
         );
 
@@ -127,6 +127,7 @@ final class GenerateOrUpdateNoteService
                 $this->createCurrentLink(
                     $transcription->tree,
                     $transcription->source_xref,
+                    $transcription->media_xref,
                     $transcription->id,
                     $revision->id,
                     $note_xref,
@@ -157,6 +158,7 @@ final class GenerateOrUpdateNoteService
                     $this->createCurrentLink(
                         $transcription->tree,
                         $transcription->source_xref,
+                        $transcription->media_xref,
                         $transcription->id,
                         $revision->id,
                         $note_xref,
@@ -176,6 +178,7 @@ final class GenerateOrUpdateNoteService
             $this->createCurrentLink(
                 $transcription->tree,
                 $transcription->source_xref,
+                $transcription->media_xref,
                 $transcription->id,
                 $revision->id,
                 $note_xref,
@@ -190,6 +193,7 @@ final class GenerateOrUpdateNoteService
     private function createCurrentLink(
         Tree $tree,
         string $source_xref,
+        ?string $media_xref,
         int $transcription_id,
         int $revision_id,
         string $note_xref,
@@ -209,6 +213,15 @@ final class GenerateOrUpdateNoteService
 
         $this->noteLinkRepository->markCurrent($transcription_id, $note_xref);
         $this->transcriptionRepository->setCurrentNoteXref($transcription_id, $note_xref);
-        $this->sourceGateway->linkNoteToSource($tree, $source_xref, $note_xref);
+        $this->revisionRepository->recordGeneratedNoteChange($revision_id, $note_xref);
+
+        $linked_to_media = $media_xref !== null &&
+            $this->mediaObjectGateway->linkNoteToMedia($tree, $media_xref, $note_xref);
+
+        if ($linked_to_media) {
+            $this->sourceGateway->unlinkNoteFromSource($tree, $source_xref, $note_xref);
+        } else {
+            $this->sourceGateway->linkNoteToSource($tree, $source_xref, $note_xref);
+        }
     }
 }

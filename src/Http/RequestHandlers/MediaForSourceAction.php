@@ -30,6 +30,7 @@ declare(strict_types=1);
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers;
 
 use Fisharebest\Webtrees\DB;
+use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Registry;
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
@@ -42,6 +43,9 @@ final class MediaForSourceAction
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $tree = $request->getAttribute('tree');
+
+        if (!Auth::isMember($tree)) return response('');
+
         $query = $request->getQueryParams();
 
         $source_xref = trim((string) ($query['source_xref'] ?? ''));

@@ -32,6 +32,7 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers;
 
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Registry;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Dto\CreateTranscriptionCommand;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\CreateTranscriptionService;
@@ -51,6 +52,9 @@ class StoreManualAction implements RequestHandlerInterface
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $tree = $request->getAttribute('tree');
+
+        if (!Auth::isMember($tree)) return response('');
+
         $user = $request->getAttribute('user');
         $params = (array) $request->getParsedBody();
 
