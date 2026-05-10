@@ -184,6 +184,29 @@ The manual provider supports
 - generating a working NOTE
 - saving the current NOTE as a new manual revision
 
+### Internal collaboration provider
+
+Detailed documentation: [docs/provider/internal.md](docs/provider/internal.md)
+
+The internal collaboration provider opens an existing transcription for collaborative work by several webtrees users.
+It does not create a new transcription and does not ask again for source or media selection.
+
+The initiator starts collaboration from an existing transcription, optionally saving the current working NOTE as a revision first.
+The initiator selects team members from users who can access the tree and the transcription target.
+Team members can edit the working NOTE and create new revisions.
+
+In the intended workflow
+
+- the initiator opens collaboration and invites collaborators
+- all active collaborators are informed when collaboration starts
+- all active collaborators are informed about new revisions and status changes
+- every active collaborator can set the transcription status to ready for review
+- only the initiator can set the transcription status to final
+- the initiator or an administrator can reopen a finalized collaboration
+
+The team relation is stored separately from the transcription revision history.
+This keeps existing source/media links, the working NOTE, and previous revisions intact.
+
 ### Discourse provider
 tbd
 
@@ -201,7 +224,7 @@ The Transkribus provider supports
 <a name="Database"></a>
 ## Database schema
 
-The module uses an explicit schema version to allow future migrations. The current schema is documented in [docs/database/schema-2.sql.txt](docs/database/schema-2.sql.txt).
+The module uses an explicit schema version to allow future migrations. The current schema is documented in [docs/database/schema-3.sql.txt](docs/database/schema-3.sql.txt).
 
 <a name="Design"></a>
 ## Design principles
@@ -223,6 +246,17 @@ The module uses an explicit schema version to allow future migrations. The curre
 5. Edit the note in webtrees
 6. Save the note as a new revision when needed
 7. Or select an already existing NOTE containing transcribed text as a new revision
+
+### Internal collaboration
+1. Open an existing transcription
+2. Open the transcription for internal collaboration
+3. Optionally save the current NOTE as a starting revision
+4. Select collaborators from eligible webtrees users
+5. Notify the selected collaborators
+6. Collaborators edit the working NOTE and save new revisions
+7. Notify all active collaborators about each new revision
+8. Any active collaborator can mark the transcription as ready for review
+9. The initiator can mark the transcription as final
 
 ### Discourse
 1. Open a source with a media object
@@ -296,7 +330,7 @@ Strategically very interesting for CompGen
 
 - V1.1 (actual development version)
   - Feedback-getriebene UI-Glättung nach V1.0-Test
-  - switch to Provider Factory model
+  - Icon erscheint noch nicht; Test mit allen Themen (hell und dunkel)
   - Context display directly at the source
   - TinyMDE einsetzbar machen
   - Diagnose-/Statusanzeige im Adminbereich: Schema-Version, erkannte linkenhancer/TinyMDE-Verfügbarkeit, Markdown-Status je Tree.
@@ -309,11 +343,10 @@ Strategically very interesting for CompGen
   - Diff Revision
   - Restore Revision
   - Eine Funktion oder Admin-Aktion zur Konsistenzprüfung: Transkription hat aktuelle NOTE, NOTE ist korrekt an OBJE/SOUR verlinkt, Revisionsdaten zeigen auf existierende NOTE.
-  - add status "review" and "final" (per button)
 
 - V1.4
-  - webtrees internal collaboration
   - backup/restore of database tables
+  - replace development behavior that rebuilds all module tables when one table is missing
   - update screenshots in README.md
   - first GitHub release version
 

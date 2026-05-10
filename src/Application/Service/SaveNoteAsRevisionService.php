@@ -30,10 +30,10 @@ declare(strict_types=1);
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service;
 
 use Fisharebest\Webtrees\DB;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\RevisionOriginType;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\NoteLinkRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\RevisionRepository;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionCollaboratorRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SharedNoteGateway;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Support\HashService;
@@ -46,13 +46,16 @@ final class SaveNoteAsRevisionService
         private readonly NoteLinkRepository $noteLinkRepository,
         private readonly SharedNoteGateway $sharedNoteGateway,
         private readonly HashService $hashService,
+        private readonly TranscriptionCollaboratorRepository $collaboratorRepository,
+        private readonly CollaborationNotificationService $notificationService,
     ) {
     }
 
     public function saveCurrentNoteAsRevision(
         int $transcription_id,
         int $user_id,
-        ?string $comment = null
+        ?string $comment = null,
+        bool $notify_collaborators = true
     ): int {
         $transcription = $this->transcriptionRepository->find($transcription_id);
 
@@ -82,7 +85,7 @@ final class SaveNoteAsRevisionService
             return $latest->id;
         }
 
-        return DB::transaction(function () use (
+        $revision_id = DB::transaction(function () use (
             $transcription,
             $note_text,
             $note_hash,
@@ -94,7 +97,7 @@ final class SaveNoteAsRevisionService
             $revision_id = $this->revisionRepository->create([
                 'transcription_id' => $transcription->id,
                 'revision_no' => $revision_no,
-                'provider_key' => ProviderKey::MANUAL,
+                'provider_key' => $transcription->provider_key,
                 'origin_type' => RevisionOriginType::MANUAL_NOTE_SAVE->value,
                 'origin_reference' => $transcription->current_note_xref,
                 'content_format' => 'text/plain',
@@ -129,5 +132,18 @@ final class SaveNoteAsRevisionService
 
             return $revision_id;
         });
+
+        $revision = $this->revisionRepository->find($revision_id);
+
+        if ($notify_collaborators && $revision !== null) {
+            $this->notificationService->notifyRevisionCreated(
+                $transcription,
+                $user_id,
+                $revision->revision_no,
+                $this->collaboratorRepository->activeUserIds($transcription->id)
+            );
+        }
+
+        return $revision_id;
     }
 }

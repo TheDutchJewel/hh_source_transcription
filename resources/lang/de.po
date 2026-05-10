@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SourceTranscription\n"
-"POT-Creation-Date: 2026-05-09 00:52+0200\n"
+"POT-Creation-Date: 2026-05-10 13:17+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
 "Language-Team: \n"
@@ -17,7 +17,7 @@ msgstr ""
 
 #: src/Application/Factory/NoteContentFactory.php:51
 #: src/Domain/Enum/TranscriptionType.php:47
-#: src/Http/RequestHandlers/DetailAction.php:53
+#: src/Http/RequestHandlers/DetailAction.php:58
 msgid "Transcription"
 msgstr "Transkription"
 
@@ -58,6 +58,35 @@ msgstr "Transkriptionstext"
 msgctxt "Heading for one media file in a generated note"
 msgid "Media file"
 msgstr "Mediendatei"
+
+#: src/Application/Service/CollaborationNotificationService.php:42
+#, php-format
+msgid "Collaboration started for transcription: %s"
+msgstr "Zusammenarbeit für die Transkription begonnen: %s"
+
+#: src/Application/Service/CollaborationNotificationService.php:45
+msgid "You have been invited to collaborate on a source transcription."
+msgstr "Du wurdest eingeladen, bei einer Quellen-Transkription mitzuarbeiten."
+
+#: src/Application/Service/CollaborationNotificationService.php:74
+#, php-format
+msgid "New revision for transcription: %s"
+msgstr "Neue Revision der Transkription: %s"
+
+#: src/Application/Service/CollaborationNotificationService.php:75
+#, php-format
+msgid "A new revision has been created: %s"
+msgstr "Eine neue Revision ist erzeugt worden: %s"
+
+#: src/Application/Service/CollaborationNotificationService.php:92
+#, php-format
+msgid "Status changed for transcription: %s"
+msgstr "Status für die Transkription %s geändert"
+
+#: src/Application/Service/CollaborationNotificationService.php:93
+#, php-format
+msgid "The transcription status has changed to: %s"
+msgstr "Der Status der Transkription wurde auf \"%s\" geändert"
 
 #: src/Domain/Enum/InteractionModel.php:48
 msgid "Manual (direct editing)"
@@ -360,26 +389,32 @@ msgid "Origin not specified"
 msgstr "Ursprung nicht spezifiziert"
 
 #: src/Domain/Enum/TranscriptionStatus.php:61
+msgctxt "Transcription status"
 msgid "New"
 msgstr "Neu"
 
 #: src/Domain/Enum/TranscriptionStatus.php:62
+msgctxt "Transcription status"
 msgid "In progress"
 msgstr "In Arbeit"
 
 #: src/Domain/Enum/TranscriptionStatus.php:63
+msgctxt "Transcription status"
 msgid "Ready for review"
 msgstr "Bereit für Review"
 
 #: src/Domain/Enum/TranscriptionStatus.php:64
+msgctxt "Transcription status; adjective, not an action button"
 msgid "Final"
 msgstr "Beendet"
 
 #: src/Domain/Enum/TranscriptionStatus.php:65
+msgctxt "Transcription status; already reopened, not an action button"
 msgid "Reopened"
 msgstr "Wiedereröffnet"
 
 #: src/Domain/Enum/TranscriptionStatus.php:66
+msgctxt "Transcription status"
 msgid "Canceled"
 msgstr "Abgebrochen"
 
@@ -407,44 +442,69 @@ msgstr "Existierende NOTE nur aktualisieren, wenn sie nicht geändert wurde"
 msgid "Always update existing NOTE"
 msgstr "Existierende NOTE immer aktualisieren"
 
-#: src/Domain/ValueObject/ProviderLabel.php:47
-#: src/Domain/ValueObject/ProviderLabel.php:56
-msgid "Manual"
-msgstr "Manuelle Eingabe"
-
 #: src/Domain/ValueObject/ProviderLabel.php:48
-#: src/Domain/ValueObject/ProviderLabel.php:57
-#: src/Domain/ValueObject/ProviderPresentation.php:76
+#: src/Domain/ValueObject/ProviderLabel.php:58
+msgctxt "Transcription provider label"
+msgid "Manual"
+msgstr "Manuelle Transkription"
+
+#: src/Domain/ValueObject/ProviderLabel.php:49
+#: src/Domain/ValueObject/ProviderLabel.php:59
+msgctxt "Transcription provider label"
+msgid "Internal collaboration"
+msgstr "Interne Zusammenarbeit"
+
+#: src/Domain/ValueObject/ProviderLabel.php:50
+#: src/Domain/ValueObject/ProviderLabel.php:60
+#: src/Domain/ValueObject/ProviderPresentation.php:81
 msgid "Transkribus"
 msgstr "Transkribus"
 
-#: src/Domain/ValueObject/ProviderLabel.php:49
-#: src/Domain/ValueObject/ProviderLabel.php:58
+#: src/Domain/ValueObject/ProviderLabel.php:51
+#: src/Domain/ValueObject/ProviderLabel.php:61
 msgid "Community (Discourse)"
 msgstr "Gemeinschaft (Discourse)"
 
-#: src/Domain/ValueObject/ProviderPresentation.php:75
+#: src/Domain/ValueObject/ProviderPresentation.php:79
+msgctxt "Tooltip for transcription provider link"
 msgid "Manual transcription in this webtrees installation"
 msgstr "Manuelle Transkription in dieser webtrees-Installation"
 
-#: src/Domain/ValueObject/ProviderPresentation.php:77
+#: src/Domain/ValueObject/ProviderPresentation.php:80
+msgctxt "Tooltip for transcription provider link"
+msgid "Internal collaboration in this webtrees installation"
+msgstr "Interne Zusammenarbeit in dieser webtrees-Installation"
+
+#: src/Domain/ValueObject/ProviderPresentation.php:82
 msgid "Community discussion on Discourse"
 msgstr "Lesehilfe in Discourse"
+
+#: src/Http/RequestHandlers/CollaborationStatusAction.php:53
+msgid "The collaboration status has been updated."
+msgstr "Der Status der Zusammenarbeit wurde aktualisiert."
 
 #: src/Http/RequestHandlers/CreateManualAction.php:50
 msgid "Create manual transcription"
 msgstr "Start einer manuellen Transkription"
 
 #: src/Http/RequestHandlers/DashboardAction.php:51
-#: src/SourceTranscription.php:433
+#: src/SourceTranscription.php:473
 msgid "Transcriptions"
 msgstr "Transkriptionen"
 
-#: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:73
+#: src/Http/RequestHandlers/ManualStatusAction.php:48
+msgid "The transcription status has been updated."
+msgstr "Der Status der Transkription wurde aktualisiert."
+
+#: src/Http/RequestHandlers/OpenCollaborationAction.php:58
+msgid "The transcription has been opened for internal collaboration."
+msgstr "Die Transkription wurde für die interne Zusammenarbeit geöffnet."
+
+#: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:92
 msgid "Saved from UI"
 msgstr "Gesichert von der Bedienoberfläche"
 
-#: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:82
+#: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:101
 #, php-format
 msgid "The current NOTE has been saved as revision %s."
 msgstr "Die aktuelle NOTE wurde als Revision %s gespeichert."
@@ -457,7 +517,7 @@ msgstr "Von der Bedienoberfläche erzeugt"
 msgid "The transcription has been created."
 msgstr "Die Transkription wurde erzeugt."
 
-#: src/Http/RequestHandlers/UpdateCurrentNoteAction.php:62
+#: src/Http/RequestHandlers/UpdateCurrentNoteAction.php:83
 msgid "The NOTE has been updated."
 msgstr "Die NOTE wurde aktualisiert."
 
@@ -465,21 +525,29 @@ msgstr "Die NOTE wurde aktualisiert."
 msgid "First transcription provider available: manual transcription."
 msgstr "Erster Transkriptionsanbieter verfügbar: manuelle Transkription."
 
-#: src/SourceTranscription.php:247
+#: src/Infrastructure/WhatsNew/WhatsNew1.php:38
+msgid ""
+"New transcription provider available: internal collaboration with other "
+"webtrees users."
+msgstr ""
+"Ein neuer Transkriptionsanbieter ist verfügbar: interne Zusammenarbeit mit "
+"anderen webtrees.Nutzern."
+
+#: src/SourceTranscription.php:277
 msgid "What's new?"
 msgstr "Was gibt es Neues?"
 
-#: src/SourceTranscription.php:329
+#: src/SourceTranscription.php:369
 msgid "Source Transcription"
 msgstr "Transkription von Quellen"
 
-#: src/SourceTranscription.php:341
+#: src/SourceTranscription.php:381
 msgid "Manage source transcriptions with manual and provider-based workflows."
 msgstr ""
 "Verwaltung von Quellen-Transkriptionen mit einem manuellen oder Anbieter-"
 "Arbeitsablauf."
 
-#: src/SourceTranscription.php:542
+#: src/SourceTranscription.php:582
 #, php-format
 msgid "The preferences for the module “%s” have been updated."
 msgstr ""
@@ -578,7 +646,7 @@ msgstr ""
 msgid "Transcription provider"
 msgstr "Anbieter der Transkription"
 
-#: resources/views/dashboard.phtml:82 resources/views/detail.phtml:175
+#: resources/views/dashboard.phtml:82 resources/views/detail.phtml:187
 msgid "Status"
 msgstr "Status"
 
@@ -599,7 +667,7 @@ msgid "Deleted"
 msgstr "Gelöscht"
 
 #: resources/views/dashboard.phtml:164 resources/views/dashboard.phtml:193
-#: resources/views/detail.phtml:193
+#: resources/views/detail.phtml:205
 msgid "None"
 msgstr "Nichts"
 
@@ -607,11 +675,11 @@ msgstr "Nichts"
 msgid "Open"
 msgstr "Öffnen"
 
-#: resources/views/detail.phtml:87
+#: resources/views/detail.phtml:99
 msgid "Back to dashboard"
 msgstr "Zurück zum Dashboard"
 
-#: resources/views/detail.phtml:93
+#: resources/views/detail.phtml:105
 msgid ""
 "The current webtrees NOTE is used as a working copy. Changes are only "
 "archived when saved as a new revision."
@@ -619,79 +687,154 @@ msgstr ""
 "Die aktuelle NOTE dient als Arbeitskopie. Änderungen werden erst archiviert, "
 "wenn sie als neue Revision gespeichert werden."
 
-#: resources/views/detail.phtml:99
+#: resources/views/detail.phtml:111
 msgid "Information"
 msgstr ""
 
-#: resources/views/detail.phtml:118
+#: resources/views/detail.phtml:130
 msgid "Media file"
 msgid_plural "Media files"
 msgstr[0] "Mediendatei"
 msgstr[1] "Mediendateien"
 
-#: resources/views/detail.phtml:152 resources/views/detail.phtml:233
+#: resources/views/detail.phtml:164 resources/views/detail.phtml:377
 msgid "No media object selected."
 msgstr "Es wurde kein Medienobjekt ausgewählt."
 
-#: resources/views/detail.phtml:183 resources/views/detail.phtml:304
+#: resources/views/detail.phtml:195 resources/views/detail.phtml:448
 msgid "Current NOTE"
 msgstr "Aktuelle NOTE"
 
-#: resources/views/detail.phtml:227
+#: resources/views/detail.phtml:237
+msgctxt "Panel heading for the webtrees-internal collaboration workflow"
+msgid "Internal collaboration"
+msgstr "Interne Zusammenarbeit"
+
+#: resources/views/detail.phtml:243
+msgid "Team"
+msgstr "Team"
+
+#: resources/views/detail.phtml:249
+msgctxt "Collaboration team role"
+msgid "Initiator"
+msgstr "Initiator"
+
+#: resources/views/detail.phtml:249
+msgctxt "Collaboration team role, singular noun"
+msgid "Collaborator"
+msgstr "Mitarbeiter"
+
+#: resources/views/detail.phtml:257
+msgid "This transcription is not currently open for internal collaboration."
+msgstr ""
+"Diese Transkription ist derzeit nicht bereit für die interne Zusammenarbeit."
+
+#: resources/views/detail.phtml:267
+msgctxt "Button: submit the transcription for review"
+msgid "Ready for review"
+msgstr "Stelle für Review bereit"
+
+#: resources/views/detail.phtml:273 resources/views/detail.phtml:291
+msgctxt "Button: mark this transcription as final"
+msgid "Finalize"
+msgstr "Beenden"
+
+#: resources/views/detail.phtml:279 resources/views/detail.phtml:297
+msgctxt "Button: reopen this finalized transcription for editing"
+msgid "Reopen"
+msgstr "Wiedereröffnen"
+
+#: resources/views/detail.phtml:310
+msgctxt ""
+"Form label for selecting multiple collaboration team members; not a plural "
+"variant of the role label"
+msgid "Collaborators"
+msgstr "Mitarbeiter"
+
+#: resources/views/detail.phtml:315
+msgid "No eligible users found."
+msgstr "Keine passenden Nutzer gefunden."
+
+#: resources/views/detail.phtml:340
+msgid "Message"
+msgstr "Nachricht"
+
+#: resources/views/detail.phtml:347
+msgid "Save the current NOTE as a starting revision"
+msgstr "Sicherung der aktuellen NOTE als Startrevision"
+
+#: resources/views/detail.phtml:355
+msgctxt "Button: update the selected collaboration team"
+msgid "Update collaboration"
+msgstr "Aktualisiere Zusammenarbeit"
+
+#: resources/views/detail.phtml:355
+msgctxt "Button: open this transcription for collaboration"
+msgid "Open for collaboration"
+msgstr "Öffne für Zusammenarbeit"
+
+#: resources/views/detail.phtml:361
+msgctxt ""
+"Hint shown when collaboration cannot be started because the transcription is "
+"final or canceled"
+msgid ""
+"Reopen the transcription before starting or changing internal collaboration."
+msgstr ""
+"Vor dem Start oder der Änderung der internen Zusammenarbeit muss die "
+"Transkription erst wieder geöffnet werden."
+
+#: resources/views/detail.phtml:371
 msgid "Media preview"
 msgstr "Medienvorschau"
 
-#: resources/views/detail.phtml:237
+#: resources/views/detail.phtml:381
 msgid "No media files found for this media object."
 msgstr "Für dieses Medienobjekt wurden keine Mediendateien gefunden."
 
-#: resources/views/detail.phtml:243
+#: resources/views/detail.phtml:387
 msgctxt "Label for selecting one media file"
 msgid "Media file"
 msgstr "Mediendatei"
 
-#: resources/views/detail.phtml:271
+#: resources/views/detail.phtml:415
 msgid "This media file cannot be previewed here."
 msgstr "Diese Mediendatei kann hier nicht angezeigt werden."
 
-#: resources/views/detail.phtml:321
+#: resources/views/detail.phtml:465
 msgid "Save NOTE"
 msgstr "Speichere NOTE"
 
-#: resources/views/detail.phtml:324
+#: resources/views/detail.phtml:468
 msgid "Archive as new revision"
-msgstr "Archivieren als neue Revision"
+msgstr "Archiviere als neue Revision"
 
-#: resources/views/detail.phtml:340
+#: resources/views/detail.phtml:484
 msgid "Revision history"
 msgstr "Revisionshistorie"
 
-#: resources/views/detail.phtml:345
+#: resources/views/detail.phtml:489
 msgid "Current"
 msgstr "Aktuell"
 
-#: resources/views/detail.phtml:346
+#: resources/views/detail.phtml:490
 msgid "Revision"
 msgstr "Revision"
 
-#: resources/views/detail.phtml:347
+#: resources/views/detail.phtml:491
 msgid "Origin"
 msgstr "Ursprung"
 
-#: resources/views/detail.phtml:348
+#: resources/views/detail.phtml:492
 msgid "Generated NOTE"
 msgstr "Erzeugte NOTE"
 
-#: resources/views/detail.phtml:349
+#: resources/views/detail.phtml:493
 msgid "NOTE change"
 msgstr "NOTE-Änderung"
 
-#: resources/views/detail.phtml:350
+#: resources/views/detail.phtml:494
 msgid "Text"
 msgstr "Text"
-
-#~ msgid "Begin transcription"
-#~ msgstr "Beginn der Transkription"
 
 #~ msgid "End transcription"
 #~ msgstr "Ende der Transkription"

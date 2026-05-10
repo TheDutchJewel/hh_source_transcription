@@ -35,6 +35,7 @@ use Fisharebest\Webtrees\I18N;
 final class ProviderLabel
 {
     public const string MANUAL = 'manual';
+    public const string INTERNAL = 'internal';
     public const string TRANSKRIBUS = 'transkribus';
     public const string DISCOURSE = 'discourse';
 
@@ -44,7 +45,8 @@ final class ProviderLabel
     public static function labels(): array
     {
         return [
-            self::MANUAL        => I18N::translate('Manual'),
+            self::MANUAL        => I18N::translateContext('Transcription provider label', 'Manual'),
+            self::INTERNAL      => I18N::translateContext('Transcription provider label', 'Internal collaboration'),
             self::TRANSKRIBUS   => I18N::translate('Transkribus'),
             self::DISCOURSE     => I18N::translate('Community (Discourse)'),
         ];
@@ -53,7 +55,8 @@ final class ProviderLabel
     public static function label(string $key): string
     {
         return match ($key) {
-            'manual' => I18N::translate('Manual'),
+            'manual' => I18N::translateContext('Transcription provider label', 'Manual'),
+            'internal' => I18N::translateContext('Transcription provider label', 'Internal collaboration'),
             'transkribus' => I18N::translate('Transkribus'),
             'discourse' => I18N::translate('Community (Discourse)'),
             default => $key,

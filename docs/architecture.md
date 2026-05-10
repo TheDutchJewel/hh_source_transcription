@@ -37,7 +37,20 @@ NOTE (new working state)
 
 ## Data Model
 
-An overview of the current database schema can be found in [docs/database/schema-2.sql.txt](database/schema-2.sql.txt).
+An overview of the current database schema can be found in [docs/database/schema-3.sql.txt](database/schema-3.sql.txt).
+
+### transcription_collaborators
+id  
+transcription_id  
+user_id  
+role  
+invited_by_user_id  
+invited_at  
+accepted_at  
+is_active  
+
+This table stores the team for internal collaboration. It does not replace the transcription or revision tables.
+The initial version directly assigns collaborators; `accepted_at` is reserved for a later explicit invitation/acceptance workflow.
 
 ### transcription_requests (planned)
 id  
@@ -80,6 +93,15 @@ Manual:
 3. Edit NOTE  
 4. Save as revision  
 
+Internal collaboration:
+1. Open an existing transcription for collaboration
+2. Optionally save the current working NOTE as a starting revision
+3. Assign collaborators
+4. Notify the team
+5. Collaborators edit the working NOTE and save revisions
+6. Any collaborator can set ready for review
+7. The initiator can set final
+
 Automated:
 1. Submit request  
 2. Import result  
@@ -92,11 +114,25 @@ Crowd:
 
 ## Services
 
-- **CreateTranscriptionService**: Initialisiert eine neue Transkription für eine Quelle und ein Medienobjekt.
+- **CreateTranscriptionService**: Delegiert die Anlage einer neuen Transkription an den passenden Provider.
 - **GetTranscriptionDetailService**: Lädt die vollständigen Daten einer Transkription inklusive Metadaten und Revisionshistorie.
 - **SaveNoteAsRevisionService**: Erstellt einen Snapshot des aktuellen NOTE-Inhalts als unveränderliche Revision.
 - **GenerateOrUpdateNoteService**: Synchronisiert den Inhalt einer webtrees NOTE mit den Daten aus dem Modul und verknüpft die NOTE primär mit dem ausgewählten Medienobjekt. Ohne Medienobjekt wird die Quelle als Fallback verwendet.
 - **EnsureTagNoteService**: Stellt sicher, dass das entsprechende webtrees-Tag (NOTE) für die Verknüpfung existiert und demselben Ziel wie die Transkription zugeordnet ist.
+- **OpenCollaborationService**: Öffnet eine bestehende Transkription für interne Zusammenarbeit, legt das Team fest und delegiert an den internen Provider.
+- **CollaborationStatusService**: Setzt kollaborative Statusübergänge mit Rollenprüfung.
+- **CollaborationNotificationService**: Informiert Teammitglieder über Kollaborationsereignisse über den webtrees-MessageService.
+
+---
+
+## Providers
+
+- **TranscriptionProviderInterface**: Definiert den gemeinsamen Basiskontrakt für Transkriptions-Provider.
+- **CreatesTranscriptionsInterface**: Markiert Provider, die neue Transkriptionen anlegen können.
+- **OpensCollaborationInterface**: Markiert Provider, die eine bestehende Transkription für Zusammenarbeit öffnen können.
+- **TranscriptionProviderFactory**: Erzeugt den passenden Provider anhand des Provider-Keys.
+- **ManualTranscriptionProvider**: Kapselt den aktuellen manuellen Workflow inklusive Anlage der Transkription, erster Revision, Arbeits-NOTE und Tag-NOTE.
+- **InternalCollaborationProvider**: Kapselt das Öffnen einer bestehenden Transkription für interne Zusammenarbeit. Quelle, Medienobjekt, Arbeits-NOTE und bisherige Revisionen bleiben erhalten.
 
 ---
 
@@ -167,7 +203,8 @@ case CANCEL = 'cancel';
 │   ├── architecture.md
 │   ├── database/
 │   │   ├── schema-1.sql.txt
-│   │   └── schema-2.sql.txt
+│   │   ├── schema-2.sql.txt
+│   │   └── schema-3.sql.txt
 │   ├── images/
 │   │   └── ui/
 │   │       ├── control_panel.png
@@ -175,6 +212,7 @@ case CANCEL = 'cancel';
 │   │       ├── dashboard.png
 │   │       └── details.png
 │   └── provider/
+│       ├── internal.md
 │       ├── manual.md
 │       └── transkribus.md
 ├── resources/
@@ -192,16 +230,25 @@ case CANCEL = 'cancel';
     ├── SourceTranscription.php
     ├── Application/
     │   ├── Dto/
-    │   │   └── CreateTranscriptionCommand.php
+    │   │   ├── CreateTranscriptionCommand.php
+    │   │   └── OpenCollaborationCommand.php
     │   ├── Factory/
     │   │   └── NoteContentFactory.php
     │   ├── Provider/
-    │   │   └── ProviderMetadata.php
+    │   │   ├── CreatesTranscriptionsInterface.php
+    │   │   ├── InternalCollaborationProvider.php
+    │   │   ├── ManualTranscriptionProvider.php
+    │   │   ├── OpensCollaborationInterface.php
+    │   │   ├── TranscriptionProviderFactory.php
+    │   │   └── TranscriptionProviderInterface.php
     │   └── Service/
+    │       ├── CollaborationNotificationService.php
+    │       ├── CollaborationStatusService.php
     │       ├── CreateTranscriptionService.php
     │       ├── EnsureTagNoteService.php
     │       ├── GenerateOrUpdateNoteService.php
     │       ├── GetTranscriptionDetailService.php
+    │       ├── OpenCollaborationService.php
     │       └── SaveNoteAsRevisionService.php
     ├── Domain/
     │   ├── Entity/
@@ -224,10 +271,12 @@ case CANCEL = 'cancel';
     │   └── TranscriptionType.php
     ├── Http/
     │   └── RequestHandlers/
+    │       ├── CollaborationStatusAction.php
     │       ├── CreateManualAction.php
     │       ├── DashboardAction.php
     │       ├── DetailAction.php
     │       ├── MediaForSourceAction.php
+    │       ├── OpenCollaborationAction.php
     │       ├── SaveNoteAsRevisionAction.php
     │       ├── StoreManualAction.php
     │       └── UpdateCurrentNoteAction.php
@@ -236,11 +285,13 @@ case CANCEL = 'cancel';
     │   │   ├── Repository/
     │   │   │   ├── NoteLinkRepository.php
     │   │   │   ├── RevisionRepository.php
+    │   │   │   ├── TranscriptionCollaboratorRepository.php
     │   │   │   ├── SettingsRepository.php
     │   │   │   └── TranscriptionRepository.php
     │   │   └── Schema/
 │   │       ├── Migration0.php
 │   │       ├── Migration1.php
+│   │       ├── Migration2.php
 │   │       └── SchemaManager.php
     │   ├── Webtrees/
     │   │   ├── MediaObjectGateway.php

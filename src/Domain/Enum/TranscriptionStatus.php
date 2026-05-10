@@ -58,12 +58,12 @@ enum TranscriptionStatus: string
     public static function labels(): array
     {
         return [
-            self::NEW->value              => I18N::translate('New'),
-            self::IN_PROGRESS->value      => I18N::translate('In progress'),
-            self::READY_FOR_REVIEW->value => I18N::translate('Ready for review'),
-            self::FINAL->value            => I18N::translate('Final'),
-            self::REOPENED->value         => I18N::translate('Reopened'),
-            self::CANCELED->value        => I18N::translate('Canceled'),
+            self::NEW->value              => I18N::translateContext('Transcription status', 'New'),
+            self::IN_PROGRESS->value      => I18N::translateContext('Transcription status', 'In progress'),
+            self::READY_FOR_REVIEW->value => I18N::translateContext('Transcription status', 'Ready for review'),
+            self::FINAL->value            => I18N::translateContext('Transcription status; adjective, not an action button', 'Final'),
+            self::REOPENED->value         => I18N::translateContext('Transcription status; already reopened, not an action button', 'Reopened'),
+            self::CANCELED->value        => I18N::translateContext('Transcription status', 'Canceled'),
         ];
     }
 }

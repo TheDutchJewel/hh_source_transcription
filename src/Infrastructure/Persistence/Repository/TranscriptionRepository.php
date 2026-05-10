@@ -97,6 +97,17 @@ final class TranscriptionRepository
             ]);
     }
 
+    public function updateProvider(int $id, string $provider_key, string $interaction_model): void
+    {
+        DB::table(self::TABLE)
+            ->where('id', '=', $id)
+            ->update([
+                'provider_key' => $provider_key,
+                'interaction_model' => $interaction_model,
+                'updated_at' => DB::raw('CURRENT_TIMESTAMP'),
+            ]);
+    }
+
     private function map(object $row): Transcription
     {
         return new Transcription(

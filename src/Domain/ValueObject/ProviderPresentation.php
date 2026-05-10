@@ -48,6 +48,9 @@ final class ProviderPresentation
             ProviderLabel::MANUAL => route('source-transcription-dashboard', [
                 'tree' => $tree->name(),
             ]),
+            ProviderLabel::INTERNAL => route('source-transcription-dashboard', [
+                'tree' => $tree->name(),
+            ]),
 
             ProviderLabel::TRANSKRIBUS => 'https://www.transkribus.org/',
             ProviderLabel::DISCOURSE   => 'https://discourse.genealogy.net/',
@@ -60,6 +63,7 @@ final class ProviderPresentation
     {
         return match ($provider_key) {
             ProviderLabel::MANUAL => asset('favicon.ico'),
+            ProviderLabel::INTERNAL => asset('favicon.ico'),
 
             // Platzhalter; später besser eigene kleine SVG/PNG im Modul
             ProviderLabel::TRANSKRIBUS => '',
@@ -72,7 +76,8 @@ final class ProviderPresentation
     public static function title(string $provider_key): string
     {
         return match ($provider_key) {
-            ProviderLabel::MANUAL => I18N::translate('Manual transcription in this webtrees installation'),
+            ProviderLabel::MANUAL => I18N::translateContext('Tooltip for transcription provider link', 'Manual transcription in this webtrees installation'),
+            ProviderLabel::INTERNAL => I18N::translateContext('Tooltip for transcription provider link', 'Internal collaboration in this webtrees installation'),
             ProviderLabel::TRANSKRIBUS => I18N::translate('Transkribus'),
             ProviderLabel::DISCOURSE => I18N::translate('Community discussion on Discourse'),
             default => ProviderLabel::label($provider_key),

@@ -34,7 +34,12 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Services\UserService;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\GetTranscriptionDetailService;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\TranscriptionStatus;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\CollaborationRole;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionCollaboratorRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -55,17 +60,66 @@ class DetailAction implements RequestHandlerInterface
         $transcription_id = (int) $request->getAttribute('transcription_id');
         $service = Registry::container()->get(GetTranscriptionDetailService::class);
         $data = $service->get($tree, $transcription_id);
+        $transcription = $data['transcription'];
+        $user = $request->getAttribute('user');
+        $collaborator_repo = Registry::container()->get(TranscriptionCollaboratorRepository::class);
+        $active_roles = $collaborator_repo->activeRolesByUserId($transcription_id);
+        $current_user_role = $collaborator_repo->roleForUser($transcription_id, $user->id());
+        $collaboration_is_editable = !in_array($transcription->status, [
+            TranscriptionStatus::FINAL->value,
+            TranscriptionStatus::CANCELED->value,
+        ], true);
+        $can_edit_note = Auth::isEditor($tree) || ($current_user_role !== null && $collaboration_is_editable);
+        $is_initiator = $current_user_role === CollaborationRole::INITIATOR;
+
+        $eligible_collaborators = Registry::container()
+            ->get(UserService::class)
+            ->all()
+            ->filter(static fn ($candidate): bool => $candidate->id() !== $user->id() && Auth::isMember($tree, $candidate))
+            ->all();
+
+        $active_collaborators = [];
+        $user_service = Registry::container()->get(UserService::class);
+        foreach ($active_roles as $active_user_id => $role) {
+            $active_user = $user_service->find($active_user_id);
+            if ($active_user !== null) {
+                $active_collaborators[$active_user_id] = [
+                    'name' => $active_user->realName() !== '' ? $active_user->realName() : $active_user->userName(),
+                    'role' => $role,
+                ];
+            }
+        }
 
         $content = view('hh_source_transcription::detail', [
             'title'         => $title,
             'tree'          => $tree,
-            'transcription' => $data['transcription'],
+            'transcription' => $transcription,
             'revisions'     => $data['revisions'],
             'note_text'     => $data['note_text'],
             'source'        => $data['source'],
             'media_object'  => $data['media_object'],
             'media_files'   => $data['media_files'],
             'media_restriction' => $data['media_restriction'],
+            'eligible_collaborators' => $eligible_collaborators,
+            'active_collaborators' => $active_collaborators,
+            'active_collaborator_ids' => array_keys($active_roles),
+            'can_edit_note' => $can_edit_note,
+            'can_open_collaboration' => Auth::isEditor($tree) && $collaboration_is_editable,
+            'collaboration_is_editable' => $collaboration_is_editable,
+            'can_submit_review' => $current_user_role !== null && in_array($transcription->status, [
+                TranscriptionStatus::IN_PROGRESS->value,
+                TranscriptionStatus::REOPENED->value,
+            ], true),
+            'can_finalize' => $is_initiator && $transcription->status === TranscriptionStatus::READY_FOR_REVIEW->value,
+            'can_reopen' => ($is_initiator || Auth::isAdmin($user)) && $transcription->status === TranscriptionStatus::FINAL->value,
+            'is_internal_collaboration' => $transcription->provider_key === ProviderKey::INTERNAL,
+            'can_finalize_manual' => $transcription->provider_key === ProviderKey::MANUAL &&
+                Auth::isEditor($tree) &&
+                $transcription->status !== TranscriptionStatus::FINAL->value &&
+                $transcription->status !== TranscriptionStatus::CANCELED->value,
+            'can_reopen_manual' => $transcription->provider_key === ProviderKey::MANUAL &&
+                Auth::isEditor($tree) &&
+                $transcription->status === TranscriptionStatus::FINAL->value,
         ]);
 
         return response(view('layouts/default', [

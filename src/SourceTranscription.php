@@ -57,9 +57,12 @@ use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationS
 use Hartenthaler\{Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\SettingsRepository,
     Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Schema\SchemaManager,
     Webtrees\Module\SourceTranscription\Domain\ValueObject\NoteStrategy,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\CollaborationStatusAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\CreateManualAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\DashboardAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\DetailAction,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\ManualStatusAction,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\OpenCollaborationAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\SaveNoteAsRevisionAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\StoreManualAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\UpdateCurrentNoteAction,
@@ -98,7 +101,7 @@ final class SourceTranscription extends AbstractModule implements
 	public const string CUSTOM_AUTHOR = 'Hermann Hartenthaler';
 
     //Used database schema version
-    public const int CURRENT_SCHEMA_VERSION = 2;
+    public const int CURRENT_SCHEMA_VERSION = 3;
 
     //Default tag values for transcriptions (NOTE <tag_prefix><tag_value>)
     public const string DEFAULT_TAG_PREFIX = 'TAG: ';
@@ -123,10 +126,16 @@ final class SourceTranscription extends AbstractModule implements
     private const string ROUTE_PATH_UPDATE_NOTE = '/tree/{tree}/source-transcriptions/{transcription_id}/update-note';
     private const string ROUTE_POST_NAME_SAVE_NOTE_AS_REVISION = 'source-transcription-save-note-as-revision';
     private const string ROUTE_PATH_SAVE_NOTE_AS_REVISION = '/tree/{tree}/source-transcriptions/{transcription_id}/save-note-as-revision';
+    private const string ROUTE_POST_NAME_OPEN_COLLABORATION = 'source-transcription-open-collaboration';
+    private const string ROUTE_PATH_OPEN_COLLABORATION = '/tree/{tree}/source-transcriptions/{transcription_id}/open-collaboration';
+    private const string ROUTE_POST_NAME_COLLABORATION_STATUS = 'source-transcription-collaboration-status';
+    private const string ROUTE_PATH_COLLABORATION_STATUS = '/tree/{tree}/source-transcriptions/{transcription_id}/collaboration-status';
+    private const string ROUTE_POST_NAME_MANUAL_STATUS = 'source-transcription-manual-status';
+    private const string ROUTE_PATH_MANUAL_STATUS = '/tree/{tree}/source-transcriptions/{transcription_id}/manual-status';
     //private const string ROUTE_GET_NAME_MEDIA_FOR_SOURCE = 'source-transcription-media-for-source';
     private const string ROUTE_PATH_MEDIA_FOR_SOURCE = '/tree/{tree}/source-transcriptions/media-for-source';
     private const string ROUTE_GET_NAME_DETAIL = 'source-transcription-detail';
-    private const string ROUTE_PATH_DETAIL = '/tree/{tree}/source-transcriptions/{transcription_id}/{slug}';
+    private const string ROUTE_PATH_DETAIL = '/tree/{tree}/source-transcriptions/{transcription_id}';
 
     /**
      * SourceTranscription constructor.
@@ -198,6 +207,24 @@ final class SourceTranscription extends AbstractModule implements
             self::ROUTE_POST_NAME_SAVE_NOTE_AS_REVISION,
             self::ROUTE_PATH_SAVE_NOTE_AS_REVISION,
             SaveNoteAsRevisionAction::class
+        );
+
+        $router->post(
+            self::ROUTE_POST_NAME_OPEN_COLLABORATION,
+            self::ROUTE_PATH_OPEN_COLLABORATION,
+            OpenCollaborationAction::class
+        );
+
+        $router->post(
+            self::ROUTE_POST_NAME_COLLABORATION_STATUS,
+            self::ROUTE_PATH_COLLABORATION_STATUS,
+            CollaborationStatusAction::class
+        );
+
+        $router->post(
+            self::ROUTE_POST_NAME_MANUAL_STATUS,
+            self::ROUTE_PATH_MANUAL_STATUS,
+            ManualStatusAction::class
         );
 
         $router->get(
@@ -438,12 +465,34 @@ final class SourceTranscription extends AbstractModule implements
         }
 
         return new Menu(
-            I18N::translate('Transcriptions'),
+            $this->menuIcon() . I18N::translate('Transcriptions'),
             e(route('source-transcription-dashboard', [
                 'tree' => $tree->name(),
             ])),
-            $this->name()
+            $this->name() . ' menu-source-transcription'
         );
+    }
+
+    /**
+     * Inline SVG icon for the main menu entry.
+     *
+     * @return string
+     */
+    private function menuIcon(): string
+    {
+        $icon_file = $this->resourcesFolder() . 'images' . DIRECTORY_SEPARATOR . 'source-transcription.svg';
+
+        if (!is_file($icon_file)) {
+            return '';
+        }
+
+        $icon = file_get_contents($icon_file);
+
+        if ($icon === false) {
+            return '';
+        }
+
+        return '<span aria-hidden="true" style="display:inline-block;width:1.35em;height:.9em;margin-inline-end:.35em;vertical-align:-.15em">' . $icon . '</span>';
     }
 
     /**
