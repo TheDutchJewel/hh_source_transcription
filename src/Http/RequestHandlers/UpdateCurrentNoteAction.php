@@ -35,8 +35,9 @@ use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Registry;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\GenerateOrUpdateNoteService;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\TranscriptionStatus;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionCollaboratorRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SharedNoteGateway;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -52,7 +53,27 @@ class UpdateCurrentNoteAction implements RequestHandlerInterface
 
         if (!Auth::isMember($tree)) return response('');
 
+        $user = $request->getAttribute('user');
         $transcription_id = (int) $request->getAttribute('transcription_id');
+        $transcription = Registry::container()
+            ->get(TranscriptionRepository::class)
+            ->find($transcription_id);
+
+        if ($transcription === null) return response('');
+
+        $collaboration_is_editable = !in_array($transcription->status, [
+            TranscriptionStatus::FINAL->value,
+            TranscriptionStatus::CANCELED->value,
+        ], true);
+
+        $can_edit = Auth::isEditor($tree) || (
+            Registry::container()
+                ->get(TranscriptionCollaboratorRepository::class)
+                ->isActiveCollaborator($transcription_id, $user->id()) && $collaboration_is_editable
+        );
+
+        if (!$can_edit) return response('');
+
         $params = (array) $request->getParsedBody();
         $note_text = (string) ($params['note_text'] ?? '');
 

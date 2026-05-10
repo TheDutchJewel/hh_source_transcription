@@ -1,5 +1,4 @@
 <?php
-
 /*
  * webtrees: online genealogy application
  * Copyright (C) 2026 webtrees development team
@@ -28,33 +27,14 @@
 
 declare(strict_types=1);
 
-namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service;
+namespace Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\WhatsNew;
 
-use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Dto\CreateTranscriptionCommand;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider\TranscriptionProviderFactory;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
-use InvalidArgumentException;
+use Fisharebest\Webtrees\I18N;
 
-final class CreateTranscriptionService
+class WhatsNew1 implements WhatsNewInterface
 {
-    public function __construct(
-        private readonly TranscriptionProviderFactory $providerFactory,
-    ) {
-    }
-
-    public function create(CreateTranscriptionCommand $command): int
+    public function getMessage(): string
     {
-        return $this->providerFactory
-            ->creatorForKey($command->provider_key)
-            ->create($command);
-    }
-
-    public function createManual(CreateTranscriptionCommand $command): int
-    {
-        if ($command->provider_key !== ProviderKey::MANUAL) {
-            throw new InvalidArgumentException('Only manual transcriptions are supported by createManual().');
-        }
-
-        return $this->create($command);
+        return I18N::translate("New transcription provider available: internal collaboration with other webtrees users.");
     }
 }

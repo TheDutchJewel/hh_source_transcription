@@ -30,31 +30,21 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service;
 
-use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Dto\CreateTranscriptionCommand;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Dto\OpenCollaborationCommand;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider\TranscriptionProviderFactory;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
-use InvalidArgumentException;
 
-final class CreateTranscriptionService
+final class OpenCollaborationService
 {
     public function __construct(
         private readonly TranscriptionProviderFactory $providerFactory,
     ) {
     }
 
-    public function create(CreateTranscriptionCommand $command): int
+    public function open(OpenCollaborationCommand $command): void
     {
-        return $this->providerFactory
-            ->creatorForKey($command->provider_key)
-            ->create($command);
-    }
-
-    public function createManual(CreateTranscriptionCommand $command): int
-    {
-        if ($command->provider_key !== ProviderKey::MANUAL) {
-            throw new InvalidArgumentException('Only manual transcriptions are supported by createManual().');
-        }
-
-        return $this->create($command);
+        $this->providerFactory
+            ->collaborationOpenerForKey(ProviderKey::INTERNAL)
+            ->openCollaboration($command);
     }
 }

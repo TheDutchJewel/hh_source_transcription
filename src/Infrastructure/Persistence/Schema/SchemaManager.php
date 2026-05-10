@@ -46,6 +46,7 @@ final class SchemaManager
     public const string TABLE_TRANSCRIPTIONS = 'transcriptions';
     public const string TABLE_REVISIONS = 'transcription_revisions';
     public const string TABLE_NOTE_LINKS = 'transcription_note_links';
+    public const string TABLE_COLLABORATORS = 'transcription_collaborators';
 
     /*
     public function __construct(
@@ -104,6 +105,7 @@ final class SchemaManager
     public function deleteAllTables(): void
     {
         DB::schema()->dropIfExists(self::TABLE_NOTE_LINKS);
+        DB::schema()->dropIfExists(self::TABLE_COLLABORATORS);
         DB::schema()->dropIfExists(self::TABLE_REVISIONS);
         DB::schema()->dropIfExists(self::TABLE_TRANSCRIPTIONS);
         DB::schema()->dropIfExists(self::TABLE_METADATA);

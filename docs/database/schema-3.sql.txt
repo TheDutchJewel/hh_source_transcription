@@ -1,0 +1,81 @@
+This is a documentation of the database schema version 3.
+
+The table prefix "wt_" may be different in your installation.
+
+CREATE TABLE wt_transcription_metadata (
+                                           setting_name  VARCHAR(64) PRIMARY KEY,
+                                           setting_value TEXT NOT NULL
+);
+
+CREATE TABLE wt_transcriptions (
+                                   id                   INT AUTO_INCREMENT PRIMARY KEY,
+                                   tree_id              INT NOT NULL,
+                                   source_xref          VARCHAR(20) NOT NULL,
+                                   media_xref           VARCHAR(20) NULL,
+                                   title                VARCHAR(255) NOT NULL,
+                                   interaction_model    VARCHAR(32) NOT NULL,
+                                   transcription_type   VARCHAR(32) NOT NULL,
+                                   provider_key         VARCHAR(32) NOT NULL,
+                                   status               VARCHAR(32) NOT NULL,
+                                   primary_language_tag VARCHAR(32) NULL,
+                                   primary_script_tag   VARCHAR(32) NULL,
+                                   primary_form         VARCHAR(32) NULL,
+                                   tag_note_xref        VARCHAR(20) NULL,
+                                   current_note_xref    VARCHAR(20) NULL,
+                                   created_by_user_id   INT NOT NULL,
+                                   created_at           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                   updated_at           TIMESTAMP NULL DEFAULT NULL,
+                                   is_active            TINYINT(1) NOT NULL DEFAULT 1,
+                                   INDEX idx_transcriptions_source (tree_id, source_xref),
+                                   INDEX idx_transcriptions_media (tree_id, media_xref)
+);
+
+CREATE TABLE wt_transcription_revisions (
+                                            id                                   INT AUTO_INCREMENT PRIMARY KEY,
+                                            transcription_id                     INT NOT NULL,
+                                            revision_no                          INT NOT NULL,
+                                            provider_key                         VARCHAR(32) NOT NULL,
+                                            origin_type                          VARCHAR(32) NOT NULL,
+                                            origin_reference                     TEXT NULL,
+                                            content_format                       VARCHAR(32) NOT NULL,
+                                            content_text                         LONGTEXT NOT NULL,
+                                            content_hash                         CHAR(64) NOT NULL,
+                                            created_by_user_id                   INT NOT NULL,
+                                            created_at                           TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                            import_comment                       TEXT NULL,
+                                            generated_note_xref                  VARCHAR(20) NULL,
+                                            generated_note_changed_by_user_id    INT NULL,
+                                            generated_note_changed_by_user_name  VARCHAR(255) NULL,
+                                            generated_note_changed_at            TIMESTAMP NULL,
+                                            is_current_revision                  TINYINT(1) NOT NULL DEFAULT 0,
+                                            INDEX idx_revisions_transcription (transcription_id),
+                                            INDEX idx_revisions_hash (content_hash)
+);
+
+CREATE TABLE wt_transcription_note_links (
+                                             id                      INT AUTO_INCREMENT PRIMARY KEY,
+                                             transcription_id        INT NOT NULL,
+                                             revision_id             INT NULL,
+                                             note_xref               VARCHAR(20) NOT NULL,
+                                             link_type               VARCHAR(32) NOT NULL,
+                                             created_at              TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                             created_by_user_id      INT NOT NULL,
+                                             is_current              TINYINT(1) NOT NULL DEFAULT 0,
+                                             note_hash_at_link_time  CHAR(64) NULL,
+                                             INDEX idx_note_links_transcription (transcription_id),
+                                             INDEX idx_note_links_note (note_xref)
+);
+
+CREATE TABLE wt_transcription_collaborators (
+                                                id                  INT AUTO_INCREMENT PRIMARY KEY,
+                                                transcription_id    INT NOT NULL,
+                                                user_id             INT NOT NULL,
+                                                role                VARCHAR(32) NOT NULL,
+                                                invited_by_user_id  INT NOT NULL,
+                                                invited_at          TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                                                accepted_at         TIMESTAMP NULL,
+                                                is_active           TINYINT(1) NOT NULL DEFAULT 1,
+                                                UNIQUE INDEX idx_transcription_collaborators_unique (transcription_id, user_id),
+                                                INDEX idx_transcription_collaborators_transcription (transcription_id),
+                                                INDEX idx_transcription_collaborators_user (user_id)
+);
