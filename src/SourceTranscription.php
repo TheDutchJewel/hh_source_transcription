@@ -186,9 +186,10 @@ final class SourceTranscription extends AbstractModule implements
 
         //Enable the TinyMDE editor of custom module linkenhancer
         $settingsRepository = Registry::container()->get(SettingsRepository::class);
-        if ($settingsRepository->get(self::TINY_MDE) == 'enabled') {
-           $this->enableTinyMde();
-        }
+        $this->toggleTinyMde($settingsRepository->get(self::TINY_MDE) == 'enabled');
+        //if ($settingsRepository->get(self::TINY_MDE) == 'enabled') {
+        //   $this->enableTinyMde();
+        //}
 
         //Register routes
         $router = Registry::routeFactory()->routeMap();
@@ -326,24 +327,34 @@ final class SourceTranscription extends AbstractModule implements
         $settingsRepository->set(self::TAGGING_SUPPORT, 'enabled');
     }
 
+
     /**
+     * toggles registration for using markdown editor on note fields provided by linkenhancer custom module
+     * registration is persisted by linkenhancer custom module so it's not necessary to force registering again each time
+     * @param bool $enable
+     * @param bool $force
      * @return void
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    private function enableTinyMde(): void
+    private function toggleTinyMde(bool $enable, bool $force = false): void
     {
         $class = "Schwendinger\\Webtrees\\Module\\LinkEnhancer\\Services\\MarkdownEditorActivationService";
         if (Registry::container()->has($class)) {
             /** @var MarkdownEditorActivationService $mde_service */
             $mde_service = Registry::container()->get($class);
-            //if (!$mde_service->getCustomRule(self::CUSTOM_TITLE)) { // why was that condition suggested by bschwend ?
+            $existingRule = $mde_service->getCustomRule(self::CUSTOM_TITLE);
+            if (
+                $force ||
+                $enable && !$existingRule ||
+                !$enable && $existingRule
+            ) {
                 $mde_service->setCustomRule(
                     self::CUSTOM_TITLE,  // module name as key
-                    ["source-transcription-detail", "source-transcription-create-manual"], // handler: usually the short class name / last part of the route name - see js console with enabled debug info
-                    ["textarea[id$='_text']"] // filter: querySelector filter expressions; here: textarea id ends with "_text"
+                    $enable ? ["source-transcription-detail", "source-transcription-create-manual"] : [], // handler: usually the short class name / last part of the route name - see js console with enabled debug info
+                    $enable ? ["textarea[id$='_text']"] : [] // filter: querySelector filter expressions; here: textarea id ends with "_text"
                 );
-            //}
+            }
         }
     }
 
