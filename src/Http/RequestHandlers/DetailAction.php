@@ -69,13 +69,13 @@ class DetailAction implements RequestHandlerInterface
             TranscriptionStatus::FINAL->value,
             TranscriptionStatus::CANCELED->value,
         ], true);
-        $can_edit_note = Auth::isEditor($tree) || ($current_user_role !== null && $collaboration_is_editable);
+        $can_edit_note = Auth::isEditor($tree) && ($current_user_role !== null || $transcription->provider_key !== ProviderKey::INTERNAL) && $collaboration_is_editable;
         $is_initiator = $current_user_role === CollaborationRole::INITIATOR;
 
         $eligible_collaborators = Registry::container()
             ->get(UserService::class)
             ->all()
-            ->filter(static fn ($candidate): bool => $candidate->id() !== $user->id() && Auth::isMember($tree, $candidate))
+            ->filter(static fn ($candidate): bool => $candidate->id() !== $user->id() && Auth::isEditor($tree, $candidate))
             ->all();
 
         $active_collaborators = [];
@@ -104,9 +104,10 @@ class DetailAction implements RequestHandlerInterface
             'active_collaborators' => $active_collaborators,
             'active_collaborator_ids' => array_keys($active_roles),
             'can_edit_note' => $can_edit_note,
+            'can_make_revision_current' => $can_edit_note,
             'can_open_collaboration' => Auth::isEditor($tree) && $collaboration_is_editable,
             'collaboration_is_editable' => $collaboration_is_editable,
-            'can_submit_review' => $current_user_role !== null && in_array($transcription->status, [
+            'can_submit_review' => Auth::isEditor($tree) && $current_user_role !== null && in_array($transcription->status, [
                 TranscriptionStatus::IN_PROGRESS->value,
                 TranscriptionStatus::REOPENED->value,
             ], true),

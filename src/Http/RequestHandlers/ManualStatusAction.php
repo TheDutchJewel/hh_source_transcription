@@ -8,7 +8,9 @@ use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\GenerateOrUpdateNoteService;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\ManualStatusService;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\SaveNoteAsRevisionService;
 use InvalidArgumentException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -28,12 +30,27 @@ final class ManualStatusAction implements RequestHandlerInterface
         }
 
         $transcription_id = (int) $request->getAttribute('transcription_id');
+        $user = $request->getAttribute('user');
         $params = (array) $request->getParsedBody();
         $action = (string) ($params['manual_action'] ?? '');
         $service = Registry::container()->get(ManualStatusService::class);
 
         switch ($action) {
             case 'finalize':
+                if (array_key_exists('note_text', $params)) {
+                    Registry::container()
+                        ->get(GenerateOrUpdateNoteService::class)
+                        ->updateNoteText($transcription_id, (string) $params['note_text']);
+                }
+
+                Registry::container()
+                    ->get(SaveNoteAsRevisionService::class)
+                    ->saveCurrentNoteAsRevision(
+                        $transcription_id,
+                        $user->id(),
+                        I18N::translate('Saved on finalize')
+                    );
+
                 $service->finalize($transcription_id);
                 break;
 

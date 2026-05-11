@@ -30,13 +30,15 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers;
 
+use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\I18N;
-use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Registry;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\GenerateOrUpdateNoteService;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\TranscriptionStatus;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\NoteStrategy;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\RevisionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionCollaboratorRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
 use Psr\Http\Message\ResponseInterface;
@@ -44,45 +46,63 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 use function redirect;
+use function response;
 use function route;
 
-class UpdateCurrentNoteAction implements RequestHandlerInterface
+class MakeRevisionCurrentAction implements RequestHandlerInterface
 {
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $tree = $request->getAttribute('tree');
 
-        if (!Auth::isEditor($tree)) return response('');
+        if (!Auth::isEditor($tree)) {
+            return response('');
+        }
 
         $user = $request->getAttribute('user');
         $transcription_id = (int) $request->getAttribute('transcription_id');
-        $transcription = Registry::container()
-            ->get(TranscriptionRepository::class)
-            ->find($transcription_id);
+        $revision_id = (int) $request->getAttribute('revision_id');
 
-        if ($transcription === null) return response('');
+        $transcription_repository = Registry::container()->get(TranscriptionRepository::class);
+        $revision_repository = Registry::container()->get(RevisionRepository::class);
 
-        $collaboration_is_editable = !in_array($transcription->status, [
+        $transcription = $transcription_repository->find($transcription_id);
+        $revision = $revision_repository->find($revision_id);
+
+        if ($transcription === null || $revision === null || $revision->transcription_id !== $transcription_id) {
+            return response('');
+        }
+
+        $transcription_is_editable = !in_array($transcription->status, [
             TranscriptionStatus::FINAL->value,
             TranscriptionStatus::CANCELED->value,
         ], true);
 
-        $can_edit = $collaboration_is_editable && (
+        $can_edit = $transcription_is_editable && (
             $transcription->provider_key !== ProviderKey::INTERNAL ||
             Registry::container()
                 ->get(TranscriptionCollaboratorRepository::class)
                 ->isActiveCollaborator($transcription_id, $user->id())
         );
 
-        if (!$can_edit) return response('');
+        if (!$can_edit) {
+            return response('');
+        }
 
-        $params = (array) $request->getParsedBody();
-        $note_text = (string) ($params['note_text'] ?? '');
+        Registry::container()
+            ->get(GenerateOrUpdateNoteService::class)
+            ->applyRevisionToCurrentNote(
+                $transcription_id,
+                $revision_id,
+                NoteStrategy::ALWAYS_UPDATE
+            );
 
-        $service = Registry::container()->get(GenerateOrUpdateNoteService::class);
-        $service->updateNoteText($transcription_id, $note_text);
+        $revision_repository->markCurrent($transcription_id, $revision_id);
 
-        FlashMessages::addMessage(I18N::translate('The NOTE has been updated.'), 'success');
+        FlashMessages::addMessage(
+            I18N::translate('Revision %s is now the current revision.', (string) $revision->revision_no),
+            'success'
+        );
 
         return redirect(route('source-transcription-detail', [
             'tree' => $tree->name(),

@@ -45,7 +45,7 @@ class CreateManualAction implements RequestHandlerInterface
     {
         $tree = $request->getAttribute('tree');
 
-        if (!Auth::isMember($tree)) return response('');
+        if (!Auth::isEditor($tree)) return response('');
 
         $title = I18N::translate('Create manual transcription');
 

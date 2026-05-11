@@ -37,6 +37,7 @@ use Fisharebest\Webtrees\Registry;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\GenerateOrUpdateNoteService;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\SaveNoteAsRevisionService;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\TranscriptionStatus;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\RevisionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionCollaboratorRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
@@ -53,7 +54,7 @@ class SaveNoteAsRevisionAction implements RequestHandlerInterface
     {
         $tree = $request->getAttribute('tree');
 
-        if (!Auth::isMember($tree)) return response('');
+        if (!Auth::isEditor($tree)) return response('');
 
         $user = $request->getAttribute('user');
 
@@ -69,10 +70,11 @@ class SaveNoteAsRevisionAction implements RequestHandlerInterface
             TranscriptionStatus::CANCELED->value,
         ], true);
 
-        $can_edit = Auth::isEditor($tree) || (
+        $can_edit = $collaboration_is_editable && (
+            $transcription->provider_key !== ProviderKey::INTERNAL ||
             Registry::container()
                 ->get(TranscriptionCollaboratorRepository::class)
-                ->isActiveCollaborator($transcription_id, $user->id()) && $collaboration_is_editable
+                ->isActiveCollaborator($transcription_id, $user->id())
         );
 
         if (!$can_edit) return response('');

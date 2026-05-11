@@ -34,6 +34,7 @@ use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Tree;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Dto\CreateTranscriptionCommand;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\CreateTranscriptionService;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\PrimaryForm;
@@ -53,13 +54,24 @@ class StoreManualAction implements RequestHandlerInterface
     {
         $tree = $request->getAttribute('tree');
 
-        if (!Auth::isMember($tree)) return response('');
+        if (!Auth::isEditor($tree)) return response('');
 
         $user = $request->getAttribute('user');
         $params = (array) $request->getParsedBody();
 
         $source_xref = $this->normalizeXref((string) ($params['source_xref'] ?? ''));
         $media_xref  = $this->normalizeXref((string) ($params['media_xref'] ?? ''));
+
+        if (!$this->canUseSourceAndMedia($tree, $source_xref, $media_xref !== '' ? $media_xref : null)) {
+            FlashMessages::addMessage(
+                I18N::translate('You do not have permission to use the selected source or media object.'),
+                'danger'
+            );
+
+            return redirect(route('source-transcription-create-manual', [
+                'tree' => $tree->name(),
+            ]));
+        }
 
         $primary_language_tag = trim((string) ($params['primary_language_tag'] ?? ''));
         $primary_script_tag = trim((string) ($params['primary_script_tag'] ?? ''));
@@ -107,5 +119,58 @@ class StoreManualAction implements RequestHandlerInterface
     private function normalizeXref(string $xref): string
     {
         return trim(trim($xref), '@');
+    }
+
+    private function canUseSourceAndMedia(Tree $tree, string $source_xref, ?string $media_xref): bool
+    {
+        if ($source_xref === '') {
+            return false;
+        }
+
+        $access_level = Auth::accessLevel($tree);
+        $source = Registry::sourceFactory()->make($source_xref, $tree);
+
+        if ($source === null || !$source->canShow($access_level)) {
+            return false;
+        }
+
+        if ($media_xref === null) {
+            return true;
+        }
+
+        $media = Registry::mediaFactory()->make($media_xref, $tree);
+
+        if ($media === null || !$media->canShow($access_level)) {
+            return false;
+        }
+
+        return in_array($media_xref, $this->visibleMediaXrefs($tree, $source_xref), true);
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    private function visibleMediaXrefs(Tree $tree, string $source_xref): array
+    {
+        $source = Registry::sourceFactory()->make($source_xref, $tree);
+
+        if ($source === null) {
+            return [];
+        }
+
+        $media_xrefs = [];
+        $access_level = Auth::accessLevel($tree);
+
+        foreach (preg_split('/\R/u', $source->privatizeGedcom($access_level)) ?: [] as $line) {
+            if (preg_match('/^\d+\s+OBJE\s+@([^@]+)@/u', $line, $match)) {
+                $media_xrefs[] = $match[1];
+            }
+        }
+
+        return array_values(array_unique(array_filter($media_xrefs, function (string $media_xref) use ($tree, $access_level): bool {
+            $media = Registry::mediaFactory()->make($media_xref, $tree);
+
+            return $media !== null && $media->canShow($access_level);
+        })));
     }
 }

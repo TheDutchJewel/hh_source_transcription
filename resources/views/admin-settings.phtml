@@ -8,16 +8,27 @@ declare(strict_types=1);
  * @var string $title
  * @var SourceTranscription $module
  * @var bool $runs_with_webtrees_version
+ * @var array $diagnostics
  * @var string $default_note_strategy
  * @var array<string,string> $note_strategies
  * @var string $tiny_mde
  * @var string $tagging_support
  * @var string $tag_prefix
  * @var string $tag_value
+ * @var array|null $consistency_check
  */
 
 use Fisharebest\Webtrees\I18N;
 use Hartenthaler\Webtrees\Module\SourceTranscription\SourceTranscription;
+
+$transcription_trees = $diagnostics['transcription_trees'] ?? [];
+$consistency_check ??= null;
+
+$statusBadge = static function (bool $status): string {
+    return $status
+        ? '<span class="badge bg-success">' . I18N::translate('yes') . '</span>'
+        : '<span class="badge bg-secondary">' . I18N::translate('no') . '</span>';
+};
 
 ?>
 
@@ -78,7 +89,7 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\SourceTranscription;
 
     <div class="row mb-3">
         <label class="col-sm-3 col-form-label" for="tagging_support">
-            <?= I18N::translate('Should tagging be supported') ?>
+            <?= I18N::translate('Should tagging be supported?') ?>
         </label>
 
         <div class="col-sm-9">
@@ -127,6 +138,183 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\SourceTranscription;
         </div>
     </div>
 </form>
+
+<h3><?= I18N::translate('Diagnostics') ?></h3>
+
+<form method="post" action="<?= e($module->getConfigLink()) ?>" class="mb-4">
+    <?= csrf_field() ?>
+    <input type="hidden" name="run_consistency_check" value="1">
+
+    <button class="btn btn-secondary" type="submit">
+        <?= I18N::translate('Run consistency check') ?>
+    </button>
+</form>
+
+<?php if ($consistency_check !== null) : ?>
+    <h4><?= I18N::translate('Consistency check') ?></h4>
+
+    <?php if ($consistency_check['errors'] === [] && $consistency_check['warnings'] === []) : ?>
+        <div class="alert alert-success">
+            <?= I18N::translate('No consistency issues found.') ?>
+        </div>
+    <?php endif ?>
+
+    <?php if ($consistency_check['errors'] !== []) : ?>
+        <h5><?= I18N::translate('Errors') ?></h5>
+
+        <div class="table-responsive mb-4">
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th><?= I18N::translate('Family tree') ?></th>
+                        <th><?= I18N::translate('Transcription') ?></th>
+                        <th><?= I18N::translate('Error') ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($consistency_check['errors'] as $issue) : ?>
+                        <tr>
+                            <td><?= e($issue['tree']) ?></td>
+                            <td><?= e($issue['transcription']) ?></td>
+                            <td><?= e($issue['message']) ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif ?>
+
+    <?php if ($consistency_check['warnings'] !== []) : ?>
+        <h5><?= I18N::translate('Warnings') ?></h5>
+
+        <div class="table-responsive mb-4">
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th><?= I18N::translate('Family tree') ?></th>
+                        <th><?= I18N::translate('Transcription') ?></th>
+                        <th><?= I18N::translate('Warning') ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($consistency_check['warnings'] as $issue) : ?>
+                        <tr>
+                            <td><?= e($issue['tree']) ?></td>
+                            <td><?= e($issue['transcription']) ?></td>
+                            <td><?= e($issue['message']) ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif ?>
+<?php endif ?>
+
+<h4><?= I18N::translate('Database') ?></h4>
+
+<div class="table-responsive mb-4">
+    <table class="table table-sm wt-facts-table">
+        <tbody>
+            <tr>
+                <th scope="row"><?= I18N::translate('Schema version') ?></th>
+                <td>
+                    <?= e((string) $diagnostics['schema']['current']) ?>
+                    /
+                    <?= e((string) $diagnostics['schema']['target']) ?>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row"><?= I18N::translate('Database tables') ?></th>
+                <td><?= $statusBadge((bool) $diagnostics['schema']['tables_exist']) ?></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h5><?= I18N::translate('Trees with transcriptions') ?></h5>
+
+<div class="table-responsive mb-4">
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                <th><?= I18N::translate('Family tree') ?></th>
+                <th class="text-end"><?= I18N::translate('Transcriptions') ?></th>
+                <th class="text-end"><?= I18N::translate('Revisions') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php if ($transcription_trees === []) : ?>
+                <tr>
+                    <td colspan="3" class="text-muted"><?= I18N::translate('No active transcriptions found.') ?></td>
+                </tr>
+            <?php endif ?>
+
+            <?php foreach ($transcription_trees as $tree_status) : ?>
+                <tr>
+                    <th scope="row">
+                        <?= e($tree_status['title']) ?>
+                        <span class="text-muted small">(<?= e($tree_status['name']) ?>)</span>
+                    </th>
+                    <td class="text-end"><?= e((string) $tree_status['transcriptions']) ?></td>
+                    <td class="text-end"><?= e((string) $tree_status['revisions']) ?></td>
+                </tr>
+            <?php endforeach ?>
+        </tbody>
+    </table>
+</div>
+
+<h4><?= I18N::translate('NOTE editor') ?></h4>
+
+<div class="table-responsive mb-4">
+    <table class="table table-sm wt-facts-table">
+        <tbody>
+            <tr>
+                <th scope="row"><?= I18N::translate('linkenhancer installed') ?></th>
+                <td><?= $statusBadge((bool) $diagnostics['linkenhancer']['installed']) ?></td>
+            </tr>
+            <tr>
+                <th scope="row"><?= I18N::translate('linkenhancer enabled') ?></th>
+                <td><?= $statusBadge((bool) $diagnostics['linkenhancer']['enabled']) ?></td>
+            </tr>
+            <tr>
+                <th scope="row"><?= I18N::translate('TinyMDE setting enabled') ?></th>
+                <td><?= $statusBadge((bool) $diagnostics['tiny_mde']['setting_enabled']) ?></td>
+            </tr>
+            <tr>
+                <th scope="row"><?= I18N::translate('TinyMDE service available') ?></th>
+                <td><?= $statusBadge((bool) $diagnostics['tiny_mde']['service_available']) ?></td>
+            </tr>
+            <tr>
+                <th scope="row"><?= I18N::translate('TinyMDE rule registered') ?></th>
+                <td><?= $statusBadge((bool) $diagnostics['tiny_mde']['custom_rule_registered']) ?></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<h4><?= I18N::translate('Markdown option by tree') ?></h4>
+
+<div class="table-responsive mb-4">
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                <th><?= I18N::translate('Family tree') ?></th>
+                <th><?= I18N::translate('Markdown') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($diagnostics['trees'] as $tree_status) : ?>
+                <tr>
+                    <th scope="row">
+                        <?= e($tree_status['title']) ?>
+                        <span class="text-muted small">(<?= e($tree_status['name']) ?>)</span>
+                    </th>
+                    <td><?= $statusBadge((bool) $tree_status['markdown_enabled']) ?></td>
+                </tr>
+            <?php endforeach ?>
+        </tbody>
+    </table>
+</div>
 
 <script>
     const taggingSupportCheckbox = document.getElementById('tagging_support');

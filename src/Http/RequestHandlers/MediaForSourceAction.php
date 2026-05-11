@@ -29,7 +29,6 @@ declare(strict_types=1);
 
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers;
 
-use Fisharebest\Webtrees\DB;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Registry;
 use JsonException;
@@ -44,7 +43,7 @@ final class MediaForSourceAction
     {
         $tree = $request->getAttribute('tree');
 
-        if (!Auth::isMember($tree)) return response('');
+        if (!Auth::isEditor($tree)) return response('');
 
         $query = $request->getQueryParams();
 
@@ -55,18 +54,16 @@ final class MediaForSourceAction
             return $this->jsonResponse([]);
         }
 
-        $gedcom = DB::table('sources')
-            ->where('s_file', '=', $tree->id())
-            ->where('s_id', '=', $source_xref)
-            ->value('s_gedcom');
+        $source = Registry::sourceFactory()->make($source_xref, $tree);
+        $access_level = Auth::accessLevel($tree);
 
-        if ($gedcom === null) {
+        if ($source === null || !$source->canShow($access_level)) {
             return $this->jsonResponse([]);
         }
 
         $media_xrefs = [];
 
-        foreach (preg_split('/\R/u', (string) $gedcom) ?: [] as $line) {
+        foreach (preg_split('/\R/u', $source->privatizeGedcom($access_level)) ?: [] as $line) {
             if (preg_match('/^\d+\s+OBJE\s+@([^@]+)@/u', $line, $match)) {
                 $media_xrefs[] = $match[1];
             }
@@ -80,7 +77,7 @@ final class MediaForSourceAction
             try {
                 $media = Registry::mediaFactory()->make($media_xref, $tree);
 
-                if ($media === null) {
+                if ($media === null || !$media->canShow($access_level)) {
                     continue;
                 }
 

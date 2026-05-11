@@ -31,7 +31,7 @@ declare(strict_types=1);
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service;
 
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Dto\OpenCollaborationCommand;
-use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider\TranscriptionProviderFactory;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Factory\TranscriptionProviderFactory;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
 
 final class OpenCollaborationService

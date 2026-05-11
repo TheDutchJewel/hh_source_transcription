@@ -123,6 +123,8 @@ final class RevisionRepository
             content_text: (string)$row->content_text,
             content_hash: (string)$row->content_hash,
             created_by_user_id: (int)$row->created_by_user_id,
+            created_at: (string)$row->created_at,
+            import_comment: isset($row->import_comment) && $row->import_comment !== null ? (string)$row->import_comment : null,
             generated_note_xref: $row->generated_note_xref !== null ? (string)$row->generated_note_xref : null,
             generated_note_changed_by_user_id: isset($row->generated_note_changed_by_user_id) && $row->generated_note_changed_by_user_id !== null ? (int)$row->generated_note_changed_by_user_id : null,
             generated_note_changed_by_user_name: isset($row->generated_note_changed_by_user_name) && $row->generated_note_changed_by_user_name !== null ? (string)$row->generated_note_changed_by_user_name : null,

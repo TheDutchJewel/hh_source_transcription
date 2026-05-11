@@ -79,8 +79,8 @@ final class InternalCollaborationProvider implements TranscriptionProviderInterf
         }
 
         $initiator = $this->userService->find($command->initiator_user_id);
-        if ($initiator === null || !Auth::isMember($transcription->tree, $initiator)) {
-            throw new RuntimeException('Initiator cannot access this tree.');
+        if ($initiator === null || !Auth::isEditor($transcription->tree, $initiator)) {
+            throw new RuntimeException('Initiator cannot edit this tree.');
         }
 
         $collaborator_ids = $this->eligibleCollaboratorIds($command, $transcription->tree);
@@ -144,7 +144,7 @@ final class InternalCollaborationProvider implements TranscriptionProviderInterf
         return array_values(array_filter($ids, function (int $user_id) use ($tree): bool {
             $user = $this->userService->find($user_id);
 
-            return $user !== null && Auth::isMember($tree, $user);
+            return $user !== null && Auth::isEditor($tree, $user);
         }));
     }
 }
