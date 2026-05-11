@@ -46,6 +46,29 @@ msgctxt "Heading for one media file in a generated note"
 msgid "Media file"
 msgstr "Mediabestand"
 
+#, php-format
+msgid "Collaboration started for transcription: %s"
+msgstr "Samenwerking voor de transcriptie is gestart: %s"
+
+msgid "You have been invited to collaborate on a source transcription."
+msgstr "Je bent uitgenodigd om mee te werken aan een brontranscriptie."
+
+#, php-format
+msgid "New revision for transcription: %s"
+msgstr "Nieuwe revisie voor transcriptie %s"
+
+#, php-format
+msgid "A new revision has been created: %s"
+msgstr "Er is een nieuwe revisie aangemaakt: %s"
+
+#, php-format
+msgid "Status changed for transcription: %s"
+msgstr "Status gewijzigd voor transcriptie: %s"
+
+#, php-format
+msgid "The transcription status has changed to: %s"
+msgstr "De transcriptiestatus is gewijzigd in: %s"
+
 msgid "Manual (direct editing)"
 msgstr "Handmatig (direct bewerken)"
 
@@ -271,21 +294,27 @@ msgstr "Transkribus-synchronisatie"
 msgid "Origin not specified"
 msgstr "Herkomst niet gespecificeerd"
 
+msgctxt "Transcription status"
 msgid "New"
 msgstr "Nieuw"
 
+msgctxt "Transcription status"
 msgid "In progress"
 msgstr "In uitvoering"
 
+msgctxt "Transcription status"
 msgid "Ready for review"
 msgstr "Gereed voor beoordeling"
 
+msgctxt "Transcription status; adjective, not an action button"
 msgid "Final"
 msgstr "Voltooid"
 
+msgctxt "Transcription status; already reopened, not an action button"
 msgid "Reopened"
 msgstr "Heropend"
 
+msgctxt "Transcription status"
 msgid "Canceled"
 msgstr "Geannuleerd"
 
@@ -307,8 +336,13 @@ msgstr "Bestaande NOTE alleen bijwerken als deze niet is gewijzigd"
 msgid "Always update existing NOTE"
 msgstr "Bestaande NOTE altijd bijwerken"
 
+msgctxt "Transcription provider label"
 msgid "Manual"
 msgstr "Handmatige invoer"
+
+msgctxt "Transcription provider label"
+msgid "Internal collaboration"
+msgstr "Interne samenwerking"
 
 msgid "Transkribus"
 msgstr "Transkribus"
@@ -316,17 +350,31 @@ msgstr "Transkribus"
 msgid "Community (Discourse)"
 msgstr "Gemeenschap (Discourse)"
 
+msgctxt "Tooltip for transcription provider link"
 msgid "Manual transcription in this webtrees installation"
 msgstr "Handmatige transcriptie in deze webtrees-installatie"
 
+msgctxt "Tooltip for transcription provider link"
+msgid "Internal collaboration in this webtrees installation"
+msgstr "Interne samenwerking binnen deze webtrees-installatie"
+
 msgid "Community discussion on Discourse"
 msgstr "Discussiegroep op Discourse"
+
+msgid "The collaboration status has been updated."
+msgstr "De samenwerkingsstatus is bijgewerkt."
 
 msgid "Create manual transcription"
 msgstr "Start handmatige transcriptie"
 
 msgid "Transcriptions"
 msgstr "Transcripties"
+
+msgid "The transcription status has been updated."
+msgstr "De transcriptiestatus is bijgewerkt."
+
+msgid "The transcription has been opened for internal collaboration."
+msgstr "De transcriptie is vrijgegeven voor interne samenwerking."
 
 msgid "Saved from UI"
 msgstr "Opgeslagen via gebruikersinterface"
@@ -346,6 +394,9 @@ msgstr "De NOTE is bijgewerkt."
 
 msgid "First transcription provider available: manual transcription."
 msgstr "Eerste transcriptieaanbieder beschikbaar: handmatige transcriptie."
+
+msgid "New transcription provider available: internal collaboration with other webtrees users."
+msgstr "Nieuwe transcriptieaanbieder beschikbaar: interne samenwerking met andere webtrees-gebruikers."
 
 msgid "What's new?"
 msgstr "Wat is er nieuw?"
@@ -469,6 +520,62 @@ msgstr "Geen mediaobject geselecteerd."
 msgid "Current NOTE"
 msgstr "Huidige NOTE"
 
+msgctxt "Panel heading for the webtrees-internal collaboration workflow"
+msgid "Internal collaboration"
+msgstr "Interne samenwerking"
+
+msgid "Team"
+msgstr "Team"
+
+msgctxt "Collaboration team role"
+msgid "Initiator"
+msgstr "Initiator"
+
+msgctxt "Collaboration team role, singular noun"
+msgid "Collaborator"
+msgstr "Samenwerker"
+
+msgid "This transcription is not currently open for internal collaboration."
+msgstr "Deze transcriptie is momenteel niet beschikbaar voor interne samenwerking."
+
+msgctxt "Button: submit the transcription for review"
+msgid "Ready for review"
+msgstr "Gereed voor beoordeling"
+
+msgctxt "Button: mark this transcription as final"
+msgid "Finalize"
+msgstr "Voltooien"
+
+msgctxt "Button: reopen this finalized transcription for editing"
+msgid "Reopen"
+msgstr "Heropenen"
+
+msgctxt ""
+"Form label for selecting multiple collaboration team members; not a plural variant of the role label"
+msgid "Collaborators"
+msgstr "Samenwerkers"
+
+msgid "No eligible users found."
+msgstr "Geen geschikte gebruikers gevonden."
+
+msgid "Message"
+msgstr "Bericht"
+
+msgid "Save the current NOTE as a starting revision"
+msgstr "Sla de huidige NOTE op als startrevisie"
+
+msgctxt "Button: update the selected collaboration team"
+msgid "Update collaboration"
+msgstr "Samenwerking bijwerken"
+
+msgctxt "Button: open this transcription for collaboration"
+msgid "Open for collaboration"
+msgstr "Open voor samenwerking"
+
+msgctxt "Hint shown when collaboration cannot be started because the transcription is final or canceled"
+msgid "Reopen the transcription before starting or changing internal collaboration."
+msgstr "Heropen de transcriptie voordat je interne samenwerking start of wijzigt."
+
 msgid "Media preview"
 msgstr "Mediavoorvertoning"
 
@@ -508,9 +615,6 @@ msgstr "NOTE-wijziging"
 
 msgid "Text"
 msgstr "Tekst"
-
-#~ msgid "Begin transcription"
-#~ msgstr "Beginn der Transkription"
 
 #~ msgid "End transcription"
 #~ msgstr "Ende der Transkription"
