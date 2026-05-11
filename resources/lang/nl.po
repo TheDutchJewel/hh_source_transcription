@@ -69,6 +69,12 @@ msgstr "Status gewijzigd voor transcriptie: %s"
 msgid "The transcription status has changed to: %s"
 msgstr "De transcriptiestatus is gewijzigd in: %s"
 
+msgid "yes"
+msgstr "ja"
+
+msgid "no"
+msgstr "nee"
+
 msgid "Manual (direct editing)"
 msgstr "Handmatig (direct bewerken)"
 
@@ -361,14 +367,24 @@ msgstr "Interne samenwerking binnen deze webtrees-installatie"
 msgid "Community discussion on Discourse"
 msgstr "Discussiegroep op Discourse"
 
+msgid "Saved on finalize"
+msgstr "Opgeslagen bij het afsluiten"
+
 msgid "The collaboration status has been updated."
 msgstr "De samenwerkingsstatus is bijgewerkt."
+
+msgid "Compare revisions"
+msgstr "Revisies vergelijken"
 
 msgid "Create manual transcription"
 msgstr "Start handmatige transcriptie"
 
 msgid "Transcriptions"
 msgstr "Transcripties"
+
+#, php-format
+msgid "Revision %s is now the current revision."
+msgstr "Revisie %s is nu de huidige revisie."
 
 msgid "The transcription status has been updated."
 msgstr "De transcriptiestatus is bijgewerkt."
@@ -382,6 +398,9 @@ msgstr "Opgeslagen via gebruikersinterface"
 #, php-format
 msgid "The current NOTE has been saved as revision %s."
 msgstr "De huidige NOTE is opgeslagen als revisie %s."
+
+msgid "You do not have permission to use the selected source or media object."
+msgstr "Je hebt geen toestemming om de geselecteerde bron of het geselecteerde mediaobject te gebruiken."
 
 msgid "Created from UI"
 msgstr "Gemaakt via gebruikersinterface"
@@ -411,6 +430,70 @@ msgstr "Beheer bronteksten met handmatige of aanbieder-gebaseerde werkstroom."
 msgid "The preferences for the module “%s” have been updated."
 msgstr "De instellingen voor de module “%s” zijn bijgewerkt."
 
+msgid "The module database tables are incomplete."
+msgstr "De databasetabellen van de module zijn onvolledig."
+
+msgid "Unknown tree"
+msgstr "Onbekende stamboom"
+
+msgid "The referenced family tree no longer exists."
+msgstr "De stamboom waarnaar verwezen wordt bestaat niet meer."
+
+#, php-format
+msgid "The referenced source does not exist: %s"
+msgstr "De bron waarnaar verwezen wordt bestaat niet: %s"
+
+#, php-format
+msgid "The referenced media object does not exist: %s"
+msgstr "Het media-object waarnaar verwezen wordt bestaat niet: %s"
+
+msgid "The referenced media object is no longer linked to the source."
+msgstr "Het media-object waarnaar verwezen wordt is niet langer gekoppeld aan de bron."
+
+msgid "The transcription has no current NOTE."
+msgstr "De transcriptie heeft geen huidige NOTE."
+
+#, php-format
+msgid "The current NOTE does not exist: %s"
+msgstr "De huidige NOTE bestaat niet: %s"
+
+#, php-format
+msgid "The current NOTE is not linked to the expected source or media object: %s"
+msgstr "De huidige NOTE is niet gekoppeld aan de verwachte bron of het mediaobject: %s"
+
+msgid "Tagging is enabled, but the transcription has no tag NOTE."
+msgstr "Labeling is ingeschakeld, maar de transcriptie bevat geen label NOTE."
+
+#, php-format
+msgid "The tag NOTE does not exist: %s"
+msgstr "Het label NOTE bestaat niet: %s"
+
+#, php-format
+msgid "The tag NOTE is not linked to the expected source or media object: %s"
+msgstr "Het label NOTE is niet gekoppeld aan de verwachte bron of het mediaobject: %s"
+
+#, php-format
+msgid "Revision %s belongs to a transcription that no longer exists."
+msgstr "Revisie %s hoort bij een transcriptie die niet meer bestaat."
+
+#, php-format
+msgid "Revision %s references a NOTE that no longer exists: %s"
+msgstr "Revisie %s verwijst naar een NOTE die niet meer bestaat: %s"
+
+msgid "The transcription has no revisions."
+msgstr "De transcriptie bevat geen revisies."
+
+#, php-format
+msgid "The transcription has %s current revisions; expected exactly one."
+msgstr "De transcriptie bevat %s huidige revisies; er werd precies één verwacht."
+
+msgid "The current revision references a different NOTE than the transcription current NOTE."
+msgstr "De huidige revisie verwijst naar een andere NOTE dan de huidige NOTE van deze transcriptie."
+
+#, php-format
+msgid "An active collaboration entry references a user that no longer exists: %s"
+msgstr "Een actief samenwerkingsitem verwijst naar een gebruiker die niet meer bestaat: %s"
+
 #, php-format
 msgid "This module can only be used with a webtrees version greater or equal than %s."
 msgstr "Deze module kan alleen worden gebruikt met een webtreesversie die gelijk is aan of hoger is dan %s."
@@ -421,8 +504,8 @@ msgstr "NOTE-updatestrategie"
 msgid "Use of TinyMDE as the editor for transcription notes"
 msgstr "Gebruik van TinyMDE als editor voor transcriptienotities"
 
-msgid "Should tagging be supported"
-msgstr "Moet labeling worden ondersteund"
+msgid "Should tagging be supported?"
+msgstr "Moet labeling worden ondersteund?"
 
 msgid "Tag value for tagging all sources with at least one transcription"
 msgstr "Labelwaarde voor het labelen van alle bronnen met ten minste één transcriptie"
@@ -432,6 +515,94 @@ msgstr "Standaard"
 
 msgid "save"
 msgstr "opslaan"
+
+msgid "Diagnostics"
+msgstr "Diagnose"
+
+msgid "Run consistency check"
+msgstr "Consistentiecontrole uitvoeren"
+
+msgid "Consistency check"
+msgstr "Consistentiecontrole"
+
+msgid "No consistency issues found."
+msgstr "Er zijn geen consistentieproblemen gevonden."
+
+msgid "Errors"
+msgstr "Fouten"
+
+msgid "Family tree"
+msgstr "Stamboom"
+
+msgid "Error"
+msgstr "Fout"
+
+msgid "Warnings"
+msgstr "Waarschuwingen"
+
+msgid "Warning"
+msgstr "Waarschuwing"
+
+msgid "Database"
+msgstr "Database"
+
+msgid "Schema version"
+msgstr "Schemaversie"
+
+msgid "Database tables"
+msgstr "Databasetabellen"
+
+msgid "Trees with transcriptions"
+msgstr "Stambomen met transcripties"
+
+msgid "Revisions"
+msgstr "Revisies"
+
+msgid "No active transcriptions found."
+msgstr "Geen actieve transcripties gevonden."
+
+msgid "NOTE editor"
+msgstr "NOTE-editor"
+
+msgid "linkenhancer installed"
+msgstr "Link-verbeteraar geïnstalleerd"
+
+msgid "linkenhancer enabled"
+msgstr "Link-verbeteraar ingeschakeld"
+
+msgid "TinyMDE setting enabled"
+msgstr "TinyMDE-instelling ingeschakeld"
+
+msgid "TinyMDE service available"
+msgstr "TinyMDE-service beschikbaar"
+
+msgid "TinyMDE rule registered"
+msgstr "TinyMDE-regel geregistreerd"
+
+msgid "Markdown option by tree"
+msgstr "Markdown-optie per stamboom"
+
+msgid "Markdown"
+msgstr "Markdown"
+
+#, php-format
+msgid "Revision %s"
+msgstr "Revisie %s"
+
+msgid "Back to transcription"
+msgstr "Terug naar transcriptie"
+
+msgid "Metadata"
+msgstr "Metagegevens"
+
+msgid "Field"
+msgstr "Veld"
+
+msgid "Text differences"
+msgstr "Tekstverschillen"
+
+msgid "Both revisions have no text content."
+msgstr "Beide revisies bevatten geen tekst."
 
 msgid "No results found"
 msgstr "Geen resultaten gevonden"
@@ -491,7 +662,7 @@ msgid "Deleted"
 msgstr "Verwijderd"
 
 msgid "None"
-msgstr "Niets"
+msgstr "Geen"
 
 msgid "Open"
 msgstr "Openen"
@@ -499,12 +670,10 @@ msgstr "Openen"
 msgid "Back to dashboard"
 msgstr "Terug naar dashboard"
 
-msgid ""
-"The current webtrees NOTE is used as a working copy. Changes are only archived when saved as a new "
-"revision."
+msgid "The current webtrees NOTE is used as a working copy. Changes are only archived when saved as a new revision."
 msgstr ""
-"De huidige webtrees-NOTE wordt gebruikt als werkkopie. Wijzigingen worden pas gearchiveerd wanneer ze als "
-"nieuwe revisie worden opgeslagen."
+"De huidige webtrees-NOTE wordt gebruikt als werkkopie. Wijzigingen worden pas gearchiveerd wanneer ze als nieuwe "
+"revisie worden opgeslagen."
 
 msgid "Information"
 msgstr "Informatie"
@@ -542,16 +711,7 @@ msgctxt "Button: submit the transcription for review"
 msgid "Ready for review"
 msgstr "Gereed voor beoordeling"
 
-msgctxt "Button: mark this transcription as final"
-msgid "Finalize"
-msgstr "Voltooien"
-
-msgctxt "Button: reopen this finalized transcription for editing"
-msgid "Reopen"
-msgstr "Heropenen"
-
-msgctxt ""
-"Form label for selecting multiple collaboration team members; not a plural variant of the role label"
+msgctxt "Form label for selecting multiple collaboration team members; not a plural variant of the role label"
 msgid "Collaborators"
 msgstr "Samenwerkers"
 
@@ -595,11 +755,25 @@ msgstr "Opslaan NOTE"
 msgid "Archive as new revision"
 msgstr "Archiveren als nieuwe revisie"
 
+msgctxt "Button: mark this transcription as final"
+msgid "Finalize"
+msgstr "Voltooien"
+
+msgctxt "Button: reopen this finalized transcription for editing"
+msgid "Reopen"
+msgstr "Heropenen"
+
 msgid "Revision history"
 msgstr "Revisiegeschiedenis"
 
+msgid "First revision"
+msgstr "Eerste revisie"
+
 msgid "Current"
 msgstr "Huidig"
+
+msgid "Second revision"
+msgstr "Tweede revisie"
 
 msgid "Revision"
 msgstr "Revisie"
@@ -615,6 +789,51 @@ msgstr "NOTE-wijziging"
 
 msgid "Text"
 msgstr "Tekst"
+
+msgid "Action"
+msgstr "Actie"
+
+msgid "Make this revision current? The current NOTE will be overwritten with the text of this revision."
+msgstr "Deze revisie als de huidige revisie instellen? De huidige NOTE wordt overschreven met de tekst van deze revisie."
+
+msgid "Make current"
+msgstr "Aktuell machen"
+
+#~ msgid "Current revision"
+#~ msgstr "Aktuelle Revision"
+
+#~ msgid "Origin reference"
+#~ msgstr "Ursprungsreferenz"
+
+#~ msgid "Content format"
+#~ msgstr "Inhaltsformat"
+
+#~ msgid "Content hash"
+#~ msgstr "Inhalts-Hash"
+
+#~ msgid "Created by"
+#~ msgstr "Erzeugt von"
+
+#~ msgid "Created at"
+#~ msgstr "Erzeugt am"
+
+#~ msgid "Import comment"
+#~ msgstr "Importkommentar"
+
+#~ msgid "NOTE changed by"
+#~ msgstr "NOTE geändert von"
+
+#~ msgid "NOTE changed at"
+#~ msgstr "NOTE geändert am"
+
+#~ msgid "Current Markdown revisions"
+#~ msgstr "Aktuelle Markdown-Revisionen"
+
+#~ msgid "Current non-Markdown revisions"
+#~ msgstr "Aktuelle Nicht-Markdown-Revisionen"
+
+#~ msgid "Without current revision"
+#~ msgstr "Ohne aktuelle Revision"
 
 #~ msgid "End transcription"
 #~ msgstr "Ende der Transkription"
@@ -634,9 +853,6 @@ msgstr "Tekst"
 #~ msgid "Audio interview"
 #~ msgstr "Ton - Interview"
 
-#~ msgid "Unknown"
-#~ msgstr "Unbekannt"
-
 #~ msgid "Latin script, Fraktur variant"
 #~ msgstr "Lateinische Schriftart, Variante Fraktur"
 
@@ -647,7 +863,7 @@ msgstr "Tekst"
 #~ msgstr "Archiviert"
 
 #~ msgid "%d transcription"
-#~ msgstr "% Transkription"
+#~ msgstr "%d Transkription"
 
 #~ msgid "Media XREF"
 #~ msgstr "Medien XREF"
