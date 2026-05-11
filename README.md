@@ -157,7 +157,7 @@ Typical properties
 - source or optional media object related to a source
 - provider (manual, Transkribus, ...)
 - title
-- type (handwritten Sütterlin, ...)
+- type (handwritten Suetterlin, ...)
 - language (German, Latin, ...)
 - status (in progress, finished, ...)
 - current note (text enriched by Markdown)
@@ -211,6 +211,7 @@ This keeps existing source/media links, the working NOTE, and previous revisions
 tbd
 
 ### Transkribus provider
+tbd
 
 Detailed documentation: [docs/provider/transkribus.md](docs/provider/transkribus.md)
 
@@ -262,8 +263,8 @@ The module uses an explicit schema version to allow future migrations. The curre
 1. Open a source with a media object
 2. Create a transcription
 3. Select provider: Discourse
-4. Formulate a "Lesehilfe" post (what you know; what is your problem?)
-5. Upload the media together with meta information in a post at https://discourse.genealogy.net/c/lesehilfe/10
+4. Formulate a reading-help post (what you know; what is your problem?)
+5. Upload the media together with meta information in the reading-help forum category at https://discourse.genealogy.net/c/lesehilfe/10
 5. Present a link to Discourse for the user
 6. Import responses into webtrees after some days
 7. Select and edit the responses in webtrees and store them as a revision
@@ -285,14 +286,6 @@ The module uses an explicit schema version to allow future migrations. The curre
 This project is currently in the design and initial development phase.
 It is an early beta version and not ready for production use.
 
-The first implementation goal is
-
-- schema installation and migration support (done)
-- revision storage (done)
-- note generation (done)
-- tagging of media objects or sources (done)
-- UI for manual provider (work in progress)
-
 ### Current limitations
 Permission checks are currently handled in the UI and request handlers. They should be reviewed before production use.
 
@@ -300,14 +293,13 @@ Older development data may still contain NOTE links at the source that are moved
 
 ### Implementation of provider candidates by priority
 
-1. Manual
+1. Manual and internal collaboration
 - must be stable first
-- support webtrees internal collaboration as a good basis for review workflow
 
 2. Discourse
-Strategically very interesting for CompGen
+- strategically very interesting for CompGen
 - uses existing crowd
-- fits with Lesehilfe
+- fits with the existing reading-help workflow
 - makes webtrees connectable to community knowledge
 
 3. Transkribus
@@ -323,31 +315,30 @@ Strategically very interesting for CompGen
 - Very flexible, but privacy, costs, prompting, and reproducibility must be properly resolved
 
 ### Roadmap
-- V1.0 (development done; only tests are open)
-  - Bestehende ältere Testdaten: alte NOTE-Links an SOUR werden beim erneuten Speichern korrekt nach OBJE verschoben.
-  - Rechteprüfung aus Nutzersicht: Admin, Editor, Member, Gast.
-  - Test Zugriffsrechte: Darstellung der NOTE für Member
+- V1.0 (done)
 
-- V1.1 (actual development version)
-  - Feedback-getriebene UI-Glättung nach V1.0-Test
-  - Icon erscheint noch nicht; Test mit allen Themen (hell und dunkel)
-  - Context display directly at the source
-  - TinyMDE einsetzbar machen
-  - Diagnose-/Statusanzeige im Adminbereich: Schema-Version, erkannte linkenhancer/TinyMDE-Verfügbarkeit, Markdown-Status je Tree.
+- V1.1 (development finbished; only testing and bug fixing)
+  - Compare revisions: "Metadata -> Metadata differences"; make all strings in column 1 translatable
+  - Feedback-driven UI refinement after tests by other users
+  - Test with disabled and uninstalled linkenhancer, including the control panel diagnostics
+  - Test older development data: old NOTE links at SOUR are moved correctly to OBJE when saved again
+  - Test access rights: NOTE display for members
+  - Test with all themes, including light and dark variants
   
-- V1.2
+- V1.2 (current development version)
+  - Context display directly at the source
+  - Fix menu icon rendering in themes where it is displayed incorrectly
   - Media Viewer (incl. audio/video) supporting Zoom
 
 - V1.3
-  - Dashboard: sort table (title, status, provider_key, created_at / updated_at); pagination; filter (status/, provider)
-  - Diff Revision
-  - Restore Revision
-  - Eine Funktion oder Admin-Aktion zur Konsistenzprüfung: Transkription hat aktuelle NOTE, NOTE ist korrekt an OBJE/SOUR verlinkt, Revisionsdaten zeigen auf existierende NOTE.
+  - Dashboard: sort table (title, status, provider_key, created_at / updated_at); pagination; filter (status, provider)
 
 - V1.4
   - backup/restore of database tables
   - replace development behavior that rebuilds all module tables when one table is missing
+  - update all translations
   - update screenshots in README.md
+  - update READme and all other documentation files
   - first GitHub release version
 
 - V1.5
@@ -365,11 +356,11 @@ Strategically very interesting for CompGen
 
 - V2
   - support for transliteration (and diplomatic transcription and modern transcription)
-  - virtual keyboard for manual transliteration (supporting special Latf charcaters)
+  - virtual keyboard for manual transliteration (supporting special Latf characters)
   - automatic conversion from Latf to Latn (and vice versa) using Fraktur webfonts (like UnifrakturMaguntia)
   - support for translation
   - full text search in all transcriptions and revisions
-  - templates as plugins for vital records (Personenstandsurkunden)
+  - templates as plugins for civil registration records
   - templates for census as a replacement for the core census module
 
 - V3
@@ -391,7 +382,6 @@ The following points are still open for discussion
 - Do you know any other genealogy programs that support the transcription process well (best practices) and at the same time use genealogical data structures?
 - How to store the position of a transcribed line as position in the image?
 - Should the default note strategy be “always create new NOTE” or “update if unchanged”?
-- How should media selection be handled if a source has multiple media objects or media objects with multiple pages?
 - How to integrate named entities, links to persons and to locations in future versions?
 - How to indicate the confidence about a transcription or parts of it?
 
@@ -413,7 +403,7 @@ The following points are still open for discussion
 <a name="Literature"></a>
 ## Literature and links
 
-- [Zedlitz, Jesper: "Gedbas4all - neues Datenmodell für die Genealogie"](https://doi.org/10.5281/zenodo.33958), in COMPUTERGENEALOGIE 4/2009, S. 15-18, 2009 (checked 23.04.2026).
+- [Zedlitz, Jesper: "Gedbas4all - new data model for genealogy"](https://doi.org/10.5281/zenodo.33958), German original title, COMPUTERGENEALOGIE 4/2009, pp. 15-18, 2009 (checked 23.04.2026).
 - [GENTECH Genealogical Data Model](https://xml.coverpages.org/GENTECH-DataModelV11.pdf), 29.05.2000 (checked 23.04.2026).
 - [ResearchSpace](https://researchspace.org/argument/) (checked 4.05.2026).
 - [CRMinf (CIDOC CRM)](https://cidoc-crm.org/crminf/) (checked 4.05.2026).
@@ -432,9 +422,10 @@ The following points are still open for discussion
 ## Requirements
 
 This module requires **webtrees** version 2.2 or later.
+The version of PHP must be at least 8.3.
 This module has the same requirements as [webtrees#system-requirements](https://github.com/fisharebest/webtrees#system-requirements).
 
-This module was tested with **webtrees** 2.2.5 version
+This module was tested with **webtrees** 2.2.6 version
 and all available themes and all other custom modules.
 
 <a name="Installation"></a>

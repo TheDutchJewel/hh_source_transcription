@@ -41,6 +41,7 @@ declare(strict_types=1);
  * @var array<int, array{name: string, role: string}> $active_collaborators
  * @var array<int, int> $active_collaborator_ids
  * @var bool $can_edit_note
+ * @var bool $can_make_revision_current
  * @var bool $can_open_collaboration
  * @var bool $collaboration_is_editable
  * @var bool $can_submit_review
@@ -252,51 +253,19 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
                     <?php endforeach ?>
                 </ul>
             </div>
-        <?php elseif (!$can_open_collaboration) : ?>
+        <?php elseif (!$can_open_collaboration && $collaboration_is_editable) : ?>
             <div class="text-muted">
                 <?= I18N::translate('This transcription is not currently open for internal collaboration.') ?>
             </div>
         <?php endif ?>
 
-        <?php if ($is_internal_collaboration && ($can_submit_review || $can_finalize || $can_reopen)) : ?>
+        <?php if ($is_internal_collaboration && $can_submit_review) : ?>
             <form method="post" action="<?= e(route('source-transcription-collaboration-status', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>" class="mb-3 d-flex gap-2 flex-wrap">
                 <?= csrf_field() ?>
 
-                <?php if ($can_submit_review) : ?>
-                    <button class="btn btn-info" type="submit" name="collaboration_action" value="submit_for_review">
-                        <?= I18N::translateContext('Button: submit the transcription for review', 'Ready for review') ?>
-                    </button>
-                <?php endif ?>
-
-                <?php if ($can_finalize) : ?>
-                    <button class="btn btn-success" type="submit" name="collaboration_action" value="finalize">
-                        <?= I18N::translateContext('Button: mark this transcription as final', 'Finalize') ?>
-                    </button>
-                <?php endif ?>
-
-                <?php if ($can_reopen) : ?>
-                    <button class="btn btn-warning" type="submit" name="collaboration_action" value="reopen">
-                        <?= I18N::translateContext('Button: reopen this finalized transcription for editing', 'Reopen') ?>
-                    </button>
-                <?php endif ?>
-            </form>
-        <?php endif ?>
-
-        <?php if (!$is_internal_collaboration && ($can_finalize_manual || $can_reopen_manual)) : ?>
-            <form method="post" action="<?= e(route('source-transcription-manual-status', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>" class="mb-3 d-flex gap-2 flex-wrap">
-                <?= csrf_field() ?>
-
-                <?php if ($can_finalize_manual) : ?>
-                    <button class="btn btn-success" type="submit" name="manual_action" value="finalize">
-                        <?= I18N::translateContext('Button: mark this transcription as final', 'Finalize') ?>
-                    </button>
-                <?php endif ?>
-
-                <?php if ($can_reopen_manual) : ?>
-                    <button class="btn btn-warning" type="submit" name="manual_action" value="reopen">
-                        <?= I18N::translateContext('Button: reopen this finalized transcription for editing', 'Reopen') ?>
-                    </button>
-                <?php endif ?>
+                <button class="btn btn-info" type="submit" name="collaboration_action" value="submit_for_review">
+                    <?= I18N::translateContext('Button: submit the transcription for review', 'Ready for review') ?>
+                </button>
             </form>
         <?php endif ?>
 
@@ -449,6 +418,30 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
             </div>
 
             <div class="card-body">
+                <?php if ($is_internal_collaboration && ($can_finalize || $can_reopen)) : ?>
+                    <form
+                        id="source-transcription-collaboration-status-form"
+                        method="post"
+                        action="<?= e(route('source-transcription-collaboration-status', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>"
+                        class="d-none"
+                    >
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="note_text" value="" disabled>
+                    </form>
+                <?php endif ?>
+
+                <?php if (!$is_internal_collaboration && ($can_finalize_manual || $can_reopen_manual)) : ?>
+                    <form
+                        id="source-transcription-manual-status-form"
+                        method="post"
+                        action="<?= e(route('source-transcription-manual-status', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>"
+                        class="d-none"
+                    >
+                        <?= csrf_field() ?>
+                        <input type="hidden" name="note_text" value="" disabled>
+                    </form>
+                <?php endif ?>
+
                 <?php if ($can_edit_note) : ?>
                     <form method="post" action="<?= e(route('source-transcription-update-note', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>">
                         <?= csrf_field() ?>
@@ -474,14 +467,137 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
                         <?= e((string) $note_text) ?>
                     </div>
                 <?php endif ?>
+
+                <?php if ($is_internal_collaboration && ($can_finalize || $can_reopen)) : ?>
+                    <div class="mt-3 d-flex gap-2 flex-wrap">
+                        <?php if ($can_finalize) : ?>
+                            <button class="btn btn-success" type="submit" form="source-transcription-collaboration-status-form" name="collaboration_action" value="finalize">
+                                <?= I18N::translateContext('Button: mark this transcription as final', 'Finalize') ?>
+                            </button>
+                        <?php endif ?>
+
+                        <?php if ($can_reopen) : ?>
+                            <button class="btn btn-warning" type="submit" form="source-transcription-collaboration-status-form" name="collaboration_action" value="reopen">
+                                <?= I18N::translateContext('Button: reopen this finalized transcription for editing', 'Reopen') ?>
+                            </button>
+                        <?php endif ?>
+                    </div>
+                <?php endif ?>
+
+                <?php if (!$is_internal_collaboration && ($can_finalize_manual || $can_reopen_manual)) : ?>
+                    <div class="mt-3 d-flex gap-2 flex-wrap">
+                        <?php if ($can_finalize_manual) : ?>
+                            <button class="btn btn-success" type="submit" form="source-transcription-manual-status-form" name="manual_action" value="finalize">
+                                <?= I18N::translateContext('Button: mark this transcription as final', 'Finalize') ?>
+                            </button>
+                        <?php endif ?>
+
+                        <?php if ($can_reopen_manual) : ?>
+                            <button class="btn btn-warning" type="submit" form="source-transcription-manual-status-form" name="manual_action" value="reopen">
+                                <?= I18N::translateContext('Button: reopen this finalized transcription for editing', 'Reopen') ?>
+                            </button>
+                        <?php endif ?>
+                    </div>
+                <?php endif ?>
             </div>
         </div>
     </div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const noteText = document.getElementById('current_note_text');
+
+        if (!noteText) {
+            return;
+        }
+
+        function copyNoteTextToStatusForm(form) {
+            const hiddenNoteText = form.querySelector('input[name="note_text"]');
+
+            if (hiddenNoteText) {
+                hiddenNoteText.value = noteText.value;
+                hiddenNoteText.disabled = false;
+            }
+        }
+
+        document.querySelectorAll('button[form="source-transcription-collaboration-status-form"][value="finalize"], button[form="source-transcription-manual-status-form"][value="finalize"]').forEach(function (button) {
+            button.addEventListener('click', function () {
+                const form = document.getElementById(button.getAttribute('form'));
+
+                if (form) {
+                    copyNoteTextToStatusForm(form);
+                }
+            });
+        });
+
+        document.querySelectorAll('#source-transcription-collaboration-status-form, #source-transcription-manual-status-form').forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                const submitter = event.submitter;
+
+                if (submitter && (submitter.value === 'finalize' || submitter.value === 'approve')) {
+                    copyNoteTextToStatusForm(form);
+                }
+            });
+        });
+    });
+</script>
+
 <hr>
 
 <h3><?= I18N::translate('Revision history') ?></h3>
+
+<?php if (count($revisions) >= 2) : ?>
+    <?php
+    $compare_url = route('source-transcription-compare-revisions', ['tree' => $tree->name(), 'transcription_id' => $transcription->id]);
+    $compare_url_parts = parse_url($compare_url);
+    $compare_action = isset($compare_url_parts['query']) ? (string) ($compare_url_parts['path'] ?? '') : $compare_url;
+    $compare_query = [];
+
+    if (isset($compare_url_parts['query'])) {
+        parse_str($compare_url_parts['query'], $compare_query);
+    }
+    ?>
+    <form class="row g-2 align-items-end mb-3" method="get" action="<?= e($compare_action) ?>">
+        <?php foreach ($compare_query as $name => $value) : ?>
+            <input type="hidden" name="<?= e((string) $name) ?>" value="<?= e((string) $value) ?>">
+        <?php endforeach ?>
+
+        <div class="col-md-4">
+            <label class="form-label" for="left-revision-id">
+                <?= I18N::translate('First revision') ?>
+            </label>
+            <select class="form-select" id="left-revision-id" name="left_revision_id">
+                <?php foreach ($revisions as $revision) : ?>
+                    <option value="<?= e((string) $revision->id) ?>">
+                        <?= I18N::translate('Revision %s', (string) $revision->revision_no) ?>
+                        <?= $revision->is_current_revision ? '(' . I18N::translate('Current') . ')' : '' ?>
+                    </option>
+                <?php endforeach ?>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label class="form-label" for="right-revision-id">
+                <?= I18N::translate('Second revision') ?>
+            </label>
+            <select class="form-select" id="right-revision-id" name="right_revision_id">
+                <?php foreach ($revisions as $index => $revision) : ?>
+                    <option value="<?= e((string) $revision->id) ?>" <?= $index === 1 ? 'selected' : '' ?>>
+                        <?= I18N::translate('Revision %s', (string) $revision->revision_no) ?>
+                        <?= $revision->is_current_revision ? '(' . I18N::translate('Current') . ')' : '' ?>
+                    </option>
+                <?php endforeach ?>
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <button class="btn btn-primary" type="submit">
+                <?= I18N::translate('Compare revisions') ?>
+            </button>
+        </div>
+    </form>
+<?php endif ?>
 
 <table class="table table-bordered table-sm">
     <thead>
@@ -492,6 +608,9 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
             <th><?= I18N::translate('Generated NOTE') ?></th>
             <th><?= I18N::translate('NOTE change') ?></th>
             <th><?= I18N::translate('Text') ?></th>
+            <?php if ($can_make_revision_current) : ?>
+                <th><?= I18N::translate('Action') ?></th>
+            <?php endif ?>
         </tr>
     </thead>
 
@@ -522,6 +641,23 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
                     <?php endif ?>
                 </td>
                 <td><pre class="mb-0"><?= e(mb_substr($revision->content_text, 0, 500)) ?></pre></td>
+                <?php if ($can_make_revision_current) : ?>
+                    <td>
+                        <?php if (!$revision->is_current_revision) : ?>
+                            <form method="post" action="<?= e(route('source-transcription-make-revision-current', ['tree' => $tree->name(), 'transcription_id' => $transcription->id, 'revision_id' => $revision->id])) ?>">
+                                <?= csrf_field() ?>
+
+                                <button
+                                    class="btn btn-sm btn-outline-primary"
+                                    type="submit"
+                                    onclick="return confirm(<?= e(json_encode(I18N::translate('Make this revision current? The current NOTE will be overwritten with the text of this revision.'), JSON_THROW_ON_ERROR)) ?>)"
+                                >
+                                    <?= I18N::translate('Make current') ?>
+                                </button>
+                            </form>
+                        <?php endif ?>
+                    </td>
+                <?php endif ?>
             </tr>
         <?php endforeach ?>
     </tbody>

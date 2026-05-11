@@ -35,6 +35,12 @@ Revision (immutable)
 NOTE (new working state)
 ```
 
+Finalizing a transcription also follows this rule. When a user clicks **Finalize**, the current editor content is copied back to the working NOTE first and then saved as a new revision before the status is changed to `final`.
+
+Earlier revisions can be promoted back to the current state. This operation updates the working NOTE from the selected immutable revision and then marks that revision as the single current revision. It does not rewrite older revision rows.
+
+Two revisions of the same transcription can also be compared. The comparison shows metadata differences side by side and a line-based text diff for the transcription content.
+
 ## Data Model
 
 An overview of the current database schema can be found in [docs/database/schema-3.sql.txt](database/schema-3.sql.txt).
@@ -92,6 +98,7 @@ Manual:
 2. Create NOTE and link it to the selected media object  
 3. Edit NOTE  
 4. Save as revision  
+5. Finalize or reopen from the NOTE action area
 
 Internal collaboration:
 1. Open an existing transcription for collaboration
@@ -101,6 +108,7 @@ Internal collaboration:
 5. Collaborators edit the working NOTE and save revisions
 6. Any collaborator can set ready for review
 7. The initiator can set final
+8. Finalize saves the current NOTE as a revision before closing the transcription
 
 Automated:
 1. Submit request  
@@ -112,49 +120,110 @@ Crowd:
 
 ---
 
+## Permissions
+
+The module follows webtrees tree permissions. Access to the dashboard is available to members, but editing workflows require editor rights for the current tree.
+
+Important enforcement points:
+
+- Manual transcription creation requires `Auth::isEditor($tree)`.
+- Source and media selection for manual transcriptions only returns records visible to the current user.
+- Saving NOTE text, saving revisions, opening collaboration, submitting for review, finalizing, and reopening require editor rights.
+- Internal collaboration membership does not override webtrees permissions. A user invited as a collaborator must still be an editor for the tree to edit the NOTE or save revisions.
+- Eligible internal collaborators are limited to users who are editors for the tree.
+
+---
+
 ## Services
 
-- **CreateTranscriptionService**: Delegiert die Anlage einer neuen Transkription an den passenden Provider.
-- **GetTranscriptionDetailService**: Lädt die vollständigen Daten einer Transkription inklusive Metadaten und Revisionshistorie.
-- **SaveNoteAsRevisionService**: Erstellt einen Snapshot des aktuellen NOTE-Inhalts als unveränderliche Revision.
-- **GenerateOrUpdateNoteService**: Synchronisiert den Inhalt einer webtrees NOTE mit den Daten aus dem Modul und verknüpft die NOTE primär mit dem ausgewählten Medienobjekt. Ohne Medienobjekt wird die Quelle als Fallback verwendet.
-- **EnsureTagNoteService**: Stellt sicher, dass das entsprechende webtrees-Tag (NOTE) für die Verknüpfung existiert und demselben Ziel wie die Transkription zugeordnet ist.
-- **OpenCollaborationService**: Öffnet eine bestehende Transkription für interne Zusammenarbeit, legt das Team fest und delegiert an den internen Provider.
-- **CollaborationStatusService**: Setzt kollaborative Statusübergänge mit Rollenprüfung.
-- **CollaborationNotificationService**: Informiert Teammitglieder über Kollaborationsereignisse über den webtrees-MessageService.
+- **CreateTranscriptionService**: Delegates creation of a new transcription to the matching provider.
+- **GetTranscriptionDetailService**: Loads complete transcription data, including metadata and revision history.
+- **SaveNoteAsRevisionService**: Creates an immutable revision snapshot from the current NOTE content.
+- **GenerateOrUpdateNoteService**: Synchronizes a webtrees NOTE with module data and links the NOTE primarily to the selected media object. If no media object is selected, the source is used as fallback target.
+- **CompareRevisionsService**: Builds side-by-side revision metadata rows and a line-based text diff for two revisions of the same transcription.
+- **EnsureTagNoteService**: Ensures that the configured webtrees tag NOTE exists and is linked to the same target as the transcription.
+- **OpenCollaborationService**: Opens an existing transcription for internal collaboration, assigns the team, and delegates to the internal provider.
+- **CollaborationStatusService**: Applies collaborative status transitions with role checks.
+- **CollaborationNotificationService**: Notifies team members about collaboration events through the webtrees `MessageService`.
+
+Status request handlers for manual and internal workflows also ensure that a finalize action persists the current NOTE as a revision before changing the status.
 
 ---
 
 ## Providers
 
-- **TranscriptionProviderInterface**: Definiert den gemeinsamen Basiskontrakt für Transkriptions-Provider.
-- **CreatesTranscriptionsInterface**: Markiert Provider, die neue Transkriptionen anlegen können.
-- **OpensCollaborationInterface**: Markiert Provider, die eine bestehende Transkription für Zusammenarbeit öffnen können.
-- **TranscriptionProviderFactory**: Erzeugt den passenden Provider anhand des Provider-Keys.
-- **ManualTranscriptionProvider**: Kapselt den aktuellen manuellen Workflow inklusive Anlage der Transkription, erster Revision, Arbeits-NOTE und Tag-NOTE.
-- **InternalCollaborationProvider**: Kapselt das Öffnen einer bestehenden Transkription für interne Zusammenarbeit. Quelle, Medienobjekt, Arbeits-NOTE und bisherige Revisionen bleiben erhalten.
+- **TranscriptionProviderInterface**: Defines the common base contract for transcription providers.
+- **CreatesTranscriptionsInterface**: Marks providers that can create new transcriptions.
+- **OpensCollaborationInterface**: Marks providers that can open an existing transcription for collaboration.
+- **ManualTranscriptionProvider**: Encapsulates the manual workflow, including transcription creation, initial revision, working NOTE, and tag NOTE.
+- **InternalCollaborationProvider**: Encapsulates opening an existing transcription for internal collaboration. Source, media object, working NOTE, and existing revisions are preserved.
+
+`TranscriptionProviderFactory` lives in `Application/Factory` and resolves the matching provider from the provider key.
 
 ---
 
 ## Gateways
 
-- **SharedNoteGateway**: Abstraktionsschicht für den Zugriff auf webtrees NOTE-Datensätze (Shared Notes). NOTE-Datensätze werden über webtrees-Record-APIs erzeugt und aktualisiert, damit CHAN-Daten, Pending Changes und interne Links korrekt entstehen.
-- **SourceGateway**: Ermöglicht den Zugriff auf webtrees Quellen (SOURce-Records), deren Struktur und den Fallback-Link einer NOTE zur Quelle.
-- **MediaObjectGateway**: Dient zum Abrufen von Informationen über Medienobjekte (Sichtbarkeit) und deren Mediendateien (Metadaten) sowie zum primären Verknüpfen von NOTEs mit OBJE-Datensätzen.
+- **SharedNoteGateway**: Abstraction layer for accessing webtrees shared NOTE records. NOTE records are created and updated through webtrees record APIs so that CHAN data, pending changes, and internal links are handled correctly.
+- **SourceGateway**: Provides access to webtrees source records, their GEDCOM structure, and fallback NOTE links to sources.
+- **MediaObjectGateway**: Provides access to media objects, media-file metadata, and primary NOTE links to OBJE records.
 
 ---
 
 ## UI
 
 ### Pages
-- **Dashboard**: Zentrale Übersicht über alle vorhandenen Transkriptionen.
-- **Create**: Interface zur manuellen Erstellung einer Transkription (Auswahl von Quelle und Medium).
-- **Detail**: Die Hauptarbeitsansicht. Enthält den Text-Editor für die aktuelle NOTE, zeigt das verknüpfte Medium an und listet die Revisionshistorie inklusive erzeugter NOTE und protokollierter NOTE-Änderung auf.
+- **Dashboard**: Central overview of all available transcriptions.
+- **Create**: Interface for manually creating a transcription by selecting a source and optional media object.
+- **Detail**: Main working view. It contains the editor for the current NOTE, shows the linked media object, lists the revision history, allows a previous revision to become current again, and provides revision comparison controls.
+- **Compare revisions**: Side-by-side view for two revisions of one transcription. It highlights changed metadata fields and displays line-level text additions, removals, and changes.
+- **Admin settings**: Module configuration plus diagnostics for database schema, NOTE editor/TinyMDE availability, tree Markdown settings, transcription counts by tree, and an optional consistency check.
 
 ### Actions / API
-- **UpdateCurrentNoteAction**: Speichert den aktuellen Text des Editors in der webtrees NOTE.
-- **SaveNoteAsRevisionAction**: Archiviert den aktuellen Stand der NOTE als neue, unveränderliche Revision.
-- **MediaForSourceAction**: Liefert via JSON die verfügbaren Medienobjekte für eine gewählte Quelle (wird im Create-Dialog genutzt).
+- **UpdateCurrentNoteAction**: Saves the current editor text to the webtrees NOTE.
+- **SaveNoteAsRevisionAction**: Archives the current NOTE state as a new immutable revision.
+- **MakeRevisionCurrentAction**: Promotes an earlier revision to the current revision, updates the working NOTE from that revision, and records the generated NOTE reference.
+- **CompareRevisionsAction**: Loads two revisions of the same transcription and renders metadata and text differences.
+- **SourceForManualAction**: Returns only sources that the current editor may see in the tree.
+- **MediaForSourceAction**: Returns only media objects of the selected source that the current editor may see in the tree.
+- **CollaborationStatusAction**: Handles status changes for internal collaboration, including `ready_for_review`, `finalize`, and `reopen`.
+- **ManualStatusAction**: Handles `finalize` and `reopen` for manual transcriptions.
+
+### Admin Diagnostics
+
+The admin settings view contains three passive diagnostics sections:
+
+- **Database**: schema version, whether all module tables exist, and a compact table of trees with active transcriptions. The tree table shows active transcriptions and total revisions.
+- **NOTE editor**: whether `linkenhancer` is installed/enabled, whether the local TinyMDE option is enabled, whether the `MarkdownEditorActivationService` is available, and whether this module registered its TinyMDE rule.
+- **Markdown option by tree**: whether the webtrees tree option `FORMAT_TEXT` is set to `markdown`.
+
+The TinyMDE rule is registered for transcription text areas when the module option is enabled. The `linkenhancer` module registers its `MarkdownEditorActivationService` in its constructor so the service is available independently of module boot order.
+
+### Consistency Check
+
+The admin settings view includes a **Run consistency check** button. The check is not executed automatically; it runs only for the current request after the button is clicked.
+
+It reports:
+
+- **Errors** for broken invariants that can prevent normal module workflows.
+- **Warnings** for suspicious states that may be legitimate after manual webtrees edits but should be reviewed.
+
+Current checks:
+
+- active transcription references a missing family tree
+- active transcription references a missing source
+- active transcription references a missing media object
+- referenced media object is no longer linked to the source
+- transcription has no current NOTE
+- current NOTE does not exist
+- current NOTE is not linked to the expected `SOUR` or `OBJE`
+- tag NOTE is missing, deleted, or linked to the wrong target while tagging is enabled
+- revision belongs to a missing transcription
+- revision references a deleted generated NOTE
+- transcription has no revisions
+- transcription has zero or multiple current revisions
+- current revision references a different NOTE than `current_note_xref`
+- active collaboration entry references a deleted webtrees user
 
 ---
 
@@ -223,6 +292,7 @@ case CANCEL = 'cancel';
 │   │   └── nl.po
 │   └── views/
 │       ├── admin-settings.phtml
+│       ├── compare-revisions.phtml
 │       ├── create-manual.phtml
 │       ├── dashboard.phtml
 │       └── detail.phtml
@@ -233,17 +303,18 @@ case CANCEL = 'cancel';
     │   │   ├── CreateTranscriptionCommand.php
     │   │   └── OpenCollaborationCommand.php
     │   ├── Factory/
-    │   │   └── NoteContentFactory.php
+    │   │   ├── NoteContentFactory.php
+    │   │   └── TranscriptionProviderFactory.php
     │   ├── Provider/
     │   │   ├── CreatesTranscriptionsInterface.php
     │   │   ├── InternalCollaborationProvider.php
     │   │   ├── ManualTranscriptionProvider.php
     │   │   ├── OpensCollaborationInterface.php
-    │   │   ├── TranscriptionProviderFactory.php
     │   │   └── TranscriptionProviderInterface.php
     │   └── Service/
     │       ├── CollaborationNotificationService.php
     │       ├── CollaborationStatusService.php
+    │       ├── CompareRevisionsService.php
     │       ├── CreateTranscriptionService.php
     │       ├── EnsureTagNoteService.php
     │       ├── GenerateOrUpdateNoteService.php
@@ -251,33 +322,40 @@ case CANCEL = 'cancel';
     │       ├── OpenCollaborationService.php
     │       └── SaveNoteAsRevisionService.php
     ├── Domain/
+    │   ├── Enum/
+    │   │   ├── InteractionModel.php
+    │   │   ├── PrimaryForm.php
+    │   │   ├── PrimaryLanguage.php
+    │   │   ├── PrimaryScript.php
+    │   │   ├── RevisionOriginType.php
+    │   │   ├── TranscriptionStatus.php
+    │   │   ├── TranscriptionTransition.php
+    │   │   └── TranscriptionType.php
     │   ├── Entity/
     │   │   ├── NoteLink.php
     │   │   ├── Transcription.php
     │   │   └── TranscriptionRevision.php
+    │   ├── Service/
+    │   │   └── TranscriptionStateMachine.php
     │   └── ValueObject/
+    │       ├── CollaborationRole.php
     │       ├── NoteStrategy.php
     │       ├── ProviderKey.php
     │       ├── ProviderLabel.php
     │       └── ProviderPresentation.php
-    ├── Enum/
-    │   ├── InteractionModel.php
-    │   ├── PrimaryForm.php
-    │   ├── PrimaryLanguage.php
-    │   ├── PrimaryScript.php
-    │   ├── RevisionOriginType.php
-    │   ├── TranscriptionStatus.php
-    │   ├── TranscriptionTransition.php
-    │   └── TranscriptionType.php
     ├── Http/
     │   └── RequestHandlers/
     │       ├── CollaborationStatusAction.php
+    │       ├── CompareRevisionsAction.php
     │       ├── CreateManualAction.php
     │       ├── DashboardAction.php
     │       ├── DetailAction.php
+    │       ├── ManualStatusAction.php
+    │       ├── MakeRevisionCurrentAction.php
     │       ├── MediaForSourceAction.php
     │       ├── OpenCollaborationAction.php
     │       ├── SaveNoteAsRevisionAction.php
+    │       ├── SourceForManualAction.php
     │       ├── StoreManualAction.php
     │       └── UpdateCurrentNoteAction.php
     ├── Infrastructure/
@@ -289,10 +367,10 @@ case CANCEL = 'cancel';
     │   │   │   ├── SettingsRepository.php
     │   │   │   └── TranscriptionRepository.php
     │   │   └── Schema/
-│   │       ├── Migration0.php
-│   │       ├── Migration1.php
-│   │       ├── Migration2.php
-│   │       └── SchemaManager.php
+    │   │       ├── Migration0.php
+    │   │       ├── Migration1.php
+    │   │       ├── Migration2.php
+    │   │       └── SchemaManager.php
     │   ├── Webtrees/
     │   │   ├── MediaObjectGateway.php
     │   │   ├── SharedNoteGateway.php
@@ -309,5 +387,6 @@ case CANCEL = 'cancel';
 
 ## Known Limitations
 
-- Permission checks are still implemented at the UI/action level and should be reviewed before production use.
 - Existing data created by earlier development versions may still contain old NOTE links to sources until the affected transcription or tag NOTE is saved again.
+- The consistency check reports issues only. It does not repair records automatically.
+- The check compares NOTE links by GEDCOM references and does not attempt semantic repair if a user intentionally moved or duplicated NOTE links outside the module.

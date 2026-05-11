@@ -9,6 +9,9 @@ use Fisharebest\Webtrees\FlashMessages;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Registry;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\CollaborationStatusService;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\GenerateOrUpdateNoteService;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service\SaveNoteAsRevisionService;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionCollaboratorRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -23,7 +26,7 @@ final class CollaborationStatusAction implements RequestHandlerInterface
     {
         $tree = $request->getAttribute('tree');
 
-        if (!Auth::isMember($tree)) {
+        if (!Auth::isEditor($tree)) {
             return response('');
         }
 
@@ -39,6 +42,26 @@ final class CollaborationStatusAction implements RequestHandlerInterface
                 break;
 
             case 'finalize':
+                if (!Registry::container()
+                    ->get(TranscriptionCollaboratorRepository::class)
+                    ->isInitiator($transcription_id, $user->id())) {
+                    return response('');
+                }
+
+                if (array_key_exists('note_text', $params)) {
+                    Registry::container()
+                        ->get(GenerateOrUpdateNoteService::class)
+                        ->updateNoteText($transcription_id, (string) $params['note_text']);
+                }
+
+                Registry::container()
+                    ->get(SaveNoteAsRevisionService::class)
+                    ->saveCurrentNoteAsRevision(
+                        $transcription_id,
+                        $user->id(),
+                        I18N::translate('Saved on finalize')
+                    );
+
                 $service->finalize($transcription_id, $user->id());
                 break;
 

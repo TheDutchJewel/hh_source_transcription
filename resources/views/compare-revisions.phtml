@@ -1,0 +1,96 @@
+<?php
+/*
+ * webtrees: online genealogy application
+ * Copyright (C) 2026 webtrees development team
+ *                    <https://webtrees.net>
+ *
+ * Source Transcription (webtrees custom module):
+ * Copyright (C) 2026 Hermann Hartenthaler
+ *                     <https://ahnen.hartenthaler.eu>
+ */
+
+declare(strict_types=1);
+
+/**
+ * @var string $title
+ * @var Tree $tree
+ * @var Transcription $transcription
+ * @var TranscriptionRevision $left_revision
+ * @var TranscriptionRevision $right_revision
+ * @var array<int,array{label:string,left:string,right:string,changed:bool}> $metadata_rows
+ * @var array<int,array{type:string,left:?string,right:?string}> $text_diff
+ * @var string $detail_url
+ */
+
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Tree;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\TranscriptionRevision;
+
+$left_title = I18N::translate('Revision %s', (string) $left_revision->revision_no);
+$right_title = I18N::translate('Revision %s', (string) $right_revision->revision_no);
+?>
+
+<h2><?= e($title) ?>: <?= e($transcription->title) ?></h2>
+
+<p>
+    <a class="btn btn-secondary" href="<?= e($detail_url) ?>">
+        <?= I18N::translate('Back to transcription') ?>
+    </a>
+</p>
+
+<h3><?= I18N::translate('Metadata') ?></h3>
+
+<table class="table table-bordered table-sm">
+    <thead>
+        <tr>
+            <th><?= I18N::translate('Field') ?></th>
+            <th><?= e($left_title) ?></th>
+            <th><?= e($right_title) ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($metadata_rows as $row) : ?>
+            <tr class="<?= $row['changed'] ? 'table-warning' : '' ?>">
+                <th><?= I18N::translate($row['label']) ?></th>
+                <td><?= e($row['left']) ?></td>
+                <td><?= e($row['right']) ?></td>
+            </tr>
+        <?php endforeach ?>
+    </tbody>
+</table>
+
+<h3><?= I18N::translate('Text differences') ?></h3>
+
+<table class="table table-bordered table-sm">
+    <thead>
+        <tr>
+            <th style="width: 50%"><?= e($left_title) ?></th>
+            <th style="width: 50%"><?= e($right_title) ?></th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php if ($text_diff === []) : ?>
+            <tr>
+                <td colspan="2" class="text-muted">
+                    <?= I18N::translate('Both revisions have no text content.') ?>
+                </td>
+            </tr>
+        <?php endif ?>
+
+        <?php foreach ($text_diff as $row) : ?>
+            <?php
+            $row_class = match ($row['type']) {
+                'added' => 'table-success',
+                'removed' => 'table-danger',
+                'changed' => 'table-warning',
+                default => '',
+            };
+            ?>
+            <tr class="<?= $row_class ?>">
+                <td><pre class="mb-0" style="white-space: pre-wrap;"><?= e($row['left'] ?? '') ?></pre></td>
+                <td><pre class="mb-0" style="white-space: pre-wrap;"><?= e($row['right'] ?? '') ?></pre></td>
+            </tr>
+        <?php endforeach ?>
+    </tbody>
+</table>

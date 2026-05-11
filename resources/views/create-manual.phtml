@@ -9,11 +9,11 @@ declare(strict_types=1);
 
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Tree;
-use Fisharebest\Webtrees\Http\RequestHandlers\TomSelectSource;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\PrimaryForm;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\PrimaryLanguage;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\PrimaryScript;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\MediaForSourceAction;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\SourceForManualAction;
 
 ?>
 
@@ -42,7 +42,7 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\MediaF
                         class="form-select tom-select"
                         id="source_xref"
                         name="source_xref"
-                        data-wt-url="<?= e(route(TomSelectSource::class, ['tree' => $tree->name(), 'at' => '@'])) ?>"
+                        data-wt-url="<?= e(route(SourceForManualAction::class, ['tree' => $tree->name(), 'at' => '@'])) ?>"
                         data-wt-i18n-no-results="<?= e(I18N::translate('No results found')) ?>"
                         placeholder="<?= e(I18N::translate('Search for a source')) ?>"
                         required

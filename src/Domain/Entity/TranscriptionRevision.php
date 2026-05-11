@@ -43,6 +43,8 @@ final class TranscriptionRevision
         public readonly string $content_text,
         public readonly string $content_hash,
         public readonly int $created_by_user_id,
+        public readonly string $created_at,
+        public readonly ?string $import_comment,
         public readonly ?string $generated_note_xref,
         public readonly ?int $generated_note_changed_by_user_id,
         public readonly ?string $generated_note_changed_by_user_name,

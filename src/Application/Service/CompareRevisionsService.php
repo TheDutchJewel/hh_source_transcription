@@ -1,0 +1,185 @@
+<?php
+
+/*
+ * webtrees: online genealogy application
+ * Copyright (C) 2026 webtrees development team
+ *                    <https://webtrees.net>
+ *
+ * Source Transcription (webtrees custom module):
+ * Copyright (C) 2026 Hermann Hartenthaler
+ *                     <https://ahnen.hartenthaler.eu>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Source Transcription
+ * A webtrees (https://webtrees.net) 2.2 custom module to transcribe sources
+ */
+
+declare(strict_types=1);
+
+namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service;
+
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Services\UserService;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\TranscriptionRevision;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\RevisionOriginType;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderPresentation;
+
+final class CompareRevisionsService
+{
+    public function __construct(
+        private readonly UserService $userService,
+    ) {
+    }
+
+    /**
+     * @return array<int,array{label:string,left:string,right:string,changed:bool}>
+     */
+    public function metadataRows(TranscriptionRevision $left, TranscriptionRevision $right): array
+    {
+        $rows = [
+            ['Revision', (string) $left->revision_no, (string) $right->revision_no],
+            ['Current revision', $left->is_current_revision ? I18N::translate('yes') : I18N::translate('no'), $right->is_current_revision ? I18N::translate('yes') : I18N::translate('no')],
+            ['Provider', ProviderPresentation::label($left->provider_key), ProviderPresentation::label($right->provider_key)],
+            ['Origin', RevisionOriginType::labels()[$left->origin_type] ?? $left->origin_type, RevisionOriginType::labels()[$right->origin_type] ?? $right->origin_type],
+            ['Origin reference', $left->origin_reference ?? '', $right->origin_reference ?? ''],
+            ['Content format', $left->content_format, $right->content_format],
+            ['Content hash', $left->content_hash, $right->content_hash],
+            ['Created by', $this->userLabel($left->created_by_user_id), $this->userLabel($right->created_by_user_id)],
+            ['Created at', $left->created_at, $right->created_at],
+            ['Import comment', $left->import_comment ?? '', $right->import_comment ?? ''],
+            ['Generated NOTE', $left->generated_note_xref ?? '', $right->generated_note_xref ?? ''],
+            ['NOTE changed by', $left->generated_note_changed_by_user_name ?? '', $right->generated_note_changed_by_user_name ?? ''],
+            ['NOTE changed at', $left->generated_note_changed_at ?? '', $right->generated_note_changed_at ?? ''],
+        ];
+
+        return array_map(
+            static fn (array $row): array => [
+                'label' => $row[0],
+                'left' => $row[1],
+                'right' => $row[2],
+                'changed' => $row[1] !== $row[2],
+            ],
+            $rows
+        );
+    }
+
+    /**
+     * @return array<int,array{type:string,left:?string,right:?string}>
+     */
+    public function textDiff(TranscriptionRevision $left, TranscriptionRevision $right): array
+    {
+        $left_lines = $this->splitLines($left->content_text);
+        $right_lines = $this->splitLines($right->content_text);
+        $left_count = count($left_lines);
+        $right_count = count($right_lines);
+
+        if ($left_count * $right_count > 250000) {
+            return $this->pairedLineDiff($left_lines, $right_lines);
+        }
+
+        $lcs = array_fill(0, $left_count + 1, array_fill(0, $right_count + 1, 0));
+
+        for ($i = $left_count - 1; $i >= 0; $i--) {
+            for ($j = $right_count - 1; $j >= 0; $j--) {
+                if ($left_lines[$i] === $right_lines[$j]) {
+                    $lcs[$i][$j] = $lcs[$i + 1][$j + 1] + 1;
+                } else {
+                    $lcs[$i][$j] = max($lcs[$i + 1][$j], $lcs[$i][$j + 1]);
+                }
+            }
+        }
+
+        $diff = [];
+        $i = 0;
+        $j = 0;
+
+        while ($i < $left_count && $j < $right_count) {
+            if ($left_lines[$i] === $right_lines[$j]) {
+                $diff[] = ['type' => 'unchanged', 'left' => $left_lines[$i], 'right' => $right_lines[$j]];
+                $i++;
+                $j++;
+            } elseif ($lcs[$i + 1][$j] >= $lcs[$i][$j + 1]) {
+                $diff[] = ['type' => 'removed', 'left' => $left_lines[$i], 'right' => null];
+                $i++;
+            } else {
+                $diff[] = ['type' => 'added', 'left' => null, 'right' => $right_lines[$j]];
+                $j++;
+            }
+        }
+
+        while ($i < $left_count) {
+            $diff[] = ['type' => 'removed', 'left' => $left_lines[$i], 'right' => null];
+            $i++;
+        }
+
+        while ($j < $right_count) {
+            $diff[] = ['type' => 'added', 'left' => null, 'right' => $right_lines[$j]];
+            $j++;
+        }
+
+        return $diff;
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    private function splitLines(string $text): array
+    {
+        if ($text === '') {
+            return [];
+        }
+
+        return preg_split('/\R/u', $text) ?: [];
+    }
+
+    /**
+     * @param array<int,string> $left_lines
+     * @param array<int,string> $right_lines
+     * @return array<int,array{type:string,left:?string,right:?string}>
+     */
+    private function pairedLineDiff(array $left_lines, array $right_lines): array
+    {
+        $diff = [];
+        $max = max(count($left_lines), count($right_lines));
+
+        for ($i = 0; $i < $max; $i++) {
+            $left = $left_lines[$i] ?? null;
+            $right = $right_lines[$i] ?? null;
+
+            if ($left === $right) {
+                $diff[] = ['type' => 'unchanged', 'left' => $left, 'right' => $right];
+            } elseif ($left === null) {
+                $diff[] = ['type' => 'added', 'left' => null, 'right' => $right];
+            } elseif ($right === null) {
+                $diff[] = ['type' => 'removed', 'left' => $left, 'right' => null];
+            } else {
+                $diff[] = ['type' => 'changed', 'left' => $left, 'right' => $right];
+            }
+        }
+
+        return $diff;
+    }
+
+    private function userLabel(int $user_id): string
+    {
+        $user = $this->userService->find($user_id);
+
+        if ($user === null) {
+            return '#' . $user_id;
+        }
+
+        return $user->realName() !== '' ? $user->realName() : $user->userName();
+    }
+}
