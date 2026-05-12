@@ -69,11 +69,47 @@ msgstr "Status gewijzigd voor transcriptie: %s"
 msgid "The transcription status has changed to: %s"
 msgstr "De transcriptiestatus is gewijzigd in: %s"
 
+msgid "Revision"
+msgstr "Revisie"
+
+msgid "Current revision"
+msgstr "Huidige revisie"
+
 msgid "yes"
 msgstr "ja"
 
 msgid "no"
 msgstr "nee"
+
+msgid "Origin"
+msgstr "Herkomst"
+
+msgid "Origin reference"
+msgstr "Herkomstreferentie"
+
+msgid "Content format"
+msgstr "Content‑formaat"
+
+msgid "Content hash"
+msgstr "Content‑hash"
+
+msgid "Created by"
+msgstr "Gemaakt door"
+
+msgid "Created at"
+msgstr "Gemaakt op"
+
+msgid "Import comment"
+msgstr "Geïmporteerde opmerking"
+
+msgid "Generated NOTE"
+msgstr "Gegenereerde NOTE"
+
+msgid "NOTE changed by"
+msgstr "NOTE gewijzigd door"
+
+msgid "NOTE changed at"
+msgstr "NOTE gewijzigd op"
 
 msgid "Manual (direct editing)"
 msgstr "Handmatig (direct bewerken)"
@@ -333,6 +369,21 @@ msgstr "Genormaliseerde tekst"
 msgid "Type not specified"
 msgstr "Type niet gespecificeerd"
 
+msgid "Pending"
+msgstr "In behandeling"
+
+msgid "Uploaded"
+msgstr "Geüpload"
+
+msgid "Failed"
+msgstr "Mislukt"
+
+msgid "Uploading"
+msgstr "Uploaden"
+
+msgid "Upload failed"
+msgstr "Uploaden is mislukt"
+
 msgid "Always create a new NOTE"
 msgstr "Altijd een nieuwe NOTE aanmaken"
 
@@ -379,8 +430,11 @@ msgstr "Revisies vergelijken"
 msgid "Create manual transcription"
 msgstr "Start handmatige transcriptie"
 
-msgid "Transcriptions"
-msgstr "Transcripties"
+msgid "Upload images to Transkribus"
+msgstr "Afbeeldingen uploaden naar Transcripties"
+
+msgid "Source capture and analysis"
+msgstr "Bronvastlegging en -analyse"
 
 #, php-format
 msgid "Revision %s is now the current revision."
@@ -388,6 +442,22 @@ msgstr "Revisie %s is nu de huidige revisie."
 
 msgid "The transcription status has been updated."
 msgstr "De transcriptiestatus is bijgewerkt."
+
+#, php-format
+msgid "%s KB"
+msgstr "%s KB"
+
+msgid "External media files cannot be uploaded directly."
+msgstr "Externe mediabestanden kunnen niet direct worden geüpload."
+
+msgid "The file does not exist on this server."
+msgstr "Het bestand bestaat niet op deze server."
+
+msgid "Unsupported file format. Use JPEG, TIFF or PNG."
+msgstr "Niet-ondersteund bestandsformaat. Gebruik JPEG, TIFF of PNG."
+
+msgid "The file is larger than 20 MB."
+msgstr "Het bestand is groter dan 20 MB."
 
 msgid "The transcription has been opened for internal collaboration."
 msgstr "De transcriptie is vrijgegeven voor interne samenwerking."
@@ -411,6 +481,10 @@ msgstr "De transcriptie is gemaakt."
 msgid "The NOTE has been updated."
 msgstr "De NOTE is bijgewerkt."
 
+#, php-format
+msgid "Transkribus job #%s: %s"
+msgstr "Transkribus-taak #%s: %s"
+
 msgid "First transcription provider available: manual transcription."
 msgstr "Eerste transcriptieaanbieder beschikbaar: handmatige transcriptie."
 
@@ -425,6 +499,18 @@ msgstr "Brontranscriptie"
 
 msgid "Manage source transcriptions with manual and provider-based workflows."
 msgstr "Beheer bronteksten met handmatige of aanbieder-gebaseerde werkstroom."
+
+msgid "Transcriptions"
+msgstr "Transcripties"
+
+msgid "The provider credentials have been deleted."
+msgstr "De provider‑credentials zijn verwijderd."
+
+msgid "The provider credentials could not be loaded."
+msgstr "De provider‑credentials konden niet worden geladen."
+
+msgid "The provider credentials have been saved."
+msgstr "De provider‑credentials zijn opgeslagen ."
 
 #, php-format
 msgid "The preferences for the module “%s” have been updated."
@@ -445,10 +531,10 @@ msgstr "De bron waarnaar verwezen wordt bestaat niet: %s"
 
 #, php-format
 msgid "The referenced media object does not exist: %s"
-msgstr "Het media-object waarnaar verwezen wordt bestaat niet: %s"
+msgstr "Het mediaobject waarnaar verwezen wordt bestaat niet: %s"
 
 msgid "The referenced media object is no longer linked to the source."
-msgstr "Het media-object waarnaar verwezen wordt is niet langer gekoppeld aan de bron."
+msgstr "Het mediaobject waarnaar verwezen wordt is niet langer gekoppeld aan de bron."
 
 msgid "The transcription has no current NOTE."
 msgstr "De transcriptie heeft geen huidige NOTE."
@@ -460,6 +546,9 @@ msgstr "De huidige NOTE bestaat niet: %s"
 #, php-format
 msgid "The current NOTE is not linked to the expected source or media object: %s"
 msgstr "De huidige NOTE is niet gekoppeld aan de verwachte bron of het mediaobject: %s"
+
+msgid "The current NOTE has changed since it was last linked to a revision."
+msgstr "De huidige NOTE is gewijzigd na koppeling aan een revisie."
 
 msgid "Tagging is enabled, but the transcription has no tag NOTE."
 msgstr "Labeling is ingeschakeld, maar de transcriptie bevat geen label NOTE."
@@ -494,6 +583,15 @@ msgstr "De huidige revisie verwijst naar een andere NOTE dan de huidige NOTE van
 msgid "An active collaboration entry references a user that no longer exists: %s"
 msgstr "Een actief samenwerkingsitem verwijst naar een gebruiker die niet meer bestaat: %s"
 
+msgid "successful"
+msgstr "succesvol"
+
+msgid "failed"
+msgstr "mislukt"
+
+msgid "not tested"
+msgstr "niet getest"
+
 #, php-format
 msgid "This module can only be used with a webtrees version greater or equal than %s."
 msgstr "Deze module kan alleen worden gebruikt met een webtreesversie die gelijk is aan of hoger is dan %s."
@@ -515,6 +613,81 @@ msgstr "Standaard"
 
 msgid "save"
 msgstr "opslaan"
+
+msgid "Provider credentials"
+msgstr "Provider‑credentials"
+
+msgid "An administrator creates an API key in the Discourse administration under Admin > API > API keys. Use the forum base URL, the Discourse username for requests and the generated API key. For a key limited to one user, the API username must match that user; for an all-users key, choose the user whose permissions should be used."
+msgstr "Een beheerder maakt een API-sleutel aan in het Discourse-beheergedeelte onder Beheer > API > API-sleutels. Gebruik de basis-URL van het forum, de Discourse-gebruikersnaam voor verzoeken en de gegenereerde API-sleutel. Voor een sleutel die beperkt is tot één gebruiker, moet de API-gebruikersnaam overeenkomen met die van die gebruiker; voor een sleutel voor alle gebruikers kiest u de gebruiker wiens rechten moeten worden gebruikt."
+
+msgid "Discourse documentation"
+msgstr "Discourse-documentatie"
+
+msgid "For uploads, use a Transkribus API key as the secret if your account provides one. As a fallback, you can use the regular Transkribus account username and password; the token URL and client ID are prefilled for the Processing API."
+msgstr "Gebruik voor uploads een Transkribus API-sleutel als geheim, als uw account daarover beschikt. Als alternatief kunt u de gebruiksnaam en het wachtwoord van je gewone Transkribus-account gebruiken; de token-URL en client-ID worden automatisch ingevuld voor de Processing API."
+
+msgid "Transkribus API documentation"
+msgstr "Transkribus API-documentatie"
+
+msgid "webtrees user"
+msgstr "webtrees-gebruikers"
+
+msgid "Discourse URL"
+msgstr "Discourse-URL"
+
+msgid "Base address of the Discourse forum, without an API path."
+msgstr "Basisadres van het Discourse-forum, zonder het API-gedeelte."
+
+msgid "API username"
+msgstr "API-gebruikersnaam"
+
+msgid "Discourse username used in the Api-Username request header."
+msgstr "Discourse-gebruikersnaam in de API-Username Request Header."
+
+msgid "API key"
+msgstr "API-sleutel"
+
+msgid "stored; leave empty to keep"
+msgstr "opgeslagen; laat leeg om te behouden"
+
+msgid "The API key is shown only once in Discourse; store it here or create a new key if it was lost."
+msgstr "De API-sleutel wordt in Discourse slechts één keer getoond; sla hem hier op of maak een nieuwe sleutel aan als u hem kwijt bent."
+
+msgid "Token URL"
+msgstr "Token-URL"
+
+msgid "OpenID Connect token endpoint used to obtain a temporary Transkribus access token."
+msgstr "OpenID Connect-token-eindpunt voor het ophalen van een tijdelijk Transkribus-toegangstoken."
+
+msgid "Upload URL"
+msgstr "Upload-URL"
+
+msgid "Endpoint used for the first upload step. Keep the default unless Transkribus changes the upload endpoint for your API account."
+msgstr "Eindpunt dat wordt gebruikt voor de eerste uploadstap. Houd de standaardinstelling aan, tenzij Transkribus het upload-eindpunt voor uw API-account wijzigt."
+
+msgid "Client ID"
+msgstr "Client-ID"
+
+msgid "Use \"processing-api-client\" for the Processing API. Use \"transkribus-api-client\" only for the legacy REST API."
+msgstr "Gebruik \"processing-api-client\" voor de Processing-API. Gebruik \"transkribus-api-client\" alleen voor de oude REST-API."
+
+msgid "Username"
+msgstr "Gebruikersnaam"
+
+msgid "Transkribus login name or email address. Leave unchanged when using an API key as the secret."
+msgstr "Transkribus-gebruikersnaam of e-mailadres. Laat ongewijzigd als u een API-sleutel als geheim gebruikt."
+
+msgid "Password or API key"
+msgstr "Wachtwoord of API-sleutel"
+
+msgid "Use an API key starting with \"sk_\" for direct upload authentication, or the account password for token-based authentication."
+msgstr "Gebruik een API-sleutel die begint met \"sk_\" voor authenticatie bij directe uploads, of het accountwachtwoord voor tokengebaseerde authenticatie."
+
+msgid "Save and test"
+msgstr "Opslaan en testen"
+
+msgid "delete"
+msgstr "verwijderen"
 
 msgid "Diagnostics"
 msgstr "Diagnose"
@@ -592,8 +765,8 @@ msgstr "Revisie %s"
 msgid "Back to transcription"
 msgstr "Terug naar transcriptie"
 
-msgid "Metadata"
-msgstr "Metagegevens"
+msgid "Metadata differences"
+msgstr "Metadata‑verschillen"
 
 msgid "Field"
 msgstr "Veld"
@@ -634,20 +807,62 @@ msgstr "Geen mediaobject geselecteerd"
 msgid "Could not load media objects"
 msgstr "Mediaobjecten konden niet worden geladen"
 
+msgid "Job title"
+msgstr "Taaktitel"
+
+msgid "Media files"
+msgstr "Mediabestanden"
+
+msgid "Select a media object first."
+msgstr "Selecteer eerst een mediaobject."
+
+msgid "Accepted formats: JPEG, TIFF, PNG. Maximum file size: 20 MB per image."
+msgstr "Toegestane formaten: JPEG, TIFF, PNG. Maximale bestandsgrootte: 20 MB per afbeelding."
+
+msgid "Upload to Transkribus"
+msgstr "Uploaden naar Transkribus"
+
+msgid "Loading media objects..."
+msgstr "Laden van mediaobjecten..."
+
+msgid "Select a media object"
+msgstr "Selecteer een mediaobject"
+
+msgid "Loading media files..."
+msgstr "Laden van mediabestanden..."
+
+msgid "No media files found."
+msgstr "Geen mediabestanden gevonden."
+
+msgid "Could not load media files."
+msgstr "Mediabestanden konden niet worden geladen."
+
+msgid "Transkribus jobs"
+msgstr "Transkribus-taken"
+
+msgid "Media"
+msgstr "Media"
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Upload references"
+msgstr "Uploadreferenties"
+
+msgid "Message"
+msgstr "Bericht"
+
+msgid "Deleted"
+msgstr "Verwijderd"
+
 #, php-format
 msgid "%s transcription"
 msgid_plural "%s transcriptions"
 msgstr[0] "%s transcriptie"
 msgstr[1] "%s transcripties"
 
-msgid "Media"
-msgstr "Media"
-
 msgid "Transcription provider"
 msgstr "Transcriptieaanbieder"
-
-msgid "Status"
-msgstr "Status"
 
 msgid "Note"
 msgstr "Notitie"
@@ -657,9 +872,6 @@ msgstr "Acties"
 
 msgid "Source record"
 msgstr "Bronrecord"
-
-msgid "Deleted"
-msgstr "Verwijderd"
 
 msgid "None"
 msgstr "Geen"
@@ -671,9 +883,10 @@ msgid "Back to dashboard"
 msgstr "Terug naar dashboard"
 
 msgid "The current webtrees NOTE is used as a working copy. Changes are only archived when saved as a new revision."
-msgstr ""
-"De huidige webtrees-NOTE wordt gebruikt als werkkopie. Wijzigingen worden pas gearchiveerd wanneer ze als nieuwe "
-"revisie worden opgeslagen."
+msgstr "De huidige webtrees-NOTE wordt gebruikt als werkkopie. Wijzigingen worden pas gearchiveerd wanneer ze als nieuwe revisie worden opgeslagen."
+
+msgid "The current webtrees NOTE has changed since it was last linked to a revision. Use \"Archive as new revision\" to preserve these changes before making another revision current or otherwise replacing the NOTE."
+msgstr "De huidige NOTE van webtrees is gewijzigd sinds deze voor het laatst aan een revisie werd gekoppeld. Gebruik \"Archiveren als nieuwe revisie\" om deze wijzigingen te bewaren voordat u een andere revisie als actueel instelt of de NOTE op een andere manier vervangt."
 
 msgid "Information"
 msgstr "Informatie"
@@ -717,9 +930,6 @@ msgstr "Samenwerkers"
 
 msgid "No eligible users found."
 msgstr "Geen geschikte gebruikers gevonden."
-
-msgid "Message"
-msgstr "Bericht"
 
 msgid "Save the current NOTE as a starting revision"
 msgstr "Sla de huidige NOTE op als startrevisie"
@@ -775,15 +985,6 @@ msgstr "Huidig"
 msgid "Second revision"
 msgstr "Tweede revisie"
 
-msgid "Revision"
-msgstr "Revisie"
-
-msgid "Origin"
-msgstr "Oorsprong"
-
-msgid "Generated NOTE"
-msgstr "Gegenereerde NOTE"
-
 msgid "NOTE change"
 msgstr "NOTE-wijziging"
 
@@ -798,42 +999,6 @@ msgstr "Deze revisie als de huidige revisie instellen? De huidige NOTE wordt ove
 
 msgid "Make current"
 msgstr "Aktuell machen"
-
-#~ msgid "Current revision"
-#~ msgstr "Aktuelle Revision"
-
-#~ msgid "Origin reference"
-#~ msgstr "Ursprungsreferenz"
-
-#~ msgid "Content format"
-#~ msgstr "Inhaltsformat"
-
-#~ msgid "Content hash"
-#~ msgstr "Inhalts-Hash"
-
-#~ msgid "Created by"
-#~ msgstr "Erzeugt von"
-
-#~ msgid "Created at"
-#~ msgstr "Erzeugt am"
-
-#~ msgid "Import comment"
-#~ msgstr "Importkommentar"
-
-#~ msgid "NOTE changed by"
-#~ msgstr "NOTE geändert von"
-
-#~ msgid "NOTE changed at"
-#~ msgstr "NOTE geändert am"
-
-#~ msgid "Current Markdown revisions"
-#~ msgstr "Aktuelle Markdown-Revisionen"
-
-#~ msgid "Current non-Markdown revisions"
-#~ msgstr "Aktuelle Nicht-Markdown-Revisionen"
-
-#~ msgid "Without current revision"
-#~ msgstr "Ohne aktuelle Revision"
 
 #~ msgid "End transcription"
 #~ msgstr "Ende der Transkription"
@@ -869,13 +1034,10 @@ msgstr "Aktuell machen"
 #~ msgstr "Medien XREF"
 
 #~ msgid "Tag NOTE"
-#~ msgstr "Tag NOTE"
+#~ msgstr "Tag-NOTE"
 
 #~ msgid "Transcription Provider"
 #~ msgstr "Anbieter der Transkription"
-
-#~ msgid "ID"
-#~ msgstr "ID"
 
 #~ msgid "Open media file"
 #~ msgstr "Öffne Mediendatei"
