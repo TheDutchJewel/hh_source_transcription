@@ -96,6 +96,7 @@ class DetailAction implements RequestHandlerInterface
             'transcription' => $transcription,
             'revisions'     => $data['revisions'],
             'note_text'     => $data['note_text'],
+            'note_status'   => $data['note_status'],
             'source'        => $data['source'],
             'media_object'  => $data['media_object'],
             'media_files'   => $data['media_files'],

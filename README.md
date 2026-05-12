@@ -1,4 +1,4 @@
-# **webtrees** module for Source Transcriptions (hh_source_transcription)
+# 🌳 **webtrees** module for Source Transcriptions (hh_source_transcription)
 
 [![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0)
 
@@ -7,7 +7,7 @@
 This [webtrees](https://www.webtrees.net) custom module manages transcriptions of sources and source media.
 
 <a name="Contents"></a>
-## Contents
+## 📚 Contents
 
 This Readme contains the following main sections
 
@@ -19,11 +19,8 @@ This Readme contains the following main sections
 * [Design principles](#Design)
 * [Workflow](#Workflow)
 * [Current status](#Status)
-* [Discussion points](#Discussion)
-* [Current status](#Current)
-* [Discussion points](#Discussion)
 * [Screenshots](#Screenshots) 
-* [Literature](#Literature)
+* [Literature and links](#Literature)
 * [Requirements](#Requirements)
 * [Installation](#Installation)
 * [Upgrade](#Upgrade)
@@ -32,7 +29,7 @@ This Readme contains the following main sections
 * [License](#License)
 
 <a name="Purpose"></a>
-## Purpose
+## 🎯 Purpose
 
 Genealogical sources often contain handwritten or otherwise difficult-to-read texts.  
 This module adds a structured workflow for creating, importing, managing, and revising transcriptions in **webtrees**.
@@ -44,7 +41,7 @@ The architecture is designed to support additional providers,
 like Transkribus, Discourse, and AI tools.
 
 <a name="Scope"></a>
-## Scope
+## 🔎 Scope
 
 The module links transcriptions to
 
@@ -65,7 +62,7 @@ It is treated as a structured object with
 - a current working shared NOTE in **webtrees**, linked to `OBJE` if a media object is selected, otherwise to `SOUR`
 
 <a name="Main"></a>
-## Main ideas
+## 💡 Main ideas
 The overarching goal is to link a Digital Humanities edition system with a genealogical data model.
 The long-term goal is therefore the development of a structured data collection with TEI parsing and integrated GEDCOM generation.
 Based on claims webtrees objects such as people, places, and events
@@ -146,7 +143,7 @@ Module backup/restore preserves the transcription revision history stored outsid
 It requires the target tree to contain the same GEDCOM records and XREF identifiers.
 
 <a name="Data"></a>
-## Data model
+## 🧩 Data model
 
 ### Transcription
 
@@ -171,7 +168,7 @@ The revision table also stores the generated NOTE XREF and the user/time informa
 
 The module tracks which NOTE was generated from which revision and whether that NOTE is currently active.
 
-## Providers in version 1
+## 🔌 Providers in version 1
 
 ### Manual provider
 
@@ -223,12 +220,12 @@ The Transkribus provider supports
 - updating or generating a current working NOTE
 
 <a name="Database"></a>
-## Database schema
+## 🗄 Database schema
 
 The module uses an explicit schema version to allow future migrations. The current schema is documented in [docs/database/schema-3.sql.txt](docs/database/schema-3.sql.txt).
 
 <a name="Design"></a>
-## Design principles
+## 🧭 Design principles
 
 - keep the module **provider-agnostic**
 - keep revision history separate from editable webtrees notes
@@ -237,7 +234,7 @@ The module uses an explicit schema version to allow future migrations. The curre
 - make future providers easy to add
 
 <a name="Workflow"></a>
-## Workflow
+## 🛠 Workflow
 
 ### Manual
 1. Open a source
@@ -281,7 +278,7 @@ The module uses an explicit schema version to allow future migrations. The curre
 8. Generate or update the current working note
 
 <a name="Status"></a>
-## Current status
+## 🚧 Current status
 
 This project is currently in the design and initial development phase.
 It is an early beta version and not ready for production use.
@@ -315,78 +312,19 @@ Older development data may still contain NOTE links at the source that are moved
 - Very flexible, but privacy, costs, prompting, and reproducibility must be properly resolved
 
 ### Roadmap
-- V1.0 (done)
+The detailed roadmap is maintained in GitHub milestones and issues:
 
-- V1.1 (development finbished; only testing and bug fixing)
-  - Compare revisions: "Metadata -> Metadata differences"; make all strings in column 1 translatable
-  - Feedback-driven UI refinement after tests by other users
-  - Test with disabled and uninstalled linkenhancer, including the control panel diagnostics
-  - Test older development data: old NOTE links at SOUR are moved correctly to OBJE when saved again
-  - Test access rights: NOTE display for members
-  - Test with all themes, including light and dark variants
-  
-- V1.2 (current development version)
-  - Context display directly at the source
-  - Fix menu icon rendering in themes where it is displayed incorrectly
-  - Media Viewer (incl. audio/video) supporting Zoom
+- [Milestones](https://github.com/hartenthaler/hh_source_transcription/milestones)
+- [Issues](https://github.com/hartenthaler/hh_source_transcription/issues)
 
-- V1.3
-  - Dashboard: sort table (title, status, provider_key, created_at / updated_at); pagination; filter (status, provider)
+### Discussion points
 
-- V1.4
-  - backup/restore of database tables
-  - replace development behavior that rebuilds all module tables when one table is missing
-  - update all translations
-  - update screenshots in README.md
-  - update READme and all other documentation files
-  - first GitHub release version
+Open discussion points are maintained as GitHub issues with the `discussion` label:
 
-- V1.5
-  - Discourse integration
-
-- V1.6
-  - Transkribus integration
-
-- V1.7
-  - test concept
-  - File import
-  - use metadata in TIFF, PDF, JPEG, PNG, and WebP (XMP/IPTC) like dc:language
-  - store metadata in source images (EXIF/XMP)
-  - delete transcriptions (manual as user or as admin for sources that are no longer linked to a source media object)
-
-- V2
-  - support for transliteration (and diplomatic transcription and modern transcription)
-  - virtual keyboard for manual transliteration (supporting special Latf characters)
-  - automatic conversion from Latf to Latn (and vice versa) using Fraktur webfonts (like UnifrakturMaguntia)
-  - support for translation
-  - full text search in all transcriptions and revisions
-  - templates as plugins for civil registration records
-  - templates for census as a replacement for the core census module
-
-- V3
-  - Named Entity Recognition
-  - Findings and interpretation
-  - Position specifications in the source image / audio file
-  - Uncertainty markers
-  - TEI as new output format
-  
-- New custom module
-  - Derivation of claims from the source following the Genealogical Proof Standard (GPS)
-  - assisted workflow to link or generate GEDCOM records (INDI, FAM, _LOC, ...)
-
-<a name="Discussion"></a>
-## Discussion points
-
-The following points are still open for discussion
-
-- Do you know any other genealogy programs that support the transcription process well (best practices) and at the same time use genealogical data structures?
-- How to store the position of a transcribed line as position in the image?
-- Should the default note strategy be “always create new NOTE” or “update if unchanged”?
-- How to integrate named entities, links to persons and to locations in future versions?
-- How to indicate the confidence about a transcription or parts of it?
+- [Discussion issues](https://github.com/hartenthaler/hh_source_transcription/issues?q=is%3Aissue%20label%3Adiscussion)
 
 <a name="Screenshots"></a>
-## Screenshots
+## 🖼 Screenshots
 
 ### Dashboard
 ![Screenshot 1](docs/images/ui/dashboard.png)
@@ -401,7 +339,7 @@ The following points are still open for discussion
 ![Screenshot 1](docs/images/ui/control_panel.png)
 
 <a name="Literature"></a>
-## Literature and links
+## 🔗 Literature and links
 
 - [Zedlitz, Jesper: "Gedbas4all - new data model for genealogy"](https://doi.org/10.5281/zenodo.33958), German original title, COMPUTERGENEALOGIE 4/2009, pp. 15-18, 2009 (checked 23.04.2026).
 - [GENTECH Genealogical Data Model](https://xml.coverpages.org/GENTECH-DataModelV11.pdf), 29.05.2000 (checked 23.04.2026).
@@ -419,7 +357,7 @@ The following points are still open for discussion
 - [Gramps: Text recognition](https://gramps.discourse.group/t/text-recognition/9450) (checked 5.05.2026).
 
 <a name="Requirements"></a>
-## Requirements
+## 📌 Requirements
 
 This module requires **webtrees** version 2.2 or later.
 The version of PHP must be at least 8.3.
@@ -429,7 +367,7 @@ This module was tested with **webtrees** 2.2.6 version
 and all available themes and all other custom modules.
 
 <a name="Installation"></a>
-## Installation
+## 📥 Installation
 
 At the current time, install the development version from GitHub. After V1.3:
 
@@ -447,12 +385,12 @@ Install and use [Custom Module Manager](https://github.com/Jefferson49/CustomMod
 1. Finally, click SAVE, to complete the installation.
 
 <a name="Upgrade"></a>
-## Upgrade
+## ⬆️ Upgrade
 
 To update, simply replace the `hh_source_transcription` files with the new ones from the latest release.
 
 <a name="Translation"></a>
-## Translation
+## 🌍 Translation
 
 You can help to translate this module.
 The language information is stored in the folder `resources/lang/`.
@@ -468,13 +406,13 @@ There are the following translations available
 - Catalan template
 
 <a name="Support"></a>
-## Support
+## ❓ Support
 
 - <span style="font-weight: bold;">Issues: </span> You can report errors by raising an issue in this GitHub repository.
 - <span style="font-weight: bold;">Forum: </span>General webtrees support can be found at the [webtrees forum](http://www.webtrees.net/).
 
 <a name="License"></a>
-## License
+## 📄 License
 
 This module uses GPL-3.0-or-later as a license.
 

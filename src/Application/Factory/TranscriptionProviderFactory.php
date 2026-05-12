@@ -31,9 +31,11 @@ declare(strict_types=1);
 namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Factory;
 
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider\CreatesTranscriptionsInterface;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider\DiscourseTranscriptionProvider;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider\InternalCollaborationProvider;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider\ManualTranscriptionProvider;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider\OpensCollaborationInterface;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider\TranskribusTranscriptionProvider;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider\TranscriptionProviderInterface;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
 use InvalidArgumentException;
@@ -43,6 +45,8 @@ final class TranscriptionProviderFactory
     public function __construct(
         private readonly ManualTranscriptionProvider $manualProvider,
         private readonly InternalCollaborationProvider $internalCollaborationProvider,
+        private readonly DiscourseTranscriptionProvider $discourseProvider,
+        private readonly TranskribusTranscriptionProvider $transkribusProvider,
     ) {
     }
 
@@ -51,6 +55,8 @@ final class TranscriptionProviderFactory
         return match ($provider_key) {
             ProviderKey::MANUAL => $this->manualProvider,
             ProviderKey::INTERNAL => $this->internalCollaborationProvider,
+            ProviderKey::DISCOURSE => $this->discourseProvider,
+            ProviderKey::TRANSKRIBUS => $this->transkribusProvider,
             default => throw new InvalidArgumentException('Unknown transcription provider: ' . $provider_key),
         };
     }

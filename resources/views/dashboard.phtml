@@ -31,6 +31,8 @@ declare(strict_types=1);
  * @var string $title
  * @var Tree $tree
  * @var array<int, Transcription> $transcriptions
+ * @var array<int, object> $transkribus_jobs
+ * @var array<int, array<int, object>> $transkribus_job_files
  */
 
 use Fisharebest\Webtrees\I18N;
@@ -38,6 +40,8 @@ use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\TranskribusJobFileStatus;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\TranskribusJobStatus;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderPresentation;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\TranscriptionStatus;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Support\TranscriptionSlug;
@@ -50,11 +54,91 @@ $muted = 'text-secondary fst-italic';
 <h2><?= e($title) ?></h2>
 
 <?php if (Auth::isEditor($tree)) : ?>
-<p>
+<p class="d-flex gap-2 mb-4">
     <a class="btn btn-primary" href="<?= e(route('source-transcription-create-manual', ['tree' => $tree->name()])) ?>">
         <?= I18N::translate('Create manual transcription') ?>
     </a>
+    <a class="btn btn-primary" href="<?= e(route('source-transcription-create-transkribus', ['tree' => $tree->name()])) ?>">
+        <?= I18N::translate('Upload images to Transkribus') ?>
+    </a>
 </p>
+<?php endif ?>
+
+<?php if (($transkribus_jobs ?? []) !== []) : ?>
+    <h3><?= I18N::translate('Transkribus jobs') ?></h3>
+
+    <table class="table table-bordered table-sm mb-4">
+        <thead>
+            <tr>
+                <th><?= I18N::translate('Job title') ?></th>
+                <th><?= I18N::translate('Source') ?></th>
+                <th><?= I18N::translate('Media') ?></th>
+                <th><?= I18N::translate('Status') ?></th>
+                <th><?= I18N::translate('Upload references') ?></th>
+                <th><?= I18N::translate('Message') ?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($transkribus_jobs as $job) : ?>
+                <?php
+                $source = Registry::sourceFactory()->make((string) $job->source_xref, $tree);
+                $media = Registry::mediaFactory()->make((string) $job->media_xref, $tree);
+                $job_badge_class = match (TranskribusJobStatus::tryFrom((string) $job->status)) {
+                    TranskribusJobStatus::UPLOADED      => 'bg-success',
+                    TranskribusJobStatus::UPLOADING     => 'bg-warning text-dark',
+                    TranskribusJobStatus::UPLOAD_FAILED => 'bg-danger',
+                    null                                => 'bg-secondary',
+                };
+                ?>
+                <tr>
+                    <td>
+                        #<?= e((string) $job->id) ?>
+                        <?= e((string) $job->title) ?>
+                    </td>
+                    <td>
+                        <?php if ($source !== null) : ?>
+                            <a href="<?= e($source->url()) ?>"><?= $source->fullName() ?></a>
+                        <?php else : ?>
+                            <span class="<?= $muted ?>"><?= I18N::translate('Deleted') ?></span>
+                        <?php endif ?>
+                    </td>
+                    <td>
+                        <?php if ($media !== null) : ?>
+                            <a href="<?= e($media->url()) ?>"><?= $media->fullName() ?></a>
+                        <?php else : ?>
+                            <span class="<?= $muted ?>"><?= I18N::translate('Deleted') ?></span>
+                        <?php endif ?>
+                    </td>
+                    <td>
+                        <span class="badge <?= $job_badge_class ?>">
+                            <?= e(TranskribusJobStatus::label((string) $job->status)) ?>
+                        </span>
+                    </td>
+                    <td>
+                        <?php foreach (($transkribus_job_files[(int) $job->id] ?? []) as $file) : ?>
+                            <?php $file_message = trim((string) ($file->message ?? '')) ?>
+                            <div class="small">
+                                <?= e((string) $file->filename) ?>:
+                                <?php if ($file->upload_reference !== null && $file->upload_reference !== '') : ?>
+                                    <code><?= e((string) $file->upload_reference) ?></code>
+                                <?php else : ?>
+                                    <span class="<?= $muted ?>"><?= e(TranskribusJobFileStatus::label((string) $file->status)) ?></span>
+                                <?php endif ?>
+                                <?php if ($file_message !== '') : ?>
+                                    <div class="text-danger"><?= e($file_message) ?></div>
+                                <?php endif ?>
+                            </div>
+                        <?php endforeach ?>
+                    </td>
+                    <td><?= e((string) ($job->last_message ?? '')) ?></td>
+                </tr>
+            <?php endforeach ?>
+        </tbody>
+    </table>
+<?php endif ?>
+
+<?php if (count($transcriptions) > 0) : ?>
+    <h3><?= I18N::translate('Transcriptions') ?></h3>
 <?php endif ?>
 
 <div class="d-flex justify-content-between align-items-center mb-2">
@@ -75,9 +159,9 @@ $muted = 'text-secondary fst-italic';
     <table class="table table-bordered table-sm">
         <thead>
         <tr>
+            <th><?= I18N::translate('Transcription title') ?></th>
             <th><?= I18N::translate('Source') ?></th>
             <th><?= I18N::translate('Media') ?></th>
-            <th><?= I18N::translate('Title') ?></th>
             <th><?= I18N::translate('Transcription provider') ?></th>
             <th><?= I18N::translate('Status') ?></th>
             <th><?= I18N::translate('Note') ?></th>
@@ -128,6 +212,11 @@ $muted = 'text-secondary fst-italic';
 
             <tr class="align-top">
                 <td>
+                    <a href="<?= e($detail_url) ?>">
+                        <?= e($transcription->title) ?>
+                    </a>
+                </td>
+                <td>
                     <?php if ($source !== null) : ?>
                         <a href="<?= e($source->url()) ?>" class="<?= $cell_format ?>">
                             <?= $source->fullName() ?: I18N::translate('Source record') ?>
@@ -164,11 +253,6 @@ $muted = 'text-secondary fst-italic';
                             <?= e(I18N::translate('None')) ?>
                         </span>
                     <?php endif ?>
-                </td>
-                <td>
-                    <a href="<?= e($detail_url) ?>">
-                        <?= e($transcription->title) ?>
-                    </a>
                 </td>
                 <td>
                     <a href="<?= e($provider_url) ?>" title="<?= e($provider_title) ?>" class="<?= $cell_format ?>">

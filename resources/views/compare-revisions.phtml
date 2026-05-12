@@ -17,18 +17,37 @@ declare(strict_types=1);
  * @var Transcription $transcription
  * @var TranscriptionRevision $left_revision
  * @var TranscriptionRevision $right_revision
- * @var array<int,array{label:string,left:string,right:string,changed:bool}> $metadata_rows
+ * @var array<int,array{key:string,label:string,left:string,right:string,changed:bool}> $metadata_rows
  * @var array<int,array{type:string,left:?string,right:?string}> $text_diff
  * @var string $detail_url
  */
 
 use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\TranscriptionRevision;
 
 $left_title = I18N::translate('Revision %s', (string) $left_revision->revision_no);
 $right_title = I18N::translate('Revision %s', (string) $right_revision->revision_no);
+
+$xref_link = static function (string $key, string $xref) use ($tree): string {
+    if ($xref === '') {
+        return '';
+    }
+
+    $record = match ($key) {
+        'generated_note_xref' => Registry::noteFactory()->make($xref, $tree),
+        'origin_reference' => Registry::gedcomRecordFactory()->make(trim($xref, '@'), $tree),
+        default => null,
+    };
+
+    if ($record === null) {
+        return e($xref);
+    }
+
+    return '<a href="' . e($record->url()) . '">' . e($xref) . '</a>';
+};
 ?>
 
 <h2><?= e($title) ?>: <?= e($transcription->title) ?></h2>
@@ -39,7 +58,7 @@ $right_title = I18N::translate('Revision %s', (string) $right_revision->revision
     </a>
 </p>
 
-<h3><?= I18N::translate('Metadata') ?></h3>
+<h3><?= I18N::translate('Metadata differences') ?></h3>
 
 <table class="table table-bordered table-sm">
     <thead>
@@ -52,9 +71,9 @@ $right_title = I18N::translate('Revision %s', (string) $right_revision->revision
     <tbody>
         <?php foreach ($metadata_rows as $row) : ?>
             <tr class="<?= $row['changed'] ? 'table-warning' : '' ?>">
-                <th><?= I18N::translate($row['label']) ?></th>
-                <td><?= e($row['left']) ?></td>
-                <td><?= e($row['right']) ?></td>
+                <th><?= e($row['label']) ?></th>
+                <td><?= $xref_link($row['key'], $row['left']) ?></td>
+                <td><?= $xref_link($row['key'], $row['right']) ?></td>
             </tr>
         <?php endforeach ?>
     </tbody>

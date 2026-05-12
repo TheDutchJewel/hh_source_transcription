@@ -37,6 +37,39 @@ msgstr ""
 msgid "Origin"
 msgstr ""
 
+msgid "Current revision"
+msgstr ""
+
+msgid "Origin reference"
+msgstr ""
+
+msgid "Content format"
+msgstr ""
+
+msgid "Content hash"
+msgstr ""
+
+msgid "Created by"
+msgstr ""
+
+msgid "Created at"
+msgstr ""
+
+msgid "Import comment"
+msgstr ""
+
+msgid "NOTE changed by"
+msgstr ""
+
+msgid "NOTE changed at"
+msgstr ""
+
+msgid "yes"
+msgstr ""
+
+msgid "no"
+msgstr ""
+
 #: src/Application/Factory/NoteContentFactory.php:52
 msgid "Begin transcription"
 msgstr ""
@@ -684,6 +717,27 @@ msgstr ""
 
 #: resources/views/detail.phtml:346
 msgid "Text"
+msgstr ""
+
+msgid "Compare revisions"
+msgstr ""
+
+msgid "Revision %s"
+msgstr ""
+
+msgid "Back to transcription"
+msgstr ""
+
+msgid "Metadata differences"
+msgstr ""
+
+msgid "Field"
+msgstr ""
+
+msgid "Text differences"
+msgstr ""
+
+msgid "Both revisions have no text content."
 msgstr ""
 
 #~ msgid "Restriction"

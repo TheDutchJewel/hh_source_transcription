@@ -47,6 +47,9 @@ final class SchemaManager
     public const string TABLE_REVISIONS = 'transcription_revisions';
     public const string TABLE_NOTE_LINKS = 'transcription_note_links';
     public const string TABLE_COLLABORATORS = 'transcription_collaborators';
+    public const string TABLE_PROVIDER_CREDENTIALS = 'transcription_provider_credentials';
+    public const string TABLE_TRANSKRIBUS_JOBS = 'transkribus_jobs';
+    public const string TABLE_TRANSKRIBUS_JOB_FILES = 'transkribus_job_files';
 
     /*
     public function __construct(
@@ -106,6 +109,9 @@ final class SchemaManager
     {
         DB::schema()->dropIfExists(self::TABLE_NOTE_LINKS);
         DB::schema()->dropIfExists(self::TABLE_COLLABORATORS);
+        DB::schema()->dropIfExists(self::TABLE_TRANSKRIBUS_JOB_FILES);
+        DB::schema()->dropIfExists(self::TABLE_TRANSKRIBUS_JOBS);
+        DB::schema()->dropIfExists(self::TABLE_PROVIDER_CREDENTIALS);
         DB::schema()->dropIfExists(self::TABLE_REVISIONS);
         DB::schema()->dropIfExists(self::TABLE_TRANSCRIPTIONS);
         DB::schema()->dropIfExists(self::TABLE_METADATA);

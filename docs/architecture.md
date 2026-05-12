@@ -56,7 +56,7 @@ accepted_at
 is_active  
 
 This table stores the team for internal collaboration. It does not replace the transcription or revision tables.
-The initial version directly assigns collaborators; `accepted_at` is reserved for a later explicit invitation/acceptance workflow.
+V1 uses immediate assignment: selected collaborators become active as soon as they are added. `accepted_at` remains unused in V1 and is reserved for a later opt-in invitation/acceptance workflow.
 
 ### transcription_requests (planned)
 id  

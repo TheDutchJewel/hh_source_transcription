@@ -1,0 +1,55 @@
+<?php
+
+/*
+ * webtrees: online genealogy application
+ * Copyright (C) 2026 webtrees development team
+ *                    <https://webtrees.net>
+ *
+ * Source Transcription (webtrees custom module):
+ * Copyright (C) 2026 Hermann Hartenthaler
+ *                     <https://ahnen.hartenthaler.eu>
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ */
+
+declare(strict_types=1);
+
+namespace Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers;
+
+use Fisharebest\Webtrees\Auth;
+use Fisharebest\Webtrees\I18N;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+
+use function response;
+use function view;
+
+final class CreateTranskribusJobAction implements RequestHandlerInterface
+{
+    public function handle(ServerRequestInterface $request): ResponseInterface
+    {
+        $tree = $request->getAttribute('tree');
+
+        if (!Auth::isEditor($tree)) {
+            return response('');
+        }
+
+        $title = I18N::translate('Upload images to Transkribus');
+
+        $content = view('hh_source_transcription::create-transkribus-job', [
+            'title' => $title,
+            'tree'  => $tree,
+        ]);
+
+        return response(view('layouts/default', [
+            'title'   => $title,
+            'tree'    => $tree,
+            'request' => $request,
+            'content' => $content,
+        ]));
+    }
+}

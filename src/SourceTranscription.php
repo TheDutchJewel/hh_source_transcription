@@ -59,21 +59,29 @@ use Psr\{Container\ContainerExceptionInterface,
     Http\Message\ServerRequestInterface};
 use Schwendinger\Webtrees\Module\LinkEnhancer\Services\MarkdownEditorActivationService;
 use Hartenthaler\{Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\SettingsRepository,
+    Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\ProviderCredentialRepository,
     Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Schema\SchemaManager,
+    Webtrees\Module\SourceTranscription\Application\Provider\ProviderConnectionTester,
     Webtrees\Module\SourceTranscription\Domain\ValueObject\NoteStrategy,
+    Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\CollaborationStatusAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\CompareRevisionsAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\CreateManualAction,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\CreateTranskribusJobAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\DashboardAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\DetailAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\ManualStatusAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\MakeRevisionCurrentAction,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\MediaFilesForMediaAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\OpenCollaborationAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\SaveNoteAsRevisionAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\StoreManualAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\SourceForManualAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\UpdateCurrentNoteAction,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\UploadTranskribusImagesAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\MediaForSourceAction,
+    Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SharedNoteGateway,
+    Webtrees\Module\SourceTranscription\Support\HashService,
     Webtrees\Module\SourceTranscription\Infrastructure\WhatsNew\WhatsNewInterface};
 
 final class SourceTranscription extends AbstractModule implements
@@ -108,7 +116,7 @@ final class SourceTranscription extends AbstractModule implements
 	public const string CUSTOM_AUTHOR = 'Hermann Hartenthaler';
 
     //Used database schema version
-    public const int CURRENT_SCHEMA_VERSION = 3;
+    public const int CURRENT_SCHEMA_VERSION = 5;
 
     //Default tag values for transcriptions (NOTE <tag_prefix><tag_value>)
     public const string DEFAULT_TAG_PREFIX = 'TAG: ';
@@ -123,12 +131,21 @@ final class SourceTranscription extends AbstractModule implements
     public const string TAGGING_SUPPORT = 'tagging_support';
     public const string WHATS_NEW = 'whats_new';
 
+    //Default provider credential endpoints
+    public const string DEFAULT_TRANSKRIBUS_TOKEN_URL = 'https://account.readcoop.eu/auth/realms/readcoop/protocol/openid-connect/token';
+    public const string DEFAULT_TRANSKRIBUS_CLIENT_ID = 'processing-api-client';
+    public const string DEFAULT_TRANSKRIBUS_UPLOAD_URL = 'https://transkribus.eu/api/v2/uploads';
+
     //ROUTE
     private const string ROUTE_GET_NAME_DASHBOARD = 'source-transcription-dashboard';
     private const string ROUTE_PATH_DASHBOARD = '/tree/{tree}/source-transcriptions';
     private const string ROUTE_GET_NAME_CREATE_MANUAL = 'source-transcription-create-manual';
     private const string ROUTE_POST_NAME_STORE_MANUAL = 'source-transcription-store-manual';
     private const string ROUTE_PATH_CREATE_MANUAL = '/tree/{tree}/source-transcriptions/create-manual';
+    private const string ROUTE_GET_NAME_CREATE_TRANSKRIBUS = 'source-transcription-create-transkribus';
+    private const string ROUTE_POST_NAME_UPLOAD_TRANSKRIBUS = 'source-transcription-upload-transkribus';
+    private const string ROUTE_PATH_CREATE_TRANSKRIBUS = '/tree/{tree}/source-transcriptions/create-transkribus';
+    private const string ROUTE_PATH_UPLOAD_TRANSKRIBUS = '/tree/{tree}/source-transcriptions/transkribus/upload';
     private const string ROUTE_POST_NAME_UPDATE_NOTE = 'source-transcription-update-note';
     private const string ROUTE_PATH_UPDATE_NOTE = '/tree/{tree}/source-transcriptions/{transcription_id}/update-note';
     private const string ROUTE_POST_NAME_SAVE_NOTE_AS_REVISION = 'source-transcription-save-note-as-revision';
@@ -143,6 +160,7 @@ final class SourceTranscription extends AbstractModule implements
     private const string ROUTE_PATH_MANUAL_STATUS = '/tree/{tree}/source-transcriptions/{transcription_id}/manual-status';
     //private const string ROUTE_GET_NAME_MEDIA_FOR_SOURCE = 'source-transcription-media-for-source';
     private const string ROUTE_PATH_MEDIA_FOR_SOURCE = '/tree/{tree}/source-transcriptions/media-for-source';
+    private const string ROUTE_PATH_MEDIA_FILES_FOR_MEDIA = '/tree/{tree}/source-transcriptions/media-files-for-media';
     private const string ROUTE_PATH_SOURCE_FOR_MANUAL = '/tree/{tree}/source-transcriptions/source-for-manual';
     private const string ROUTE_GET_NAME_DETAIL = 'source-transcription-detail';
     private const string ROUTE_PATH_DETAIL = '/tree/{tree}/source-transcriptions/{transcription_id}';
@@ -212,6 +230,18 @@ final class SourceTranscription extends AbstractModule implements
             StoreManualAction::class
         );
 
+        $router->get(
+            self::ROUTE_GET_NAME_CREATE_TRANSKRIBUS,
+            self::ROUTE_PATH_CREATE_TRANSKRIBUS,
+            CreateTranskribusJobAction::class
+        );
+
+        $router->post(
+            self::ROUTE_POST_NAME_UPLOAD_TRANSKRIBUS,
+            self::ROUTE_PATH_UPLOAD_TRANSKRIBUS,
+            UploadTranskribusImagesAction::class
+        );
+
         $router->post(
             self::ROUTE_POST_NAME_UPDATE_NOTE,
             self::ROUTE_PATH_UPDATE_NOTE,
@@ -258,6 +288,12 @@ final class SourceTranscription extends AbstractModule implements
             MediaForSourceAction::class,
             self::ROUTE_PATH_MEDIA_FOR_SOURCE,
             MediaForSourceAction::class
+        );
+
+        $router->get(
+            MediaFilesForMediaAction::class,
+            self::ROUTE_PATH_MEDIA_FILES_FOR_MEDIA,
+            MediaFilesForMediaAction::class
         );
 
         $router->get(
@@ -576,17 +612,22 @@ final class SourceTranscription extends AbstractModule implements
         $this->layout = 'layouts/administration';
 
         $settings = Registry::container()->get(SettingsRepository::class);
+        $selected_user_id = Validator::queryParams($request)->integer('provider_user_id', 0);
+        $selected_provider_key = Validator::queryParams($request)->isInArray(array_keys($this->providerOptions()))->string('provider_key', ProviderKey::DISCOURSE);
 
         $tag_text = $settings->get('default_tag_text', self::DEFAULT_TAG_PREFIX . self::DEFAULT_TAG_VALUE);
         $tag_value = $this->tagValueFromTagText($tag_text);
 
-        return $this->adminSettingsResponse($settings, $tag_value);
+        return $this->adminSettingsResponse($settings, $tag_value, null, null, $selected_user_id, $selected_provider_key);
     }
 
     private function adminSettingsResponse(
         SettingsRepository $settings,
         string $tag_value,
-        ?array $consistency_check = null
+        ?array $consistency_check = null,
+        ?array $provider_test_result = null,
+        int $selected_user_id = 0,
+        string $selected_provider_key = ProviderKey::DISCOURSE
     ): ResponseInterface {
         return $this->viewResponse(self::CUSTOM_TITLE . '::' . 'admin-settings', [
             'title'                         => $this->title(),
@@ -603,6 +644,8 @@ final class SourceTranscription extends AbstractModule implements
             'tagging_support'               => $settings->get('tagging_support', 'enabled'),
             'tag_prefix'                    => self::DEFAULT_TAG_PREFIX,
             'tag_value'                     => $tag_value,
+            'provider_credentials'          => $this->providerCredentialViewData($selected_user_id, $selected_provider_key),
+            'provider_test_result'          => $provider_test_result,
         ]);
     }
 
@@ -619,6 +662,7 @@ final class SourceTranscription extends AbstractModule implements
     {
         $save = Validator::parsedBody($request)->string('save', '');
         $run_consistency_check = Validator::parsedBody($request)->string('run_consistency_check', '');
+        $provider_credentials_action = Validator::parsedBody($request)->string('provider_credentials_action', '');
 
         if ($run_consistency_check === '1') {
             $this->layout = 'layouts/administration';
@@ -628,6 +672,62 @@ final class SourceTranscription extends AbstractModule implements
             $tag_value = $this->tagValueFromTagText($tag_text);
 
             return $this->adminSettingsResponse($settings, $tag_value, $this->runConsistencyCheck($settings));
+        }
+
+        if ($provider_credentials_action !== '') {
+            $this->layout = 'layouts/administration';
+
+            $settings = Registry::container()->get(SettingsRepository::class);
+            $tag_text = $settings->get('default_tag_text', self::DEFAULT_TAG_PREFIX . self::DEFAULT_TAG_VALUE);
+            $tag_value = $this->tagValueFromTagText($tag_text);
+            $params = (array) $request->getParsedBody();
+            $user_id = (int) ($params['provider_user_id'] ?? 0);
+            $provider_key = (string) ($params['provider_key'] ?? ProviderKey::DISCOURSE);
+
+            if (!array_key_exists($provider_key, $this->providerOptions())) {
+                $provider_key = ProviderKey::DISCOURSE;
+            }
+
+            $credential_repository = Registry::container()->get(ProviderCredentialRepository::class);
+
+            if ($provider_credentials_action === 'delete') {
+                $credential_repository->delete($user_id, $provider_key);
+                FlashMessages::addMessage(I18N::translate('The provider credentials have been deleted.'), 'success');
+
+                return $this->adminSettingsResponse($settings, $tag_value, null, null, $user_id, $provider_key);
+            }
+
+            try {
+                $credential_repository->save(
+                    $user_id,
+                    $provider_key,
+                    $this->providerSettingsFromParams($provider_key, $params),
+                    $this->providerSecretFromParams($provider_key, $params)
+                );
+            } catch (\Throwable $ex) {
+                FlashMessages::addMessage($ex->getMessage(), 'danger');
+
+                return $this->adminSettingsResponse($settings, $tag_value, null, [
+                    'success' => false,
+                    'message' => $ex->getMessage(),
+                ], $user_id, $provider_key);
+            }
+
+            if ($provider_credentials_action === 'test') {
+                $credential = $credential_repository->find($user_id, $provider_key);
+                $result = $credential === null
+                    ? ['success' => false, 'message' => I18N::translate('The provider credentials could not be loaded.')]
+                    : Registry::container()->get(ProviderConnectionTester::class)->test($provider_key, $credential);
+
+                $credential_repository->recordTestResult($user_id, $provider_key, (bool) $result['success'], (string) $result['message']);
+                FlashMessages::addMessage((string) $result['message'], (bool) $result['success'] ? 'success' : 'danger');
+
+                return $this->adminSettingsResponse($settings, $tag_value, null, $result, $user_id, $provider_key);
+            }
+
+            FlashMessages::addMessage(I18N::translate('The provider credentials have been saved.'), 'success');
+
+            return $this->adminSettingsResponse($settings, $tag_value, null, null, $user_id, $provider_key);
         }
 
         //Save the received settings to the user preferences
@@ -656,6 +756,112 @@ final class SourceTranscription extends AbstractModule implements
             );
         }
         return redirect($this->getConfigLink());
+    }
+
+    /**
+     * @return array<string,string>
+     */
+    private function providerOptions(): array
+    {
+        return [
+            ProviderKey::DISCOURSE   => 'Discourse',
+            ProviderKey::TRANSKRIBUS => 'Transkribus',
+        ];
+    }
+
+    /**
+     * @return array{
+     *     users:array<int,string>,
+     *     providers:array<string,string>,
+     *     selected_user_id:int,
+     *     selected_provider_key:string,
+     *     discourse:array<string,mixed>,
+     *     transkribus:array<string,mixed>
+     * }
+     *
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
+    private function providerCredentialViewData(int $selected_user_id, string $selected_provider_key): array
+    {
+        $users = [];
+        foreach (Registry::container()->get(UserService::class)->all() as $user) {
+            $users[$user->id()] = $user->realName() . ' (' . $user->userName() . ')';
+        }
+
+        if ($selected_user_id <= 0 || !array_key_exists($selected_user_id, $users)) {
+            $selected_user_id = (int) array_key_first($users);
+        }
+
+        if (!array_key_exists($selected_provider_key, $this->providerOptions())) {
+            $selected_provider_key = ProviderKey::DISCOURSE;
+        }
+
+        $credential_repository = Registry::container()->get(ProviderCredentialRepository::class);
+        $discourse = $credential_repository->find($selected_user_id, ProviderKey::DISCOURSE);
+        $transkribus = $credential_repository->find($selected_user_id, ProviderKey::TRANSKRIBUS);
+
+        return [
+            'users'                 => $users,
+            'providers'             => $this->providerOptions(),
+            'selected_user_id'      => $selected_user_id,
+            'selected_provider_key' => $selected_provider_key,
+            'discourse'             => [
+                'settings'          => $discourse['settings'] ?? ['base_url' => '', 'api_username' => ''],
+                'has_secret'        => $discourse['has_secret'] ?? false,
+                'last_test_status'  => $discourse['last_test_status'] ?? null,
+                'last_test_message' => $discourse['last_test_message'] ?? null,
+                'last_test_at'      => $discourse['last_test_at'] ?? null,
+            ],
+            'transkribus'           => [
+                'settings'          => $transkribus['settings'] ?? [
+                    'token_url' => self::DEFAULT_TRANSKRIBUS_TOKEN_URL,
+                    'client_id' => self::DEFAULT_TRANSKRIBUS_CLIENT_ID,
+                    'upload_url' => self::DEFAULT_TRANSKRIBUS_UPLOAD_URL,
+                    'username'  => '',
+                ],
+                'has_secret'        => $transkribus['has_secret'] ?? false,
+                'last_test_status'  => $transkribus['last_test_status'] ?? null,
+                'last_test_message' => $transkribus['last_test_message'] ?? null,
+                'last_test_at'      => $transkribus['last_test_at'] ?? null,
+            ],
+        ];
+    }
+
+    /**
+     * @param array<string,mixed> $params
+     *
+     * @return array<string,string>
+     */
+    private function providerSettingsFromParams(string $provider_key, array $params): array
+    {
+        return match ($provider_key) {
+            ProviderKey::DISCOURSE => [
+                'base_url'     => rtrim(trim((string) ($params['discourse_base_url'] ?? '')), '/'),
+                'api_username' => trim((string) ($params['discourse_api_username'] ?? '')),
+            ],
+            ProviderKey::TRANSKRIBUS => [
+                'token_url' => trim((string) ($params['transkribus_token_url'] ?? self::DEFAULT_TRANSKRIBUS_TOKEN_URL)),
+                'client_id' => trim((string) ($params['transkribus_client_id'] ?? self::DEFAULT_TRANSKRIBUS_CLIENT_ID)),
+                'upload_url' => trim((string) ($params['transkribus_upload_url'] ?? self::DEFAULT_TRANSKRIBUS_UPLOAD_URL)),
+                'username'  => trim((string) ($params['transkribus_username'] ?? '')),
+            ],
+            default => [],
+        };
+    }
+
+    /**
+     * @param array<string,mixed> $params
+     */
+    private function providerSecretFromParams(string $provider_key, array $params): ?string
+    {
+        $secret = match ($provider_key) {
+            ProviderKey::DISCOURSE => trim((string) ($params['discourse_api_key'] ?? '')),
+            ProviderKey::TRANSKRIBUS => trim((string) ($params['transkribus_password'] ?? '')),
+            default => '',
+        };
+
+        return $secret === '' ? null : $secret;
     }
 
     /**
@@ -691,6 +897,8 @@ final class SourceTranscription extends AbstractModule implements
         }
 
         $tagging_enabled = $settings->get(self::TAGGING_SUPPORT, 'enabled') === 'enabled';
+        $shared_note_gateway = Registry::container()->get(SharedNoteGateway::class);
+        $hash_service = Registry::container()->get(HashService::class);
 
         $transcriptions = DB::table(SchemaManager::TABLE_TRANSCRIPTIONS)
             ->where('is_active', '=', true)
@@ -724,6 +932,7 @@ final class SourceTranscription extends AbstractModule implements
                 $this->addConsistencyIssue($result, 'warnings', $tree_label, $transcription_label, I18N::translate('The referenced media object is no longer linked to the source.'));
             }
 
+            $current_note_text = null;
             if ($transcription->current_note_xref === null || trim((string) $transcription->current_note_xref) === '') {
                 $this->addConsistencyIssue($result, 'errors', $tree_label, $transcription_label, I18N::translate('The transcription has no current NOTE.'));
             } else {
@@ -733,6 +942,25 @@ final class SourceTranscription extends AbstractModule implements
                     $this->addConsistencyIssue($result, 'errors', $tree_label, $transcription_label, I18N::translate('The current NOTE does not exist: %s', (string) $transcription->current_note_xref));
                 } elseif ($target === null || !$this->gedcomLinksToNoteOrMedia($target->gedcom(), 'NOTE', (string) $transcription->current_note_xref)) {
                     $this->addConsistencyIssue($result, 'errors', $tree_label, $transcription_label, I18N::translate('The current NOTE is not linked to the expected source or media object: %s', (string) $transcription->current_note_xref));
+                } else {
+                    $current_note_text = $shared_note_gateway->readSharedNote($tree, (string) $transcription->current_note_xref);
+                }
+            }
+
+            if ($current_note_text !== null) {
+                $current_link = DB::table(SchemaManager::TABLE_NOTE_LINKS)
+                    ->where('transcription_id', '=', (int) $transcription->id)
+                    ->where('is_current', '=', true)
+                    ->orderByDesc('id')
+                    ->first();
+
+                if (
+                    $current_link !== null &&
+                    (string) $current_link->note_xref === (string) $transcription->current_note_xref &&
+                    $current_link->note_hash_at_link_time !== null &&
+                    $hash_service->sha256($current_note_text) !== (string) $current_link->note_hash_at_link_time
+                ) {
+                    $this->addConsistencyIssue($result, 'warnings', $tree_label, $transcription_label, I18N::translate('The current NOTE has changed since it was last linked to a revision.'));
                 }
             }
 

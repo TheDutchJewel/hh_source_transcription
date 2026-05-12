@@ -15,6 +15,8 @@ declare(strict_types=1);
  * @var string $tagging_support
  * @var string $tag_prefix
  * @var string $tag_value
+ * @var array $provider_credentials
+ * @var array|null $provider_test_result
  * @var array|null $consistency_check
  */
 
@@ -23,6 +25,15 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\SourceTranscription;
 
 $transcription_trees = $diagnostics['transcription_trees'] ?? [];
 $consistency_check ??= null;
+$provider_test_result ??= null;
+
+$providerStatusBadge = static function (?string $status): string {
+    return match ($status) {
+        'success' => '<span class="badge bg-success">' . I18N::translate('successful') . '</span>',
+        'failed' => '<span class="badge bg-danger">' . I18N::translate('failed') . '</span>',
+        default => '<span class="badge bg-secondary">' . I18N::translate('not tested') . '</span>',
+    };
+};
 
 $statusBadge = static function (bool $status): string {
     return $status
@@ -134,6 +145,210 @@ $statusBadge = static function (bool $status): string {
         <div class="col-sm-9 offset-sm-3">
             <button class="btn btn-primary" type="submit">
                 <?= I18N::translate('save') ?>
+            </button>
+        </div>
+    </div>
+</form>
+
+<h3><?= I18N::translate('Provider credentials') ?></h3>
+
+<div class="alert alert-info">
+    <p class="mb-2">
+        <strong>Discourse:</strong>
+        <?= I18N::translate('An administrator creates an API key in the Discourse administration under Admin > API > API keys. Use the forum base URL, the Discourse username for requests and the generated API key. For a key limited to one user, the API username must match that user; for an all-users key, choose the user whose permissions should be used.') ?>
+        <a href="https://meta.discourse.org/t/create-and-configure-an-api-key/230124" target="_blank" rel="noopener noreferrer">
+            <?= I18N::translate('Discourse documentation') ?>
+        </a>
+    </p>
+
+    <p class="mb-0">
+        <strong>Transkribus:</strong>
+        <?= I18N::translate('For uploads, use a Transkribus API key as the secret if your account provides one. As a fallback, you can use the regular Transkribus account username and password; the token URL and client ID are prefilled for the Processing API.') ?>
+        <a href="https://www.transkribus.org/handwriting-recognition-api" target="_blank" rel="noopener noreferrer">
+            <?= I18N::translate('Transkribus API documentation') ?>
+        </a>
+    </p>
+</div>
+
+<?php if ($provider_test_result !== null) : ?>
+    <div class="alert <?= $provider_test_result['success'] ? 'alert-success' : 'alert-danger' ?>">
+        <?= e($provider_test_result['message']) ?>
+    </div>
+<?php endif ?>
+
+<form method="post" action="<?= e($module->getConfigLink()) ?>" class="mb-4">
+    <?= csrf_field() ?>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="provider_user_id">
+            <?= I18N::translate('webtrees user') ?>
+        </label>
+
+        <div class="col-sm-9">
+            <select class="form-select" id="provider_user_id" name="provider_user_id">
+                <?php foreach ($provider_credentials['users'] as $user_id => $label) : ?>
+                    <option value="<?= e((string) $user_id) ?>" <?= (int) $user_id === (int) $provider_credentials['selected_user_id'] ? 'selected' : '' ?>>
+                        <?= e($label) ?>
+                    </option>
+                <?php endforeach ?>
+            </select>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="provider_key">
+            <?= I18N::translate('Provider') ?>
+        </label>
+
+        <div class="col-sm-9">
+            <select class="form-select" id="provider_key" name="provider_key">
+                <?php foreach ($provider_credentials['providers'] as $provider_key => $label) : ?>
+                    <option value="<?= e($provider_key) ?>" <?= $provider_key === $provider_credentials['selected_provider_key'] ? 'selected' : '' ?>>
+                        <?= e($label) ?>
+                    </option>
+                <?php endforeach ?>
+            </select>
+        </div>
+    </div>
+
+    <?php $discourse_settings = $provider_credentials['discourse']['settings']; ?>
+    <div id="discourse_credentials">
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" for="discourse_base_url">
+                <?= I18N::translate('Discourse URL') ?>
+            </label>
+
+            <div class="col-sm-9">
+                <input class="form-control" id="discourse_base_url" name="discourse_base_url" type="url" value="<?= e($discourse_settings['base_url'] ?? '') ?>" placeholder="https://forum.example.org">
+                <div class="form-text">
+                    <?= I18N::translate('Base address of the Discourse forum, without an API path.') ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" for="discourse_api_username">
+                <?= I18N::translate('API username') ?>
+            </label>
+
+            <div class="col-sm-9">
+                <input class="form-control" id="discourse_api_username" name="discourse_api_username" type="text" value="<?= e($discourse_settings['api_username'] ?? '') ?>">
+                <div class="form-text">
+                    <?= I18N::translate('Discourse username used in the Api-Username request header.') ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" for="discourse_api_key">
+                <?= I18N::translate('API key') ?>
+            </label>
+
+            <div class="col-sm-9">
+                <input class="form-control" id="discourse_api_key" name="discourse_api_key" type="password" value="" autocomplete="new-password" placeholder="<?= $provider_credentials['discourse']['has_secret'] ? e(I18N::translate('stored; leave empty to keep')) : '' ?>">
+                <div class="form-text">
+                    <?= I18N::translate('The API key is shown only once in Discourse; store it here or create a new key if it was lost.') ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-9 offset-sm-3">
+                <?= $providerStatusBadge($provider_credentials['discourse']['last_test_status']) ?>
+                <?php if ($provider_credentials['discourse']['last_test_message'] !== null) : ?>
+                    <span class="text-muted"><?= e($provider_credentials['discourse']['last_test_message']) ?></span>
+                <?php endif ?>
+            </div>
+        </div>
+    </div>
+
+    <?php $transkribus_settings = $provider_credentials['transkribus']['settings']; ?>
+    <div id="transkribus_credentials">
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" for="transkribus_token_url">
+                <?= I18N::translate('Token URL') ?>
+            </label>
+
+            <div class="col-sm-9">
+                <input class="form-control" id="transkribus_token_url" name="transkribus_token_url" type="url" value="<?= e($transkribus_settings['token_url'] ?? SourceTranscription::DEFAULT_TRANSKRIBUS_TOKEN_URL) ?>">
+                <div class="form-text">
+                    <?= I18N::translate('OpenID Connect token endpoint used to obtain a temporary Transkribus access token.') ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" for="transkribus_upload_url">
+                <?= I18N::translate('Upload URL') ?>
+            </label>
+
+            <div class="col-sm-9">
+                <input class="form-control" id="transkribus_upload_url" name="transkribus_upload_url" type="url" value="<?= e($transkribus_settings['upload_url'] ?? SourceTranscription::DEFAULT_TRANSKRIBUS_UPLOAD_URL) ?>">
+                <div class="form-text">
+                    <?= I18N::translate('Endpoint used for the first upload step. Keep the default unless Transkribus changes the upload endpoint for your API account.') ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" for="transkribus_client_id">
+                <?= I18N::translate('Client ID') ?>
+            </label>
+
+            <div class="col-sm-9">
+                <input class="form-control" id="transkribus_client_id" name="transkribus_client_id" type="text" value="<?= e($transkribus_settings['client_id'] ?? SourceTranscription::DEFAULT_TRANSKRIBUS_CLIENT_ID) ?>">
+                <div class="form-text">
+                    <?= I18N::translate('Use "processing-api-client" for the Processing API. Use "transkribus-api-client" only for the legacy REST API.') ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" for="transkribus_username">
+                <?= I18N::translate('Username') ?>
+            </label>
+
+            <div class="col-sm-9">
+                <input class="form-control" id="transkribus_username" name="transkribus_username" type="text" value="<?= e($transkribus_settings['username'] ?? '') ?>">
+                <div class="form-text">
+                    <?= I18N::translate('Transkribus login name or email address. Leave unchanged when using an API key as the secret.') ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <label class="col-sm-3 col-form-label" for="transkribus_password">
+                <?= I18N::translate('Password or API key') ?>
+            </label>
+
+            <div class="col-sm-9">
+                <input class="form-control" id="transkribus_password" name="transkribus_password" type="password" value="" autocomplete="new-password" placeholder="<?= $provider_credentials['transkribus']['has_secret'] ? e(I18N::translate('stored; leave empty to keep')) : '' ?>">
+                <div class="form-text">
+                    <?= I18N::translate('Use an API key starting with "sk_" for direct upload authentication, or the account password for token-based authentication.') ?>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-sm-9 offset-sm-3">
+                <?= $providerStatusBadge($provider_credentials['transkribus']['last_test_status']) ?>
+                <?php if ($provider_credentials['transkribus']['last_test_message'] !== null) : ?>
+                    <span class="text-muted"><?= e($provider_credentials['transkribus']['last_test_message']) ?></span>
+                <?php endif ?>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-9 offset-sm-3">
+            <button class="btn btn-primary" type="submit" name="provider_credentials_action" value="save">
+                <?= I18N::translate('save') ?>
+            </button>
+            <button class="btn btn-secondary" type="submit" name="provider_credentials_action" value="test">
+                <?= I18N::translate('Save and test') ?>
+            </button>
+            <button class="btn btn-danger" type="submit" name="provider_credentials_action" value="delete">
+                <?= I18N::translate('delete') ?>
             </button>
         </div>
     </div>
@@ -338,4 +553,23 @@ $statusBadge = static function (bool $status): string {
 
     taggingSupportCheckbox.addEventListener('change', updateTaggingFields);
     updateTaggingFields();
+
+    const providerSelect = document.getElementById('provider_key');
+    const providerUserSelect = document.getElementById('provider_user_id');
+    const discourseCredentials = document.getElementById('discourse_credentials');
+    const transkribusCredentials = document.getElementById('transkribus_credentials');
+    const configLink = <?= json_encode($module->getConfigLink(), JSON_THROW_ON_ERROR) ?>;
+
+    function updateProviderFields() {
+        const provider = providerSelect.value;
+        discourseCredentials.hidden = provider !== 'discourse';
+        transkribusCredentials.hidden = provider !== 'transkribus';
+    }
+
+    providerSelect.addEventListener('change', updateProviderFields);
+    providerUserSelect.addEventListener('change', function () {
+        const separator = configLink.includes('?') ? '&' : '?';
+        location.href = configLink + separator + 'provider_user_id=' + encodeURIComponent(providerUserSelect.value) + '&provider_key=' + encodeURIComponent(providerSelect.value);
+    });
+    updateProviderFields();
 </script>

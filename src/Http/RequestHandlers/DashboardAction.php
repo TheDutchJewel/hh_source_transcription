@@ -33,6 +33,7 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Registry;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranskribusJobRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -48,14 +49,24 @@ final class DashboardAction
 
         if (!Auth::isMember($tree)) return response('');
 
-        $title = I18N::translate('Transcriptions');
+        $title = I18N::translate('Source capture and analysis');
 
         $repo = Registry::container()->get(TranscriptionRepository::class);
+        $job_repo = Registry::container()->get(TranskribusJobRepository::class);
+
+        $transkribus_jobs = $job_repo->recentForTree($tree);
+        $transkribus_job_files = [];
+
+        foreach ($transkribus_jobs as $job) {
+            $transkribus_job_files[(int) $job->id] = $job_repo->filesForJob((int) $job->id);
+        }
 
         $content = view('hh_source_transcription::dashboard', [
-            'title' => $title,
-            'tree' => $tree,
-            'transcriptions' => $repo->allActiveForTree($tree),
+            'title'            => $title,
+            'tree'             => $tree,
+            'transcriptions'   => $repo->allActiveForTree($tree),
+            'transkribus_jobs' => $transkribus_jobs,
+            'transkribus_job_files' => $transkribus_job_files,
         ]);
 
         return response(view('layouts/default', [

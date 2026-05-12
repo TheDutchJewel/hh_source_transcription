@@ -44,32 +44,38 @@ final class CompareRevisionsService
     }
 
     /**
-     * @return array<int,array{label:string,left:string,right:string,changed:bool}>
+     * @return array<int,array{key:string,label:string,left:string,right:string,changed:bool}>
      */
     public function metadataRows(TranscriptionRevision $left, TranscriptionRevision $right): array
     {
         $rows = [
-            ['Revision', (string) $left->revision_no, (string) $right->revision_no],
-            ['Current revision', $left->is_current_revision ? I18N::translate('yes') : I18N::translate('no'), $right->is_current_revision ? I18N::translate('yes') : I18N::translate('no')],
-            ['Provider', ProviderPresentation::label($left->provider_key), ProviderPresentation::label($right->provider_key)],
-            ['Origin', RevisionOriginType::labels()[$left->origin_type] ?? $left->origin_type, RevisionOriginType::labels()[$right->origin_type] ?? $right->origin_type],
-            ['Origin reference', $left->origin_reference ?? '', $right->origin_reference ?? ''],
-            ['Content format', $left->content_format, $right->content_format],
-            ['Content hash', $left->content_hash, $right->content_hash],
-            ['Created by', $this->userLabel($left->created_by_user_id), $this->userLabel($right->created_by_user_id)],
-            ['Created at', $left->created_at, $right->created_at],
-            ['Import comment', $left->import_comment ?? '', $right->import_comment ?? ''],
-            ['Generated NOTE', $left->generated_note_xref ?? '', $right->generated_note_xref ?? ''],
-            ['NOTE changed by', $left->generated_note_changed_by_user_name ?? '', $right->generated_note_changed_by_user_name ?? ''],
-            ['NOTE changed at', $left->generated_note_changed_at ?? '', $right->generated_note_changed_at ?? ''],
+            ['revision_no', I18N::translate('Revision'), (string) $left->revision_no, (string) $right->revision_no],
+            [
+                'is_current_revision',
+                I18N::translate('Current revision'),
+                $left->is_current_revision ? I18N::translate('yes') : I18N::translate('no'),
+                $right->is_current_revision ? I18N::translate('yes') : I18N::translate('no'),
+            ],
+            ['provider_key', I18N::translate('Provider'), ProviderPresentation::label($left->provider_key), ProviderPresentation::label($right->provider_key)],
+            ['origin_type', I18N::translate('Origin'), RevisionOriginType::labels()[$left->origin_type] ?? $left->origin_type, RevisionOriginType::labels()[$right->origin_type] ?? $right->origin_type],
+            ['origin_reference', I18N::translate('Origin reference'), $left->origin_reference ?? '', $right->origin_reference ?? ''],
+            ['content_format', I18N::translate('Content format'), $left->content_format, $right->content_format],
+            ['content_hash', I18N::translate('Content hash'), $left->content_hash, $right->content_hash],
+            ['created_by_user_id', I18N::translate('Created by'), $this->userLabel($left->created_by_user_id), $this->userLabel($right->created_by_user_id)],
+            ['created_at', I18N::translate('Created at'), $left->created_at, $right->created_at],
+            ['import_comment', I18N::translate('Import comment'), $left->import_comment ?? '', $right->import_comment ?? ''],
+            ['generated_note_xref', I18N::translate('Generated NOTE'), $left->generated_note_xref ?? '', $right->generated_note_xref ?? ''],
+            ['generated_note_changed_by_user_name', I18N::translate('NOTE changed by'), $left->generated_note_changed_by_user_name ?? '', $right->generated_note_changed_by_user_name ?? ''],
+            ['generated_note_changed_at', I18N::translate('NOTE changed at'), $left->generated_note_changed_at ?? '', $right->generated_note_changed_at ?? ''],
         ];
 
         return array_map(
             static fn (array $row): array => [
-                'label' => $row[0],
-                'left' => $row[1],
-                'right' => $row[2],
-                'changed' => $row[1] !== $row[2],
+                'key' => $row[0],
+                'label' => $row[1],
+                'left' => $row[2],
+                'right' => $row[3],
+                'changed' => $row[2] !== $row[3],
             ],
             $rows
         );

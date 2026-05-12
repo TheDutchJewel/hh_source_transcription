@@ -32,17 +32,21 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service;
 use Fisharebest\Webtrees\Registry;
 use Fisharebest\Webtrees\Tree;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\RevisionRepository;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\NoteLinkRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SharedNoteGateway;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\MediaObjectGateway;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Support\HashService;
 
 final class GetTranscriptionDetailService
 {
     public function __construct(
         private readonly TranscriptionRepository $transcriptionRepository,
         private readonly RevisionRepository      $revisionRepository,
+        private readonly NoteLinkRepository      $noteLinkRepository,
         private readonly SharedNoteGateway       $sharedNoteGateway,
         private readonly MediaObjectGateway      $mediaObjectGateway,
+        private readonly HashService             $hashService,
     ) {
     }
 
@@ -79,6 +83,16 @@ final class GetTranscriptionDetailService
                 $transcription->current_note_xref
             );
         }
+
+        $current_link = $this->noteLinkRepository->currentLinkForTranscription($transcription_id);
+        $current_note_hash = $note_text === null ? null : $this->hashService->sha256($note_text);
+        $tracked_note_hash = $current_link?->note_hash_at_link_time;
+        $note_changed_since_link = $current_link !== null
+            && $current_link->note_xref === $transcription->current_note_xref
+            && $current_note_hash !== null
+            && $tracked_note_hash !== null
+            && $current_note_hash !== $tracked_note_hash;
+
         $media_files = $media_object !== null
             ? $this->mediaObjectGateway->files($media_object)
             : [];
@@ -91,6 +105,13 @@ final class GetTranscriptionDetailService
             'media_object' => $media_object,
             'media_restriction' => $media_restriction,
             'media_files' => $media_files,
+            'note_status' => [
+                'changed_since_link' => $note_changed_since_link,
+                'current_hash' => $current_note_hash,
+                'tracked_hash' => $tracked_note_hash,
+                'tracked_note_xref' => $current_link?->note_xref,
+                'link_type' => $current_link?->link_type,
+            ],
         ];
     }
 }

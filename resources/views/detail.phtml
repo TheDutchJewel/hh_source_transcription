@@ -33,6 +33,7 @@ declare(strict_types=1);
  * @var Transcription $transcription
  * @var array<int, TranscriptionRevision> $revisions
  * @var ?string $note_text
+ * @var array{changed_since_link:bool,current_hash:?string,tracked_hash:?string,tracked_note_xref:?string,link_type:?string} $note_status
  * @var ?Source $source
  * @var ?Media $media_object
  * @var string $media_restriction
@@ -104,6 +105,12 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
 <?php if ($can_edit_note && $transcription->current_note_xref !== null) : ?>
     <div class="alert alert-info">
         <?= I18N::translate('The current webtrees NOTE is used as a working copy. Changes are only archived when saved as a new revision.') ?>
+    </div>
+<?php endif ?>
+
+<?php if (($note_status['changed_since_link'] ?? false) === true) : ?>
+    <div class="alert alert-warning">
+        <?= I18N::translate('The current webtrees NOTE has changed since it was last linked to a revision. Use "Archive as new revision" to preserve these changes before making another revision current or otherwise replacing the NOTE.') ?>
     </div>
 <?php endif ?>
 

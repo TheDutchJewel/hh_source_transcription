@@ -27,4 +27,4 @@ It does not create a new transcription. Source, media object, current working NO
 Collaborators are stored in `transcription_collaborators`.
 The table stores the team relation only. It does not duplicate revision content.
 
-`accepted_at` is reserved for a later explicit invitation/acceptance workflow.
+V1 uses immediate assignment: selected collaborators become active as soon as they are added. `accepted_at` remains unused in V1 and is reserved for a later opt-in invitation/acceptance workflow.

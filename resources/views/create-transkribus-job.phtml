@@ -1,0 +1,257 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @var string $title
+ * @var Tree $tree
+ */
+
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Tree;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\MediaFilesForMediaAction;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\MediaForSourceAction;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers\SourceForManualAction;
+
+?>
+
+<h2><?= e($title) ?></h2>
+
+<form method="post" action="<?= e(route('source-transcription-upload-transkribus', ['tree' => $tree->name()])) ?>">
+    <?= csrf_field() ?>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="title">
+            <?= I18N::translate('Job title') ?>
+        </label>
+        <div class="col-sm-9">
+            <input class="form-control" id="title" name="title" type="text" required>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="source_xref">
+            <?= I18N::translate('Source') ?>
+        </label>
+
+        <div class="col-sm-9">
+            <select
+                    class="form-select tom-select"
+                    id="source_xref"
+                    name="source_xref"
+                    data-wt-url="<?= e(route(SourceForManualAction::class, ['tree' => $tree->name(), 'at' => '@'])) ?>"
+                    data-wt-i18n-no-results="<?= e(I18N::translate('No results found')) ?>"
+                    placeholder="<?= e(I18N::translate('Search for a source')) ?>"
+                    required
+            ></select>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="media_xref">
+            <?= I18N::translate('Media object') ?>
+        </label>
+
+        <div class="col-sm-9">
+            <select class="form-select" id="media_xref" name="media_xref" disabled required>
+                <option value=""><?= I18N::translate('Select a source first') ?></option>
+            </select>
+
+            <div class="form-text">
+                <?= I18N::translate('Only media objects linked to the selected source are shown.') ?>
+            </div>
+        </div>
+    </div>
+
+    <fieldset class="row mb-3">
+        <legend class="col-sm-3 col-form-label">
+            <?= I18N::translate('Media files') ?>
+        </legend>
+
+        <div class="col-sm-9">
+            <div id="media_files_container" class="border rounded p-3 text-muted">
+                <?= I18N::translate('Select a media object first.') ?>
+            </div>
+
+            <div class="form-text">
+                <?= I18N::translate('Accepted formats: JPEG, TIFF, PNG. Maximum file size: 20 MB per image.') ?>
+            </div>
+        </div>
+    </fieldset>
+
+    <button class="btn btn-primary" type="submit" id="upload_button" disabled>
+        <?= I18N::translate('Upload to Transkribus') ?>
+    </button>
+</form>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const sourceSelect = document.getElementById('source_xref');
+        const mediaSelect = document.getElementById('media_xref');
+        const filesContainer = document.getElementById('media_files_container');
+        const uploadButton = document.getElementById('upload_button');
+
+        const mediaUrl = <?= json_encode(route(MediaForSourceAction::class, ['tree' => $tree->name()]), JSON_THROW_ON_ERROR) ?>;
+        const mediaFilesUrl = <?= json_encode(route(MediaFilesForMediaAction::class, ['tree' => $tree->name()]), JSON_THROW_ON_ERROR) ?>;
+
+        function resetMediaSelect(message) {
+            mediaSelect.innerHTML = '';
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent = message;
+            mediaSelect.appendChild(option);
+            mediaSelect.disabled = true;
+            resetFiles(<?= json_encode(I18N::translate('Select a media object first.'), JSON_THROW_ON_ERROR) ?>);
+        }
+
+        function resetFiles(message) {
+            filesContainer.classList.add('text-muted');
+            filesContainer.innerHTML = '';
+            filesContainer.textContent = message;
+            uploadButton.disabled = true;
+        }
+
+        function addMediaOption(value, label) {
+            const option = document.createElement('option');
+            option.value = value;
+            option.textContent = label;
+            mediaSelect.appendChild(option);
+        }
+
+        function loadMediaForSource(sourceXref) {
+            sourceXref = (sourceXref || '').replaceAll('@', '').trim();
+
+            if (!sourceXref) {
+                resetMediaSelect(<?= json_encode(I18N::translate('Select a source first'), JSON_THROW_ON_ERROR) ?>);
+                return;
+            }
+
+            resetMediaSelect(<?= json_encode(I18N::translate('Loading media objects...'), JSON_THROW_ON_ERROR) ?>);
+
+            const separator = mediaUrl.includes('?') ? '&' : '?';
+
+            fetch(mediaUrl + separator + 'source_xref=' + encodeURIComponent(sourceXref), {
+                headers: { 'Accept': 'application/json' }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(items => {
+                    mediaSelect.innerHTML = '';
+
+                    if (!Array.isArray(items) || items.length === 0) {
+                        resetMediaSelect(<?= json_encode(I18N::translate('No linked media objects found'), JSON_THROW_ON_ERROR) ?>);
+                        return;
+                    }
+
+                    const emptyOption = document.createElement('option');
+                    emptyOption.value = '';
+                    emptyOption.textContent = <?= json_encode(I18N::translate('Select a media object'), JSON_THROW_ON_ERROR) ?>;
+                    mediaSelect.appendChild(emptyOption);
+
+                    for (const item of items) {
+                        addMediaOption(item.id, item.text);
+                    }
+
+                    mediaSelect.disabled = false;
+
+                    if (items.length === 1) {
+                        mediaSelect.value = items[0].id;
+                        loadFilesForMedia(mediaSelect.value);
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    resetMediaSelect(<?= json_encode(I18N::translate('Could not load media objects'), JSON_THROW_ON_ERROR) ?>);
+                });
+        }
+
+        function loadFilesForMedia(mediaXref) {
+            mediaXref = (mediaXref || '').replaceAll('@', '').trim();
+
+            if (!mediaXref) {
+                resetFiles(<?= json_encode(I18N::translate('Select a media object first.'), JSON_THROW_ON_ERROR) ?>);
+                return;
+            }
+
+            resetFiles(<?= json_encode(I18N::translate('Loading media files...'), JSON_THROW_ON_ERROR) ?>);
+
+            const separator = mediaFilesUrl.includes('?') ? '&' : '?';
+
+            fetch(mediaFilesUrl + separator + 'media_xref=' + encodeURIComponent(mediaXref), {
+                headers: { 'Accept': 'application/json' }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('HTTP ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(items => {
+                    filesContainer.innerHTML = '';
+                    filesContainer.classList.remove('text-muted');
+
+                    if (!Array.isArray(items) || items.length === 0) {
+                        resetFiles(<?= json_encode(I18N::translate('No media files found.'), JSON_THROW_ON_ERROR) ?>);
+                        return;
+                    }
+
+                    let uploadableCount = 0;
+
+                    for (const item of items) {
+                        const wrapper = document.createElement('div');
+                        wrapper.className = 'form-check mb-2';
+
+                        const checkbox = document.createElement('input');
+                        checkbox.className = 'form-check-input';
+                        checkbox.type = 'checkbox';
+                        checkbox.name = 'media_file_fact_ids[]';
+                        checkbox.value = item.id;
+                        checkbox.id = 'media_file_' + item.id;
+                        checkbox.disabled = !item.uploadable;
+                        checkbox.checked = !!item.uploadable;
+
+                        const label = document.createElement('label');
+                        label.className = 'form-check-label';
+                        label.htmlFor = checkbox.id;
+                        label.textContent = item.text + ' (' + item.mime_type + ', ' + item.size_label + ')';
+
+                        wrapper.appendChild(checkbox);
+                        wrapper.appendChild(label);
+
+                        if (!item.uploadable) {
+                            const message = document.createElement('div');
+                            message.className = 'form-text text-danger ms-4';
+                            message.textContent = item.message;
+                            wrapper.appendChild(message);
+                        } else {
+                            uploadableCount++;
+                        }
+
+                        filesContainer.appendChild(wrapper);
+                    }
+
+                    uploadButton.disabled = uploadableCount === 0;
+                })
+                .catch(error => {
+                    console.error(error);
+                    resetFiles(<?= json_encode(I18N::translate('Could not load media files.'), JSON_THROW_ON_ERROR) ?>);
+                });
+        }
+
+        sourceSelect.addEventListener('change', function () {
+            loadMediaForSource(sourceSelect.value);
+        });
+
+        sourceSelect.addEventListener('input', function () {
+            resetMediaSelect(<?= json_encode(I18N::translate('Select a source first'), JSON_THROW_ON_ERROR) ?>);
+        });
+
+        mediaSelect.addEventListener('change', function () {
+            loadFilesForMedia(mediaSelect.value);
+        });
+    });
+</script>
