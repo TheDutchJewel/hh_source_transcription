@@ -1,9 +1,9 @@
-﻿msgid ""
+msgid ""
 msgstr ""
 "Project-Id-Version: SourceTranscription\n"
-"POT-Creation-Date: 2026-05-08 21:47+0200\n"
+"POT-Creation-Date: 2026-05-14 01:04+0200\n"
 "PO-Revision-Date: \n"
-"Last-Translator: \n"
+"Last-Translator: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
 "Language-Team: \n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
@@ -15,821 +15,1587 @@ msgstr ""
 "X-Poedit-KeywordsList: translate;noop;plural:1,2;translateContext:2,1c\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: src/Application/Factory/NoteContentFactory.php:46
+#: src/Application/Factory/NoteContentFactory.php:51
 #: src/Domain/Enum/TranscriptionType.php:47
-#: src/Http/RequestHandlers/DetailAction.php:53
+#: src/Http/RequestHandlers/DetailAction.php:58
 msgid "Transcription"
-msgstr ""
+msgstr "Transcripción"
 
-#: src/Application/Factory/NoteContentFactory.php:47
+#: src/Application/Factory/NoteContentFactory.php:53
 msgid "Title"
-msgstr ""
+msgstr "Título"
 
-#: src/Application/Factory/NoteContentFactory.php:48
-msgid "Revision"
-msgstr ""
+#: src/Application/Factory/NoteContentFactory.php:58
+msgid "Source"
+msgstr "Fuente"
 
-#: src/Application/Factory/NoteContentFactory.php:49
+#: src/Application/Factory/NoteContentFactory.php:61
+#: src/Application/Service/CompareRevisionsService.php:59
 msgid "Provider"
-msgstr ""
+msgstr "Proveedor"
 
-#: src/Application/Factory/NoteContentFactory.php:50
-msgid "Origin"
-msgstr ""
+#: src/Application/Factory/NoteContentFactory.php:64
+msgid "Primary language"
+msgstr "Idioma principal"
 
-msgid "Current revision"
-msgstr ""
-
-msgid "Origin reference"
-msgstr ""
-
-msgid "Content format"
-msgstr ""
-
-msgid "Content hash"
-msgstr ""
-
-msgid "Created by"
-msgstr ""
-
-msgid "Created at"
-msgstr ""
-
-msgid "Import comment"
-msgstr ""
-
-msgid "NOTE changed by"
-msgstr ""
-
-msgid "NOTE changed at"
-msgstr ""
-
-msgid "yes"
-msgstr ""
-
-msgid "no"
-msgstr ""
-
-#: src/Application/Factory/NoteContentFactory.php:52
-msgid "Begin transcription"
-msgstr ""
+#: src/Application/Factory/NoteContentFactory.php:68
+msgid "Primary script"
+msgstr "Escritura principal"
 
 #: src/Application/Factory/NoteContentFactory.php:72
+msgid "Primary form"
+msgstr "Forma principal"
+
+#: src/Application/Factory/NoteContentFactory.php:80
+msgid "Media object"
+msgstr "Objeto multimedia"
+
+#: src/Application/Factory/NoteContentFactory.php:85
+#: src/Application/Factory/NoteContentFactory.php:103
 msgid "Transcription text"
+msgstr "Texto de la transcripción"
+
+#: src/Application/Factory/NoteContentFactory.php:92
+msgctxt "Heading for one media file in a generated note"
+msgid "Media file"
+msgstr "Archivo multimedia"
+
+#: src/Application/Service/CollaborationNotificationService.php:42
+#, fuzzy, php-format
+#| msgid "Create transcription"
+msgid "Collaboration started for transcription: %s"
+msgstr "Crear transcripción"
+
+#: src/Application/Service/CollaborationNotificationService.php:45
+msgid "You have been invited to collaborate on a source transcription."
 msgstr ""
 
-#: src/Application/Factory/NoteContentFactory.php:56
-msgid "End transcription"
-msgstr ""
+#: src/Application/Service/CollaborationNotificationService.php:74
+#, fuzzy, php-format
+#| msgid "Begin transcription"
+msgid "New revision for transcription: %s"
+msgstr "Inicio de la transcripción"
+
+#: src/Application/Service/CollaborationNotificationService.php:75
+#, fuzzy, php-format
+#| msgid "The transcription has been created."
+msgid "A new revision has been created: %s"
+msgstr "La transcripción ha sido creada."
+
+#: src/Application/Service/CollaborationNotificationService.php:92
+#, fuzzy, php-format
+#| msgid "Back to transcription"
+msgid "Status changed for transcription: %s"
+msgstr "Volver a la transcripción"
+
+#: src/Application/Service/CollaborationNotificationService.php:93
+#, fuzzy, php-format
+#| msgid "The transcription has been created."
+msgid "The transcription status has changed to: %s"
+msgstr "La transcripción ha sido creada."
+
+#: src/Application/Service/CompareRevisionsService.php:52
+msgid "Revision"
+msgstr "Revisión"
+
+#: src/Application/Service/CompareRevisionsService.php:55
+msgid "Current revision"
+msgstr "Revisión actual"
+
+#: src/Application/Service/CompareRevisionsService.php:56
+#: src/Application/Service/CompareRevisionsService.php:57
+msgid "yes"
+msgstr "sí"
+
+#: src/Application/Service/CompareRevisionsService.php:56
+#: src/Application/Service/CompareRevisionsService.php:57
+msgid "no"
+msgstr "no"
+
+#: src/Application/Service/CompareRevisionsService.php:60
+msgid "Origin"
+msgstr "Origen"
+
+#: src/Application/Service/CompareRevisionsService.php:61
+msgid "Origin reference"
+msgstr "Referencia de origen"
+
+#: src/Application/Service/CompareRevisionsService.php:62
+msgid "Content format"
+msgstr "Formato del contenido"
+
+#: src/Application/Service/CompareRevisionsService.php:63
+msgid "Content hash"
+msgstr "Hash del contenido"
+
+#: src/Application/Service/CompareRevisionsService.php:64
+msgid "Created by"
+msgstr "Creado por"
+
+#: src/Application/Service/CompareRevisionsService.php:65
+msgid "Created at"
+msgstr "Creado el"
+
+#: src/Application/Service/CompareRevisionsService.php:66
+msgid "Import comment"
+msgstr "Comentario de importación"
+
+#: src/Application/Service/CompareRevisionsService.php:67
+msgid "Generated NOTE"
+msgstr "NOTA generada"
+
+#: src/Application/Service/CompareRevisionsService.php:68
+msgid "NOTE changed by"
+msgstr "NOTA modificada por"
+
+#: src/Application/Service/CompareRevisionsService.php:69
+msgid "NOTE changed at"
+msgstr "NOTA modificada el"
 
 #: src/Domain/Enum/InteractionModel.php:48
 msgid "Manual (direct editing)"
-msgstr ""
+msgstr "Manual (edición directa)"
 
 #: src/Domain/Enum/InteractionModel.php:49
 msgid "Automated (asynchronous)"
-msgstr ""
+msgstr "Automatizado (asíncrono)"
 
 #: src/Domain/Enum/InteractionModel.php:50
 msgid "Crowd-based (asynchronous)"
-msgstr ""
+msgstr "Colaborativo (asíncrono)"
 
 #: src/Domain/Enum/InteractionModel.php:51
 msgid "Internal collaboration"
-msgstr ""
+msgstr "Colaboración interna"
 
 #: src/Domain/Enum/InteractionModel.php:63
 msgid "Interaction model not specified"
-msgstr ""
+msgstr "Modelo de interacción no especificado"
 
 #: src/Domain/Enum/PrimaryForm.php:95
 msgid "Handwritten church register"
-msgstr ""
+msgstr "Registro parroquial manuscrito"
 
 #: src/Domain/Enum/PrimaryForm.php:98
 msgid "Handwritten deed/charter"
-msgstr ""
+msgstr "Escritura/carta manuscrita"
 
 #: src/Domain/Enum/PrimaryForm.php:99
 msgid "Printed deed/charter"
-msgstr ""
+msgstr "Escritura/carta impresa"
 
 #: src/Domain/Enum/PrimaryForm.php:102
 msgid "Handwritten letter"
-msgstr ""
+msgstr "Carta manuscrita"
 
 #: src/Domain/Enum/PrimaryForm.php:105
 msgid "Printed newspaper"
-msgstr ""
+msgstr "Periódico impreso"
 
 #: src/Domain/Enum/PrimaryForm.php:106
 msgid "Printed journal/magazine"
-msgstr ""
+msgstr "Revista impresa"
 
 #: src/Domain/Enum/PrimaryForm.php:107
 msgid "Printed book"
-msgstr ""
+msgstr "Libro impreso"
 
 #: src/Domain/Enum/PrimaryForm.php:110
 msgid "Memorial record / Minutes from memory"
-msgstr ""
+msgstr "Registro memorial / Acta redactada de memoria"
 
 #: src/Domain/Enum/PrimaryForm.php:111
 msgid "Stenographic record"
-msgstr ""
+msgstr "Registro estenográfico"
 
 #: src/Domain/Enum/PrimaryForm.php:112
 msgid "Typewritten document"
-msgstr ""
+msgstr "Documento mecanografiado"
 
 #: src/Domain/Enum/PrimaryForm.php:113
 msgid "Digital text document"
-msgstr ""
+msgstr "Documento de texto digital"
 
 #: src/Domain/Enum/PrimaryForm.php:114
 msgid "Digitized manuscript"
-msgstr ""
+msgstr "Manuscrito digitalizado"
 
 #: src/Domain/Enum/PrimaryForm.php:117
 msgid "Annotated photograph"
-msgstr ""
+msgstr "Fotografía anotada"
 
 #: src/Domain/Enum/PrimaryForm.php:118
 msgid "Microfilm / Microfiche"
-msgstr ""
+msgstr "Microfilm / Microficha"
 
 #: src/Domain/Enum/PrimaryForm.php:121
 msgid "Gravestone inscription"
-msgstr ""
+msgstr "Inscripción en lápida"
 
 #: src/Domain/Enum/PrimaryForm.php:122
 msgid "Building inscription"
-msgstr ""
+msgstr "Inscripción en edificio"
 
 #: src/Domain/Enum/PrimaryForm.php:125
 msgid "Audio recording"
-msgstr ""
+msgstr "Grabación de audio"
 
 #: src/Domain/Enum/PrimaryForm.php:126
 msgid "Video recording"
-msgstr ""
+msgstr "Grabación de vídeo"
 
 #: src/Domain/Enum/PrimaryForm.php:127
 msgid "Video interview"
-msgstr ""
+msgstr "Entrevista en vídeo"
 
 #: src/Domain/Enum/PrimaryForm.php:130
 msgid "Mixed"
-msgstr ""
+msgstr "Mixto"
 
 #: src/Domain/Enum/PrimaryForm.php:131
 msgid "Other"
-msgstr ""
+msgstr "Otro"
 
 #: src/Domain/Enum/PrimaryForm.php:143
 msgid "Form not specified"
-msgstr ""
+msgstr "Forma no especificada"
 
 #: src/Domain/Enum/PrimaryLanguage.php:70
 msgid "German"
-msgstr ""
+msgstr "Alemán"
 
 #: src/Domain/Enum/PrimaryLanguage.php:71
 msgid "Middle High German"
-msgstr ""
+msgstr "Alto alemán medio"
 
 #: src/Domain/Enum/PrimaryLanguage.php:72
 msgid "Low German"
-msgstr ""
+msgstr "Bajo alemán"
 
 #: src/Domain/Enum/PrimaryLanguage.php:73
 msgid "Western Frisian"
-msgstr ""
+msgstr "Frisón occidental"
 
 #: src/Domain/Enum/PrimaryLanguage.php:74
 msgid "Latin"
-msgstr ""
+msgstr "Latín"
 
 #: src/Domain/Enum/PrimaryLanguage.php:75
 msgid "English"
-msgstr ""
+msgstr "Inglés"
 
 #: src/Domain/Enum/PrimaryLanguage.php:76
 msgid "French"
-msgstr ""
+msgstr "Francés"
 
 #: src/Domain/Enum/PrimaryLanguage.php:77
 msgid "Old French"
-msgstr ""
+msgstr "Francés antiguo"
 
 #: src/Domain/Enum/PrimaryLanguage.php:78
 msgid "Spanish"
-msgstr ""
+msgstr "Español"
 
 #: src/Domain/Enum/PrimaryLanguage.php:79
 msgid "Russian"
-msgstr ""
+msgstr "Ruso"
 
 #: src/Domain/Enum/PrimaryLanguage.php:80
 msgid "Polish"
-msgstr ""
+msgstr "Polaco"
 
 #: src/Domain/Enum/PrimaryLanguage.php:81
 msgid "Italian"
-msgstr ""
+msgstr "Italiano"
 
 #: src/Domain/Enum/PrimaryLanguage.php:82
 msgid "Portuguese"
-msgstr ""
+msgstr "Portugués"
 
 #: src/Domain/Enum/PrimaryLanguage.php:83
 msgid "Dutch"
-msgstr ""
+msgstr "Neerlandés"
 
 #: src/Domain/Enum/PrimaryLanguage.php:84
 msgid "Hebrew"
-msgstr ""
+msgstr "Hebreo"
 
 #: src/Domain/Enum/PrimaryLanguage.php:85
 msgid "Yiddish"
-msgstr ""
+msgstr "Yidis"
 
 #: src/Domain/Enum/PrimaryLanguage.php:86
 msgid "Church Slavonic"
-msgstr ""
+msgstr "Eslavo eclesiástico"
 
 #: src/Domain/Enum/PrimaryLanguage.php:87
 msgid "Arabic"
-msgstr ""
+msgstr "Árabe"
 
 #: src/Domain/Enum/PrimaryLanguage.php:88
 msgid "Swedish"
-msgstr ""
+msgstr "Sueco"
 
 #: src/Domain/Enum/PrimaryLanguage.php:89
 msgid "Hungarian"
-msgstr ""
+msgstr "Húngaro"
 
 #: src/Domain/Enum/PrimaryLanguage.php:90
 msgid "Czech"
-msgstr ""
+msgstr "Checo"
 
 #: src/Domain/Enum/PrimaryLanguage.php:91
 msgid "Greek"
-msgstr ""
+msgstr "Griego"
 
 #: src/Domain/Enum/PrimaryLanguage.php:92
 msgid "Akkadian"
-msgstr ""
+msgstr "Akkadio"
 
 #: src/Domain/Enum/PrimaryLanguage.php:93
 msgid "Undetermined"
-msgstr ""
+msgstr "Indeterminado"
 
 #: src/Domain/Enum/PrimaryLanguage.php:105
 msgid "Language not specified"
-msgstr ""
+msgstr "Idioma no especificado"
 
 #: src/Domain/Enum/PrimaryScript.php:64
 msgid "Latin script"
-msgstr ""
+msgstr "Escritura latina"
 
 #: src/Domain/Enum/PrimaryScript.php:65
 msgid "Fraktur (Latin Fraktur)"
-msgstr ""
+msgstr "Fraktur (latina Fraktur)"
 
 #: src/Domain/Enum/PrimaryScript.php:66
 msgid "Cyrillic script"
-msgstr ""
+msgstr "Escritura cirílica"
 
 #: src/Domain/Enum/PrimaryScript.php:67
 msgid "Hebrew script"
-msgstr ""
+msgstr "Escritura hebrea"
 
 #: src/Domain/Enum/PrimaryScript.php:68
 msgid "Arabic script"
-msgstr ""
+msgstr "Escritura árabe"
 
 #: src/Domain/Enum/PrimaryScript.php:69
 msgid "Greek script"
-msgstr ""
+msgstr "Escritura griega"
 
 #: src/Domain/Enum/PrimaryScript.php:70
 msgid "Georgian script"
-msgstr ""
+msgstr "Escritura georgiana"
 
 #: src/Domain/Enum/PrimaryScript.php:71
 msgid "Armenian script"
-msgstr ""
+msgstr "Escritura armenia"
 
 #: src/Domain/Enum/PrimaryScript.php:72
 msgid "Glagolitic script"
-msgstr ""
+msgstr "Escritura glagolítica"
 
 #: src/Domain/Enum/PrimaryScript.php:73
 msgid "Coptic script"
-msgstr ""
+msgstr "Escritura copta"
 
 #: src/Domain/Enum/PrimaryScript.php:74
 msgid "Syriac script"
-msgstr ""
+msgstr "Escritura siríaca"
 
 #: src/Domain/Enum/PrimaryScript.php:75
 msgid "Old Italic script"
-msgstr ""
+msgstr "Escritura itálica antigua"
 
 #: src/Domain/Enum/PrimaryScript.php:76
 msgid "Runic script"
-msgstr ""
+msgstr "Escritura rúnica"
 
 #: src/Domain/Enum/PrimaryScript.php:77
 msgid "Osmanya script"
-msgstr ""
+msgstr "Escritura osmanya"
 
 #: src/Domain/Enum/PrimaryScript.php:78
 msgid "Gujarati script"
-msgstr ""
+msgstr "Escritura guyaratí"
 
 #: src/Domain/Enum/PrimaryScript.php:79
 msgid "Cuneiform script"
-msgstr ""
+msgstr "Escritura cuneiforme"
 
 #: src/Domain/Enum/PrimaryScript.php:80
 msgid "Unknown script"
-msgstr ""
+msgstr "Escritura desconocida"
 
 #: src/Domain/Enum/PrimaryScript.php:92
 msgid "Script not specified"
-msgstr ""
+msgstr "Escritura no especificada"
 
 #: src/Domain/Enum/RevisionOriginType.php:48
 msgid "Manual entry"
-msgstr ""
+msgstr "Entrada manual"
 
 #: src/Domain/Enum/RevisionOriginType.php:49
 msgid "Manual note save"
-msgstr ""
+msgstr "Guardado manual de nota"
 
 #: src/Domain/Enum/RevisionOriginType.php:50
 msgid "Transkribus import"
-msgstr ""
+msgstr "Importación desde Transkribus"
 
 #: src/Domain/Enum/RevisionOriginType.php:51
 msgid "Transkribus sync"
-msgstr ""
+msgstr "Sincronización con Transkribus"
 
 #: src/Domain/Enum/RevisionOriginType.php:63
 msgid "Origin not specified"
-msgstr ""
+msgstr "Origen no especificado"
 
 #: src/Domain/Enum/TranscriptionStatus.php:61
+msgctxt "Transcription status"
 msgid "New"
-msgstr ""
+msgstr "Nueva"
 
 #: src/Domain/Enum/TranscriptionStatus.php:62
+#, fuzzy
+#| msgid "In progress"
+msgctxt "Transcription status"
 msgid "In progress"
-msgstr ""
+msgstr "En curso"
 
 #: src/Domain/Enum/TranscriptionStatus.php:63
+#, fuzzy
+#| msgid "Ready for review"
+msgctxt "Transcription status"
 msgid "Ready for review"
-msgstr ""
+msgstr "Lista para revisión"
 
 #: src/Domain/Enum/TranscriptionStatus.php:64
+#, fuzzy
+#| msgid "Final"
+msgctxt "Transcription status; adjective, not an action button"
 msgid "Final"
-msgstr ""
+msgstr "Final"
 
 #: src/Domain/Enum/TranscriptionStatus.php:65
+#, fuzzy
+#| msgid "Reopened"
+msgctxt "Transcription status; already reopened, not an action button"
 msgid "Reopened"
-msgstr ""
+msgstr "Reabierta"
 
 #: src/Domain/Enum/TranscriptionStatus.php:66
+#, fuzzy
+#| msgid "Canceled"
+msgctxt "Transcription status"
 msgid "Canceled"
-msgstr ""
+msgstr "Cancelada"
 
 #: src/Domain/Enum/TranscriptionType.php:48
 msgid "Translation"
-msgstr ""
+msgstr "Traducción"
 
 #: src/Domain/Enum/TranscriptionType.php:49
 msgid "Normalized text"
-msgstr ""
+msgstr "Texto normalizado"
 
 #: src/Domain/Enum/TranscriptionType.php:61
 msgid "Type not specified"
+msgstr "Tipo no especificado"
+
+#: src/Domain/Enum/TranskribusJobFileStatus.php:36
+msgid "Pending"
+msgstr ""
+
+#: src/Domain/Enum/TranskribusJobFileStatus.php:37
+#: src/Domain/Enum/TranskribusJobStatus.php:37
+msgid "Uploaded"
+msgstr ""
+
+#: src/Domain/Enum/TranskribusJobFileStatus.php:38
+msgid "Failed"
+msgstr ""
+
+#: src/Domain/Enum/TranskribusJobStatus.php:36
+msgid "Uploading"
+msgstr ""
+
+#: src/Domain/Enum/TranskribusJobStatus.php:38
+msgid "Upload failed"
 msgstr ""
 
 #: src/Domain/ValueObject/NoteStrategy.php:48
 msgid "Always create a new NOTE"
-msgstr ""
+msgstr "Crear siempre una nueva NOTA"
 
 #: src/Domain/ValueObject/NoteStrategy.php:49
 msgid "Update existing NOTE only if unchanged"
-msgstr ""
+msgstr "Actualizar la NOTA existente solo si no ha cambiado"
 
 #: src/Domain/ValueObject/NoteStrategy.php:50
 msgid "Always update existing NOTE"
-msgstr ""
-
-#: src/Domain/ValueObject/ProviderLabel.php:47
-#: src/Domain/ValueObject/ProviderLabel.php:56
-msgid "Manual"
-msgstr ""
+msgstr "Actualizar siempre la NOTA existente"
 
 #: src/Domain/ValueObject/ProviderLabel.php:48
-#: src/Domain/ValueObject/ProviderLabel.php:57
-#: src/Domain/ValueObject/ProviderPresentation.php:76
-msgid "Transkribus"
-msgstr ""
+#: src/Domain/ValueObject/ProviderLabel.php:58
+#, fuzzy
+#| msgid "Manual"
+msgctxt "Transcription provider label"
+msgid "Manual"
+msgstr "Manual"
 
 #: src/Domain/ValueObject/ProviderLabel.php:49
-#: src/Domain/ValueObject/ProviderLabel.php:58
+#: src/Domain/ValueObject/ProviderLabel.php:59
+#, fuzzy
+#| msgid "Internal collaboration"
+msgctxt "Transcription provider label"
+msgid "Internal collaboration"
+msgstr "Colaboración interna"
+
+#: src/Domain/ValueObject/ProviderLabel.php:50
+#: src/Domain/ValueObject/ProviderLabel.php:60
+#: src/Domain/ValueObject/ProviderPresentation.php:81
+msgid "Transkribus"
+msgstr "Transkribus"
+
+#: src/Domain/ValueObject/ProviderLabel.php:51
+#: src/Domain/ValueObject/ProviderLabel.php:61
 msgid "Community (Discourse)"
-msgstr ""
+msgstr "Comunidad (Discourse)"
 
-#: src/Domain/ValueObject/ProviderPresentation.php:75
+#: src/Domain/ValueObject/ProviderPresentation.php:79
+#, fuzzy
+#| msgid "Manual transcription in this webtrees installation"
+msgctxt "Tooltip for transcription provider link"
 msgid "Manual transcription in this webtrees installation"
+msgstr "Transcripción manual en esta instalación de webtrees"
+
+#: src/Domain/ValueObject/ProviderPresentation.php:80
+#, fuzzy
+#| msgid "Manual transcription in this webtrees installation"
+msgctxt "Tooltip for transcription provider link"
+msgid "Internal collaboration in this webtrees installation"
+msgstr "Transcripción manual en esta instalación de webtrees"
+
+#: src/Domain/ValueObject/ProviderPresentation.php:82
+msgid "Community discussion on Discourse"
+msgstr "Discusión comunitaria en Discourse"
+
+#: src/Http/RequestHandlers/CollaborationStatusAction.php:62
+#: src/Http/RequestHandlers/ManualStatusAction.php:51
+msgid "Saved on finalize"
 msgstr ""
 
-#: src/Domain/ValueObject/ProviderPresentation.php:77
-msgid "Community discussion on Discourse"
-msgstr ""
+#: src/Http/RequestHandlers/CollaborationStatusAction.php:76
+#, fuzzy
+#| msgid "The transcription has been created."
+msgid "The collaboration status has been updated."
+msgstr "La transcripción ha sido creada."
+
+#: src/Http/RequestHandlers/CompareRevisionsAction.php:80
+msgid "Compare revisions"
+msgstr "Comparar revisiones"
 
 #: src/Http/RequestHandlers/CreateManualAction.php:50
 msgid "Create manual transcription"
+msgstr "Crear transcripción manual"
+
+#: src/Http/RequestHandlers/CreateTranskribusJobAction.php:41
+msgid "Upload images to Transkribus"
 msgstr ""
 
-#: src/Http/RequestHandlers/DashboardAction.php:51
-#: src/SourceTranscription.php:433
-msgid "Transcriptions"
+#: src/Http/RequestHandlers/DashboardAction.php:54
+msgid "Source capture and analysis"
 msgstr ""
 
-#: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:73
+#: src/Http/RequestHandlers/MakeRevisionCurrentAction.php:103
+#, php-format
+msgid "Revision %s is now the current revision."
+msgstr ""
+
+#: src/Http/RequestHandlers/ManualStatusAction.php:65
+#, fuzzy
+#| msgid "The transcription has been created."
+msgid "The transcription status has been updated."
+msgstr "La transcripción ha sido creada."
+
+#: src/Http/RequestHandlers/MediaFilesForMediaAction.php:72
+#, php-format
+msgid "%s KB"
+msgstr ""
+
+#: src/Http/RequestHandlers/MediaFilesForMediaAction.php:84
+#, fuzzy
+#| msgid "This media file cannot be previewed here."
+msgid "External media files cannot be uploaded directly."
+msgstr "Este archivo multimedia no puede previsualizarse aquí."
+
+#: src/Http/RequestHandlers/MediaFilesForMediaAction.php:88
+msgid "The file does not exist on this server."
+msgstr ""
+
+#: src/Http/RequestHandlers/MediaFilesForMediaAction.php:92
+msgid "Unsupported file format. Use JPEG, TIFF or PNG."
+msgstr ""
+
+#: src/Http/RequestHandlers/MediaFilesForMediaAction.php:96
+msgid "The file is larger than 20 MB."
+msgstr ""
+
+#: src/Http/RequestHandlers/OpenCollaborationAction.php:58
+#, fuzzy
+#| msgid "The transcription has been created."
+msgid "The transcription has been opened for internal collaboration."
+msgstr "La transcripción ha sido creada."
+
+#: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:94
 msgid "Saved from UI"
-msgstr ""
+msgstr "Guardado desde la interfaz"
 
-#: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:82
+#: src/Http/RequestHandlers/SaveNoteAsRevisionAction.php:103
 #, php-format
 msgid "The current NOTE has been saved as revision %s."
+msgstr "La NOTA actual se ha guardado como la revisión %s."
+
+#: src/Http/RequestHandlers/StoreManualAction.php:67
+msgid "You do not have permission to use the selected source or media object."
 msgstr ""
 
-#: src/Http/RequestHandlers/StoreManualAction.php:96
+#: src/Http/RequestHandlers/StoreManualAction.php:108
 msgid "Created from UI"
-msgstr ""
+msgstr "Creado desde la interfaz"
 
-#: src/Http/RequestHandlers/StoreManualAction.php:99
+#: src/Http/RequestHandlers/StoreManualAction.php:111
 msgid "The transcription has been created."
-msgstr ""
+msgstr "La transcripción ha sido creada."
 
-#: src/Http/RequestHandlers/UpdateCurrentNoteAction.php:62
+#: src/Http/RequestHandlers/UpdateCurrentNoteAction.php:85
 msgid "The NOTE has been updated."
-msgstr ""
+msgstr "La NOTA ha sido actualizada."
+
+#: src/Http/RequestHandlers/UploadTranskribusImagesAction.php:65
+#, fuzzy, php-format
+#| msgid "Transkribus sync"
+msgid "Transkribus job #%s: %s"
+msgstr "Sincronización con Transkribus"
 
 #: src/Infrastructure/WhatsNew/WhatsNew0.php:38
 msgid "First transcription provider available: manual transcription."
-msgstr ""
+msgstr "Primer proveedor de transcripción disponible: transcripción manual."
 
-#: src/SourceTranscription.php:247
+#: src/Infrastructure/WhatsNew/WhatsNew1.php:38
+#, fuzzy
+#| msgid "First transcription provider available: manual transcription."
+msgid ""
+"New transcription provider available: internal collaboration with other "
+"webtrees users."
+msgstr "Primer proveedor de transcripción disponible: transcripción manual."
+
+#: src/SourceTranscription.php:359
 msgid "What's new?"
-msgstr ""
+msgstr "¿Qué hay de nuevo?"
 
-#: src/SourceTranscription.php:329
+#: src/SourceTranscription.php:452
 msgid "Source Transcription"
-msgstr ""
+msgstr "Transcripción de fuentes"
 
-#: src/SourceTranscription.php:341
+#: src/SourceTranscription.php:464
 msgid "Manage source transcriptions with manual and provider-based workflows."
 msgstr ""
+"Gestiona transcripciones de fuentes con flujos manuales y basados en "
+"proveedores."
 
-#: src/SourceTranscription.php:542
-#, php-format
-msgid "The preferences for the module â€œ%sâ€ have been updated."
+#: src/SourceTranscription.php:556
+msgid "Transcriptions"
+msgstr "Transcripciones"
+
+#: src/SourceTranscription.php:714
+msgid "The provider credentials have been deleted."
 msgstr ""
 
-#: resources/views/admin-settings.phtml:27
+#: src/SourceTranscription.php:738
+msgid "The provider credentials could not be loaded."
+msgstr ""
+
+#: src/SourceTranscription.php:747
+msgid "The provider credentials have been saved."
+msgstr ""
+
+#: src/SourceTranscription.php:773
+#, fuzzy, php-format
+#| msgid "The preferences for the module â€œ%sâ€ have been updated."
+msgid "The preferences for the module “%s” have been updated."
+msgstr "Las preferencias del módulo «%s» han sido actualizadas."
+
+#: src/SourceTranscription.php:901
+msgid "The module database tables are incomplete."
+msgstr ""
+
+#: src/SourceTranscription.php:924 src/SourceTranscription.php:1039
+#, fuzzy
+#| msgid "Unknown"
+msgid "Unknown tree"
+msgstr "Desconocido"
+
+#: src/SourceTranscription.php:928
+msgid "The referenced family tree no longer exists."
+msgstr ""
+
+#: src/SourceTranscription.php:937
+#, php-format
+msgid "The referenced source does not exist: %s"
+msgstr ""
+
+#: src/SourceTranscription.php:941
+#, php-format
+msgid "The referenced media object does not exist: %s"
+msgstr ""
+
+#: src/SourceTranscription.php:945
+#, fuzzy
+#| msgid "Only media objects linked to the selected source are shown."
+msgid "The referenced media object is no longer linked to the source."
+msgstr ""
+"Solo se muestran los objetos multimedia vinculados a la fuente seleccionada."
+
+#: src/SourceTranscription.php:950
+#, fuzzy
+#| msgid "The transcription has been created."
+msgid "The transcription has no current NOTE."
+msgstr "La transcripción ha sido creada."
+
+#: src/SourceTranscription.php:955
+#, fuzzy, php-format
+#| msgid "The current NOTE has been saved as revision %s."
+msgid "The current NOTE does not exist: %s"
+msgstr "La NOTA actual se ha guardado como la revisión %s."
+
+#: src/SourceTranscription.php:957
+#, php-format
+msgid ""
+"The current NOTE is not linked to the expected source or media object: %s"
+msgstr ""
+
+#: src/SourceTranscription.php:976
+#, fuzzy
+#| msgid "The current NOTE has been saved as revision %s."
+msgid "The current NOTE has changed since it was last linked to a revision."
+msgstr "La NOTA actual se ha guardado como la revisión %s."
+
+#: src/SourceTranscription.php:982
+msgid "Tagging is enabled, but the transcription has no tag NOTE."
+msgstr ""
+
+#: src/SourceTranscription.php:987
+#, php-format
+msgid "The tag NOTE does not exist: %s"
+msgstr ""
+
+#: src/SourceTranscription.php:989
+#, fuzzy, php-format
+#| msgid "Only media objects linked to the selected source are shown."
+msgid "The tag NOTE is not linked to the expected source or media object: %s"
+msgstr ""
+"Solo se muestran los objetos multimedia vinculados a la fuente seleccionada."
+
+#: src/SourceTranscription.php:1013
+#, php-format
+msgid "Revision %s belongs to a transcription that no longer exists."
+msgstr ""
+
+#: src/SourceTranscription.php:1030
+#, php-format
+msgid "Revision %s references a NOTE that no longer exists: %s"
+msgstr ""
+
+#: src/SourceTranscription.php:1045
+#, fuzzy
+#| msgid "The transcription has been created."
+msgid "The transcription has no revisions."
+msgstr "La transcripción ha sido creada."
+
+#: src/SourceTranscription.php:1047
+#, fuzzy, php-format
+#| msgid "The transcription has been created."
+msgid "The transcription has %s current revisions; expected exactly one."
+msgstr "La transcripción ha sido creada."
+
+#: src/SourceTranscription.php:1060
+msgid ""
+"The current revision references a different NOTE than the transcription "
+"current NOTE."
+msgstr ""
+
+#: src/SourceTranscription.php:1083
+#, php-format
+msgid ""
+"An active collaboration entry references a user that no longer exists: %s"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:33
+msgid "successful"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:34
+msgid "failed"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:35
+msgid "not tested"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:47
+msgid "Control panel"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:52
 #, php-format
 msgid ""
 "This module can only be used with a webtrees version greater or equal than "
 "%s."
 msgstr ""
-
-#: resources/views/admin-settings.phtml:37
-msgid "NOTE update strategy"
-msgstr ""
+"Este módulo solo puede utilizarse con una versión de webtrees igual o "
+"superior a %s."
 
 #: resources/views/admin-settings.phtml:62
+msgid "NOTE update strategy"
+msgstr "Estrategia de actualización de NOTAS"
+
+#: resources/views/admin-settings.phtml:87
 msgid "Use of TinyMDE as the editor for transcription notes"
-msgstr ""
+msgstr "Uso de TinyMDE como editor para notas de transcripción"
 
-#: resources/views/admin-settings.phtml:81
-msgid "Should tagging be supported"
-msgstr ""
-
-#: resources/views/admin-settings.phtml:100
-msgid "Tag value for tagging all sources with at least one transcription"
-msgstr ""
-
-#: resources/views/admin-settings.phtml:117
-msgid "Default"
-msgstr ""
+#: resources/views/admin-settings.phtml:106
+#, fuzzy
+#| msgid "Should tagging be supported"
+msgid "Should tagging be supported?"
+msgstr "¿Debe permitirse el etiquetado?"
 
 #: resources/views/admin-settings.phtml:125
+msgid "Tag value for tagging all sources with at least one transcription"
+msgstr ""
+"Valor de etiqueta para marcar todas las fuentes con al menos una "
+"transcripción"
+
+#: resources/views/admin-settings.phtml:142
+msgid "Default"
+msgstr "Predeterminado"
+
+#: resources/views/admin-settings.phtml:150
+#: resources/views/admin-settings.phtml:297
 msgid "save"
+msgstr "guardar"
+
+#: resources/views/admin-settings.phtml:156
+msgid "Provider credentials"
 msgstr ""
 
-#: resources/views/create-manual.phtml:36 resources/views/dashboard.phtml:78
-#: resources/views/detail.phtml:108
-msgid "Source"
+#: resources/views/admin-settings.phtml:161
+msgid ""
+"Discourse uses the User API Key authorization flow. Users authorize the "
+"module from the transcription dashboard; the module stores the returned user-"
+"specific key for later requests."
 msgstr ""
+
+#: resources/views/admin-settings.phtml:163
+msgid "Discourse documentation"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:169
+msgid ""
+"For uploads, use a Transkribus API key as the secret if your account "
+"provides one. As a fallback, you can use the regular Transkribus account "
+"username and password; the token URL and client ID are prefilled for the "
+"Processing API."
+msgstr ""
+
+#: resources/views/admin-settings.phtml:171
+msgid "Transkribus API documentation"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:187
+msgid "webtrees user"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:221
+msgid "Token URL"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:227
+msgid ""
+"OpenID Connect token endpoint used to obtain a temporary Transkribus access "
+"token."
+msgstr ""
+
+#: resources/views/admin-settings.phtml:234
+msgid "Upload URL"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:240
+msgid ""
+"Endpoint used for the first upload step. Keep the default unless Transkribus "
+"changes the upload endpoint for your API account."
+msgstr ""
+
+#: resources/views/admin-settings.phtml:247
+msgid "Client ID"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:253
+msgid ""
+"Use \"processing-api-client\" for the Processing API. Use \"transkribus-api-"
+"client\" only for the legacy REST API."
+msgstr ""
+
+#: resources/views/admin-settings.phtml:260
+msgid "Username"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:266
+msgid ""
+"Transkribus login name or email address. Leave unchanged when using an API "
+"key as the secret."
+msgstr ""
+
+#: resources/views/admin-settings.phtml:273
+msgid "Password or API key"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:277
+msgid "stored; leave empty to keep"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:279
+msgid ""
+"Use an API key starting with \"sk_\" for direct upload authentication, or "
+"the account password for token-based authentication."
+msgstr ""
+
+#: resources/views/admin-settings.phtml:300
+msgid "Save and test"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:303
+#, fuzzy
+#| msgid "Deleted"
+msgid "delete"
+msgstr "Eliminado"
+
+#: resources/views/admin-settings.phtml:309
+msgid "Diagnostics"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:316
+msgid "Run consistency check"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:321
+msgid "Consistency check"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:325
+msgid "No consistency issues found."
+msgstr ""
+
+#: resources/views/admin-settings.phtml:330
+msgid "Errors"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:336
+#: resources/views/admin-settings.phtml:361
+#: resources/views/admin-settings.phtml:407
+#: resources/views/admin-settings.phtml:468
+msgid "Family tree"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:338
+msgid "Error"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:355
+msgid "Warnings"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:363
+msgid "Warning"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:380
+msgid "Database"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:386
+msgid "Schema version"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:394
+msgid "Database tables"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:401
+#, fuzzy
+#| msgid "Create transcription"
+msgid "Trees with transcriptions"
+msgstr "Crear transcripción"
+
+#: resources/views/admin-settings.phtml:409
+msgid "Revisions"
+msgstr "Revisión"
+
+#: resources/views/admin-settings.phtml:415
+#, fuzzy
+#| msgid "Create transcription"
+msgid "No active transcriptions found."
+msgstr "Crear transcripción"
+
+#: resources/views/admin-settings.phtml:433
+#, fuzzy
+#| msgid "NOTE changed at"
+msgid "NOTE editor"
+msgstr "NOTA modificada el"
+
+#: resources/views/admin-settings.phtml:439
+msgid "linkenhancer installed"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:443
+msgid "linkenhancer enabled"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:447
+msgid "TinyMDE setting enabled"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:451
+msgid "TinyMDE service available"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:455
+msgid "TinyMDE rule registered"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:462
+msgid "Markdown option by tree"
+msgstr ""
+
+#: resources/views/admin-settings.phtml:469
+msgid "Markdown"
+msgstr ""
+
+#: resources/views/compare-revisions.phtml:31
+#: resources/views/compare-revisions.phtml:32 resources/views/detail.phtml:578
+#: resources/views/detail.phtml:592
+#, php-format
+msgid "Revision %s"
+msgstr "Revisión %s"
+
+#: resources/views/compare-revisions.phtml:57
+msgid "Back to transcription"
+msgstr "Volver a la transcripción"
+
+#: resources/views/compare-revisions.phtml:61
+msgid "Metadata differences"
+msgstr "Diferencias de metadatos"
+
+#: resources/views/compare-revisions.phtml:66
+msgid "Field"
+msgstr "Campo"
+
+#: resources/views/compare-revisions.phtml:82
+msgid "Text differences"
+msgstr "Diferencias de texto"
+
+#: resources/views/compare-revisions.phtml:95
+msgid "Both revisions have no text content."
+msgstr "Ambas revisiones no tienen contenido textual."
 
 #: resources/views/create-manual.phtml:46
+#: resources/views/create-transkribus-job.phtml:43
 msgid "No results found"
-msgstr ""
+msgstr "No se han encontrado resultados"
 
 #: resources/views/create-manual.phtml:47
+#: resources/views/create-transkribus-job.phtml:44
 msgid "Search for a source"
-msgstr ""
-
-#: resources/views/create-manual.phtml:56 resources/views/dashboard.phtml:146
-msgid "Media object"
-msgstr ""
+msgstr "Buscar una fuente"
 
 #: resources/views/create-manual.phtml:66
 #: resources/views/create-manual.phtml:158
 #: resources/views/create-manual.phtml:209
+#: resources/views/create-transkribus-job.phtml:57
+#: resources/views/create-transkribus-job.phtml:125
+#: resources/views/create-transkribus-job.phtml:250
 msgid "Select a source first"
-msgstr ""
+msgstr "Seleccione primero una fuente"
 
 #: resources/views/create-manual.phtml:70
+#: resources/views/create-transkribus-job.phtml:61
 msgid "Only media objects linked to the selected source are shown."
 msgstr ""
-
-#: resources/views/create-manual.phtml:77 resources/views/detail.phtml:203
-msgid "Primary language"
-msgstr ""
-
-#: resources/views/create-manual.phtml:91 resources/views/detail.phtml:207
-msgid "Primary script"
-msgstr ""
-
-#: resources/views/create-manual.phtml:105 resources/views/detail.phtml:211
-msgid "Primary form"
-msgstr ""
+"Solo se muestran los objetos multimedia vinculados a la fuente seleccionada."
 
 #: resources/views/create-manual.phtml:119
 msgid "Initial text"
-msgstr ""
+msgstr "Texto inicial"
 
 #: resources/views/create-manual.phtml:127
 msgid "Create transcription"
-msgstr ""
+msgstr "Crear transcripción"
 
 #: resources/views/create-manual.phtml:162
-msgid "Loading media objectsâ€¦"
-msgstr ""
+#, fuzzy
+#| msgid "Loading media objectsâ€¦"
+msgid "Loading media objects…"
+msgstr "Cargando objetos multimedia…"
 
 #: resources/views/create-manual.phtml:179
+#: resources/views/create-transkribus-job.phtml:146
 msgid "No linked media objects found"
-msgstr ""
+msgstr "No se han encontrado objetos multimedia vinculados"
 
 #: resources/views/create-manual.phtml:185
 msgid "No media object selected"
-msgstr ""
+msgstr "Ningún objeto multimedia seleccionado"
 
 #: resources/views/create-manual.phtml:200
+#: resources/views/create-transkribus-job.phtml:168
 msgid "Could not load media objects"
+msgstr "No se pudieron cargar los objetos multimedia"
+
+#: resources/views/create-transkribus-job.phtml:25
+#: resources/views/dashboard.phtml:92
+msgid "Job title"
 msgstr ""
 
-#: resources/views/dashboard.phtml:68
+#: resources/views/create-transkribus-job.phtml:68
+#, fuzzy
+#| msgid "Media file"
+#| msgid_plural "Media files"
+msgid "Media files"
+msgstr "Archivo multimedia"
+
+#: resources/views/create-transkribus-job.phtml:73
+#: resources/views/create-transkribus-job.phtml:104
+#: resources/views/create-transkribus-job.phtml:176
+#, fuzzy
+#| msgid "Select a source first"
+msgid "Select a media object first."
+msgstr "Seleccione primero una fuente"
+
+#: resources/views/create-transkribus-job.phtml:77
+msgid "Accepted formats: JPEG, TIFF, PNG. Maximum file size: 20 MB per image."
+msgstr ""
+
+#: resources/views/create-transkribus-job.phtml:83
+#, fuzzy
+#| msgid "Transkribus"
+msgid "Upload to Transkribus"
+msgstr "Transkribus"
+
+#: resources/views/create-transkribus-job.phtml:129
+#, fuzzy
+#| msgid "Loading media objectsâ€¦"
+msgid "Loading media objects..."
+msgstr "Cargando objetos multimedia…"
+
+#: resources/views/create-transkribus-job.phtml:152
+#, fuzzy
+#| msgid "Could not load media objects"
+msgid "Select a media object"
+msgstr "No se pudieron cargar los objetos multimedia"
+
+#: resources/views/create-transkribus-job.phtml:180
+#, fuzzy
+#| msgid "Open media file"
+msgid "Loading media files..."
+msgstr "Abrir archivo multimedia"
+
+#: resources/views/create-transkribus-job.phtml:198
+#, fuzzy
+#| msgid "No linked media objects found"
+msgid "No media files found."
+msgstr "No se han encontrado objetos multimedia vinculados"
+
+#: resources/views/create-transkribus-job.phtml:241
+#, fuzzy
+#| msgid "Could not load media objects"
+msgid "Could not load media files."
+msgstr "No se pudieron cargar los objetos multimedia"
+
+#: resources/views/dashboard.phtml:69
+msgid "Renew Discourse authorization"
+msgstr ""
+
+#: resources/views/dashboard.phtml:69
+#, fuzzy
+#| msgid "Community (Discourse)"
+msgid "Authorize Discourse"
+msgstr "Comunidad (Discourse)"
+
+#: resources/views/dashboard.phtml:72
+msgid "Authorize Discourse test"
+msgstr ""
+
+#: resources/views/dashboard.phtml:77
+#, php-format
+msgid "Discourse authorization stored for %s."
+msgstr ""
+
+#: resources/views/dashboard.phtml:87
+#, fuzzy
+#| msgid "Transkribus"
+msgid "Transkribus jobs"
+msgstr "Transkribus"
+
+#: resources/views/dashboard.phtml:94 resources/views/dashboard.phtml:185
+msgid "Media"
+msgstr "Multimedia"
+
+#: resources/views/dashboard.phtml:95 resources/views/dashboard.phtml:187
+#: resources/views/detail.phtml:195
+msgid "Status"
+msgstr "Estado"
+
+#: resources/views/dashboard.phtml:96
+#, fuzzy
+#| msgid "Origin reference"
+msgid "Upload references"
+msgstr "Referencia de origen"
+
+#: resources/views/dashboard.phtml:97 resources/views/detail.phtml:314
+msgid "Message"
+msgstr ""
+
+#: resources/views/dashboard.phtml:121 resources/views/dashboard.phtml:128
+#: resources/views/dashboard.phtml:247
+msgid "Deleted"
+msgstr "Eliminado"
+
+# #: resources/views/dashboard.phtml:68
+#: resources/views/dashboard.phtml:173
 #, php-format
 msgid "%s transcription"
 msgid_plural "%s transcriptions"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s transcripción"
+msgstr[1] "%s transcripciones"
 
-#: resources/views/dashboard.phtml:79
-msgid "Media"
-msgstr ""
+#: resources/views/dashboard.phtml:183
+#, fuzzy
+#| msgid "Transcription text"
+msgid "Transcription title"
+msgstr "Texto de la transcripción"
 
-#: resources/views/dashboard.phtml:81
+#: resources/views/dashboard.phtml:186
 msgid "Transcription provider"
-msgstr ""
+msgstr "Proveedor de transcripción"
 
-#: resources/views/dashboard.phtml:82 resources/views/detail.phtml:175
-msgid "Status"
-msgstr ""
-
-#: resources/views/dashboard.phtml:83
+#: resources/views/dashboard.phtml:188
 msgid "Note"
-msgstr ""
+msgstr "Nota"
 
-#: resources/views/dashboard.phtml:84
+#: resources/views/dashboard.phtml:189
 msgid "Actions"
-msgstr ""
+msgstr "Acciones"
 
-#: resources/views/dashboard.phtml:133
+#: resources/views/dashboard.phtml:243
 msgid "Source record"
-msgstr ""
+msgstr "Registro de la fuente"
 
-#: resources/views/dashboard.phtml:137
-msgid "Deleted"
-msgstr ""
-
-#: resources/views/dashboard.phtml:164 resources/views/dashboard.phtml:193
-#: resources/views/detail.phtml:191
+#: resources/views/dashboard.phtml:274 resources/views/dashboard.phtml:298
+#: resources/views/detail.phtml:213
 msgid "None"
-msgstr ""
+msgstr "Ninguno"
 
-#: resources/views/dashboard.phtml:199
+#: resources/views/dashboard.phtml:304
 msgid "Open"
-msgstr ""
+msgstr "Abrir"
 
-#: resources/views/detail.phtml:87
+#: resources/views/detail.phtml:101
 msgid "Back to dashboard"
-msgstr ""
+msgstr "Volver al panel"
 
-#: resources/views/detail.phtml:93
+#: resources/views/detail.phtml:107
 msgid ""
 "The current webtrees NOTE is used as a working copy. Changes are only "
 "archived when saved as a new revision."
 msgstr ""
+"La NOTA actual de webtrees se usa como copia de trabajo. Los cambios solo se "
+"archivan al guardarse como una nueva revisión."
 
-#: resources/views/detail.phtml:99
-msgid "Information"
+#: resources/views/detail.phtml:113
+msgid ""
+"The current webtrees NOTE has changed since it was last linked to a "
+"revision. Use \"Archive as new revision\" to preserve these changes before "
+"making another revision current or otherwise replacing the NOTE."
 msgstr ""
 
-#: resources/views/detail.phtml:118
+#: resources/views/detail.phtml:119
+msgid "Information"
+msgstr "Información"
+
+#: resources/views/detail.phtml:138
 msgid "Media file"
 msgid_plural "Media files"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Archivo multimedia"
+msgstr[1] "Archivos multimedia"
 
-#: resources/views/detail.phtml:241
+#: resources/views/detail.phtml:172 resources/views/detail.phtml:351
+msgid "No media object selected."
+msgstr "No se ha seleccionado ningún objeto multimedia."
+
+#: resources/views/detail.phtml:203 resources/views/detail.phtml:422
+msgid "Current NOTE"
+msgstr "NOTA actual"
+
+#: resources/views/detail.phtml:245
+#, fuzzy
+#| msgid "Internal collaboration"
+msgctxt "Panel heading for the webtrees-internal collaboration workflow"
+msgid "Internal collaboration"
+msgstr "Colaboración interna"
+
+#: resources/views/detail.phtml:251
+msgid "Team"
+msgstr ""
+
+#: resources/views/detail.phtml:257
+#, fuzzy
+#| msgid "Initial text"
+msgctxt "Collaboration team role"
+msgid "Initiator"
+msgstr "Texto inicial"
+
+#: resources/views/detail.phtml:257
+msgctxt "Collaboration team role, singular noun"
+msgid "Collaborator"
+msgstr ""
+
+#: resources/views/detail.phtml:265
+msgid "This transcription is not currently open for internal collaboration."
+msgstr ""
+
+#: resources/views/detail.phtml:274
+#, fuzzy
+#| msgid "Ready for review"
+msgctxt "Button: submit the transcription for review"
+msgid "Ready for review"
+msgstr "Lista para revisión"
+
+#: resources/views/detail.phtml:281
+#, fuzzy
+#| msgid "No results found"
+msgid "No eligible users found."
+msgstr "No se han encontrado resultados"
+
+#: resources/views/detail.phtml:290
+msgctxt ""
+"Form label for selecting multiple collaboration team members; not a plural "
+"variant of the role label"
+msgid "Collaborators"
+msgstr ""
+
+#: resources/views/detail.phtml:321
+#, fuzzy
+#| msgid "The current NOTE has been saved as revision %s."
+msgid "Save the current NOTE as a starting revision"
+msgstr "La NOTA actual se ha guardado como la revisión %s."
+
+#: resources/views/detail.phtml:329
+#, fuzzy
+#| msgid "Internal collaboration"
+msgctxt "Button: update the selected collaboration team"
+msgid "Update collaboration"
+msgstr "Colaboración interna"
+
+#: resources/views/detail.phtml:329
+#, fuzzy
+#| msgid "Internal collaboration"
+msgctxt "Button: open this transcription for collaboration"
+msgid "Open for collaboration"
+msgstr "Colaboración interna"
+
+#: resources/views/detail.phtml:335
+msgctxt ""
+"Hint shown when collaboration cannot be started because the transcription is "
+"final or canceled"
+msgid ""
+"Reopen the transcription before starting or changing internal collaboration."
+msgstr ""
+
+#: resources/views/detail.phtml:345
+msgid "Media preview"
+msgstr "Vista previa multimedia"
+
+#: resources/views/detail.phtml:355
+msgid "No media files found for this media object."
+msgstr "No se han encontrado archivo"
+
+#: resources/views/detail.phtml:361
 msgctxt "Label for selecting one media file"
 msgid "Media file"
-msgstr ""
+msgstr "Archivo multimedia"
 
-#: src/Application/Factory/NoteContentFactory.php:92
-msgctxt "Heading for one media file in a generated note"
-msgid "Media file"
-msgstr ""
-
-#: resources/views/detail.phtml:152 resources/views/detail.phtml:231
-msgid "No media object selected."
-msgstr ""
-
-#: resources/views/detail.phtml:183
-msgid "Current NOTE"
-msgstr ""
-
-#: resources/views/detail.phtml:225
-msgid "Media preview"
-msgstr ""
-
-#: resources/views/detail.phtml:235
-msgid "No media files found for this media object."
-msgstr ""
-
-#: resources/views/detail.phtml:269
+#: resources/views/detail.phtml:389
 msgid "This media file cannot be previewed here."
-msgstr ""
+msgstr "Este archivo multimedia no puede previsualizarse aquí."
 
-#: resources/views/detail.phtml:319
+#: resources/views/detail.phtml:463
 msgid "Save NOTE"
-msgstr ""
+msgstr "Guardar NOTA"
 
-#: resources/views/detail.phtml:322
+#: resources/views/detail.phtml:466
 msgid "Archive as new revision"
-msgstr ""
+msgstr "Archivar como nueva revisión"
 
-#: resources/views/detail.phtml:338
+#: resources/views/detail.phtml:480 resources/views/detail.phtml:496
+#, fuzzy
+#| msgid "Final"
+msgctxt "Button: mark this transcription as final"
+msgid "Finalize"
+msgstr "Final"
+
+#: resources/views/detail.phtml:486 resources/views/detail.phtml:502
+#, fuzzy
+#| msgid "Reopened"
+msgctxt "Button: reopen this finalized transcription for editing"
+msgid "Reopen"
+msgstr "Reabierta"
+
+#: resources/views/detail.phtml:553
 msgid "Revision history"
-msgstr ""
+msgstr "Historial de revisiones"
 
-#: resources/views/detail.phtml:343
+#: resources/views/detail.phtml:573
+#, fuzzy
+#| msgid "Current revision"
+msgid "First revision"
+msgstr "Revisión actual"
+
+#: resources/views/detail.phtml:579 resources/views/detail.phtml:593
+#: resources/views/detail.phtml:610
 msgid "Current"
-msgstr ""
+msgstr "Actual"
 
-msgid "Generated NOTE"
-msgstr ""
+#: resources/views/detail.phtml:587
+#, fuzzy
+#| msgid "Current revision"
+msgid "Second revision"
+msgstr "Revisión actual"
 
+#: resources/views/detail.phtml:614
 msgid "NOTE change"
-msgstr ""
+msgstr "Cambio en la NOTA"
 
-#: resources/views/detail.phtml:346
+#: resources/views/detail.phtml:615
 msgid "Text"
+msgstr "Texto"
+
+#: resources/views/detail.phtml:617
+#, fuzzy
+#| msgid "Actions"
+msgid "Action"
+msgstr "Acciones"
+
+#: resources/views/detail.phtml:658
+msgid ""
+"Make this revision current? The current NOTE will be overwritten with the "
+"text of this revision."
 msgstr ""
 
-msgid "Compare revisions"
-msgstr ""
+#: resources/views/detail.phtml:660
+#, fuzzy
+#| msgid "Current"
+msgid "Make current"
+msgstr "Actual"
 
-msgid "Revision %s"
-msgstr ""
-
-msgid "Back to transcription"
-msgstr ""
-
-msgid "Metadata differences"
-msgstr ""
-
-msgid "Field"
-msgstr ""
-
-msgid "Text differences"
-msgstr ""
-
-msgid "Both revisions have no text content."
-msgstr ""
+#~ msgid "End transcription"
+#~ msgstr "Fin de la transcripción"
 
 #~ msgid "Restriction"
-#~ msgstr ""
+#~ msgstr "Restricción"
 
 #~ msgid "Handwritten Latin script"
-#~ msgstr ""
+#~ msgstr "Escritura latina manuscrita"
 
 #~ msgid "Printed Antiqua"
-#~ msgstr ""
+#~ msgstr "Antiqua impresa"
 
 #~ msgid "Inscription on gravestone"
-#~ msgstr ""
+#~ msgstr "Inscripción en lápida"
 
 #~ msgid "Audio interview"
-#~ msgstr ""
-
-#~ msgid "Unknown"
-#~ msgstr ""
+#~ msgstr "Entrevista de audio"
 
 #~ msgid "Latin script, Fraktur variant"
-#~ msgstr ""
+#~ msgstr "Escritura latina, variante Fraktur"
 
 #~ msgid "Completed"
-#~ msgstr ""
+#~ msgstr "Completado"
 
 #~ msgid "Archived"
-#~ msgstr ""
+#~ msgstr "Archivado"
 
 #~ msgid "%d transcription"
-#~ msgstr ""
+#~ msgstr "%d transcripción"
 
 #~ msgid "Media XREF"
-#~ msgstr ""
+#~ msgstr "XREF multimedia"
 
 #~ msgid "Tag NOTE"
-#~ msgstr ""
+#~ msgstr "Etiquetar NOTA"
 
 #~ msgid "Transcription Provider"
-#~ msgstr ""
+#~ msgstr "Proveedor de transcripción"
 
 #~ msgid "ID"
-#~ msgstr ""
-
-#~ msgid "Open media file"
-#~ msgstr ""
+#~ msgstr "ID"
 
 #~ msgid "Media preview will be added later."
-#~ msgstr ""
+#~ msgstr "La vista previa multimedia se añadirá más adelante."
 
 #~ msgid "Not specified"
-#~ msgstr ""
+#~ msgstr "No especificado"
 
 #~ msgid "Source XREF"
-#~ msgstr ""
+#~ msgstr "XREF de la fuente"
 
 #~ msgid "Hash"
-#~ msgstr ""
+#~ msgstr "Hash"
 
 #~ msgid "Tree ID"
-#~ msgstr ""
+#~ msgstr "ID del árbol"
 
 #~ msgid "Only manual transcriptions are supported by createManual()."
-#~ msgstr ""
+#~ msgstr "Solo se admiten transcripciones manuales en createManual()."
 
 #~ msgid "source_xref must not be empty."
-#~ msgstr ""
+#~ msgstr "source_xref no debe estar vacío."
 
 #~ msgid "title must not be empty."
-#~ msgstr ""
+#~ msgstr "title no debe estar vacío."
 
 #, php-format
 #~ msgid "Transcription not found: %s"
-#~ msgstr ""
+#~ msgstr "Transcripción no encontrada: %s"
 
 #, php-format
 #~ msgid "Source not found: %s"
-#~ msgstr ""
+#~ msgstr "Fuente no encontrada: %s"
 
 #, php-format
 #~ msgid "Revision not found: %s"
-#~ msgstr ""
+#~ msgstr "Revisión no encontrada: %s"
 
 #~ msgid ""
 #~ "Source Transcriptions database schema is newer than this module version."
 #~ msgstr ""
-#~ "Das Schema der Datenbank \"Transkription von Quellen\" ist neuer als "
-#~ "diese Modulversion."
+#~ "El esquema de la base de datos de Transcripciones de Fuentes es más nuevo "
+#~ "que esta versión del módulo."
 
 #, php-format
 #~ msgid "No migration defined from schema version %s"
-#~ msgstr ""
+#~ msgstr "No hay migración definida desde la versión de esquema %s"
 
 #, fuzzy
 #~| msgid ""
@@ -839,5 +1605,5 @@ msgstr ""
 #~ "Manage transcriptions for sources and media objects with support for "
 #~ "multiple providers."
 #~ msgstr ""
-#~ "Verwaltung der Transkriptionen fÃ¼r Quellen und Medienobjekte mit Hilfe "
-#~ "verschiedener Anbieter."
+#~ "Gestión de transcripciones para fuentes y objetos multimedia con soporte "
+#~ "para múltiples proveedores."
