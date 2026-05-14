@@ -73,11 +73,11 @@ final class ProviderConnectionTester
     {
         $settings = $credential['settings'];
         $base_url = rtrim($settings['base_url'] ?? '', '/');
-        $api_username = trim($settings['api_username'] ?? '');
+        $client_id = trim($settings['client_id'] ?? 'hh_source_transcription');
         $api_key = trim($credential['secret']);
 
-        if ($base_url === '' || $api_username === '' || $api_key === '') {
-            return ['success' => false, 'message' => 'Discourse URL, API username and API key are required.'];
+        if ($base_url === '' || $api_key === '') {
+            return ['success' => false, 'message' => 'Discourse URL and user API key are required.'];
         }
 
         $response = $this->request(
@@ -85,15 +85,15 @@ final class ProviderConnectionTester
             $base_url . '/session/current.json',
             [
                 'Accept: application/json',
-                'Api-Key: ' . $api_key,
-                'Api-Username: ' . $api_username,
+                'User-Api-Key: ' . $api_key,
+                'User-Api-Client-Id: ' . $client_id,
             ]
         );
 
         if ($response['status'] >= 200 && $response['status'] < 300) {
             $json = json_decode($response['body'], true);
             if (is_array($json) && (isset($json['current_user']) || isset($json['user']))) {
-                return ['success' => true, 'message' => 'Discourse credentials were accepted.'];
+                return ['success' => true, 'message' => 'Discourse authorization was accepted.'];
             }
         }
 

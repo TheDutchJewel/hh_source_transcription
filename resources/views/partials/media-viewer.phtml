@@ -1,0 +1,159 @@
+<?php
+/*
+ * webtrees: online genealogy application
+ * Source Transcription (webtrees custom module)
+ */
+
+declare(strict_types=1);
+
+/**
+ * @var array<int, array{file: MediaFile, filename: string, title: string, form: string, type: string, url: string, download_url: string, mime: string, extension: string, is_external: bool, is_embeddable_external: bool, viewer_type: string, text_content: string, text_truncated: bool}> $media_files
+ */
+
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\MediaFile;
+use Fisharebest\Webtrees\View;
+
+$resources_dir = dirname(__DIR__, 2);
+$module_dir = dirname(__DIR__, 3);
+$asset_route = [
+    'module' => '_hh_source_transcription_',
+    'action' => 'Asset',
+];
+$css_asset = 'css/media-viewer.css';
+$js_asset = 'js/media-viewer.js';
+$openseadragon_asset = 'openseadragon/openseadragon.min.js';
+?>
+
+<?php View::push('styles') ?>
+<link rel="stylesheet" href="<?= e(route('module', $asset_route + ['asset' => $css_asset, 'hash' => (string) filemtime($resources_dir . DIRECTORY_SEPARATOR . $css_asset)])) ?>">
+<?php View::endpush() ?>
+
+<?php View::push('javascript') ?>
+<script src="<?= e(route('source-transcription-vendor-asset', ['asset' => $openseadragon_asset, 'hash' => (string) filemtime($module_dir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . $openseadragon_asset)])) ?>"></script>
+<script src="<?= e(route('module', $asset_route + ['asset' => $js_asset, 'hash' => (string) filemtime($resources_dir . DIRECTORY_SEPARATOR . $js_asset)])) ?>"></script>
+<?php View::endpush() ?>
+
+<?php if (count($media_files) > 1) : ?>
+    <div class="mb-3">
+        <label class="form-label" for="media-file-select">
+            <?= I18N::translateContext('Label for selecting one media file', 'Media file') ?>
+        </label>
+
+        <select class="form-select" id="media-file-select">
+            <?php foreach ($media_files as $index => $file_data) : ?>
+                <option value="<?= e((string) $index) ?>">
+                    <?= e($file_data['title'] !== '' ? $file_data['title'] : $file_data['filename']) ?>
+                </option>
+            <?php endforeach ?>
+        </select>
+    </div>
+<?php endif ?>
+
+<?php foreach ($media_files as $index => $file_data) : ?>
+    <?php
+    $file = $file_data['file'];
+    $title = $file_data['title'] !== '' ? $file_data['title'] : $file_data['filename'];
+    $can_embed = !$file_data['is_external'] || $file_data['is_embeddable_external'];
+    ?>
+    <div
+        class="source-transcription-media-preview"
+        data-media-file-index="<?= e((string) $index) ?>"
+        style="<?= $index === 0 ? '' : 'display:none' ?>"
+    >
+        <div class="small text-muted mb-2">
+            <div><strong>FILE:</strong> <?= e($file_data['filename']) ?></div>
+            <?php if ($file_data['form'] !== '') : ?>
+                <div><strong>FORM:</strong> <?= e($file_data['form']) ?></div>
+            <?php endif ?>
+            <?php if ($file_data['type'] !== '') : ?>
+                <div><strong>TYPE:</strong> <?= e($file_data['type']) ?></div>
+            <?php endif ?>
+            <?php if ($file_data['mime'] !== '') : ?>
+                <div><strong>MIME:</strong> <?= e($file_data['mime']) ?></div>
+            <?php endif ?>
+            <?php if ($file_data['is_external']) : ?>
+                <div><?= I18N::translate('External media URL') ?></div>
+            <?php endif ?>
+        </div>
+
+        <?php if ($file_data['is_external'] && !$file_data['is_embeddable_external']) : ?>
+            <div class="alert alert-warning">
+                <?= I18N::translate('This external media URL cannot be embedded here.') ?>
+            </div>
+            <p class="mb-0">
+                <a class="btn btn-sm btn-outline-secondary" href="<?= e($file_data['url']) ?>" target="_blank" rel="noopener noreferrer">
+                    <?= I18N::translate('Open external media') ?>
+                </a>
+            </p>
+        <?php elseif ($file_data['viewer_type'] === 'image') : ?>
+            <div class="source-transcription-image-viewer" data-source-transcription-image-viewer data-image-url="<?= e($file_data['url']) ?>" data-image-title="<?= e($title) ?>">
+                <div class="source-transcription-media-toolbar" aria-label="<?= e(I18N::translate('Image controls')) ?>">
+                    <button class="btn btn-sm btn-outline-secondary" type="button" data-zoom-out title="<?= e(I18N::translate('Zoom out')) ?>">-</button>
+                    <button class="btn btn-sm btn-outline-secondary" type="button" data-zoom-reset title="<?= e(I18N::translate('Reset')) ?>"><?= I18N::translate('Reset') ?></button>
+                    <button class="btn btn-sm btn-outline-secondary" type="button" data-zoom-in title="<?= e(I18N::translate('Zoom in')) ?>">+</button>
+                    <a class="btn btn-sm btn-outline-secondary" href="<?= e($file_data['url']) ?>" target="_blank" rel="noopener noreferrer">
+                        <?= I18N::translate('Open') ?>
+                    </a>
+                </div>
+                <div class="source-transcription-image-stage"></div>
+            </div>
+        <?php elseif ($file_data['viewer_type'] === 'pdf' && $can_embed) : ?>
+            <div class="source-transcription-pdf-viewer">
+                <iframe src="<?= e($file_data['url']) ?>" title="<?= e($title) ?>"></iframe>
+            </div>
+            <p class="mt-2 mb-0">
+                <a href="<?= e($file_data['url']) ?>" target="_blank" rel="noopener noreferrer">
+                    <?= I18N::translate('Open PDF in a new window') ?>
+                </a>
+            </p>
+        <?php elseif ($file_data['viewer_type'] === 'text' && $file_data['text_content'] !== '') : ?>
+            <div class="source-transcription-text-viewer">
+                <?php if ($file_data['text_truncated']) : ?>
+                    <div class="alert alert-warning">
+                        <?= I18N::translate('The text preview is shortened.') ?>
+                    </div>
+                <?php endif ?>
+                <pre class="source-transcription-text-preview" dir="auto"><?= e($file_data['text_content']) ?></pre>
+            </div>
+        <?php elseif ($file_data['viewer_type'] === 'text' && $can_embed) : ?>
+            <div class="source-transcription-text-frame">
+                <iframe src="<?= e($file_data['url']) ?>" title="<?= e($title) ?>"></iframe>
+            </div>
+            <p class="mt-2 mb-0">
+                <a href="<?= e($file_data['url']) ?>" target="_blank" rel="noopener noreferrer">
+                    <?= I18N::translate('Open') ?>
+                </a>
+            </p>
+        <?php elseif ($file_data['viewer_type'] === 'audio' && $can_embed) : ?>
+            <div class="source-transcription-av-viewer">
+                <audio controls preload="metadata">
+                    <source src="<?= e($file_data['url']) ?>" type="<?= e($file_data['mime']) ?>">
+                </audio>
+                <button class="btn btn-sm btn-outline-secondary mt-2" type="button" data-media-stop>
+                    <?= view('icons/media-stop') ?>
+                    <?= I18N::translate('Stop') ?>
+                </button>
+            </div>
+        <?php elseif ($file_data['viewer_type'] === 'video' && $can_embed) : ?>
+            <div class="source-transcription-av-viewer">
+                <video controls preload="metadata">
+                    <source src="<?= e($file_data['url']) ?>" type="<?= e($file_data['mime']) ?>">
+                </video>
+                <button class="btn btn-sm btn-outline-secondary mt-2" type="button" data-media-stop>
+                    <?= view('icons/media-stop') ?>
+                    <?= I18N::translate('Stop') ?>
+                </button>
+            </div>
+        <?php else : ?>
+            <div class="alert alert-secondary mb-2">
+                <?= I18N::translate('This media file cannot be previewed here. Use the download link below to save the file.') ?>
+            </div>
+            <p class="mb-0">
+                <a class="btn btn-sm btn-outline-secondary" href="<?= e($file_data['download_url']) ?>" rel="noopener noreferrer">
+                    <?= I18N::translate('Download file') ?>
+                </a>
+            </p>
+        <?php endif ?>
+    </div>
+<?php endforeach ?>

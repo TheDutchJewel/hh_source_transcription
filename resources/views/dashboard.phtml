@@ -33,6 +33,10 @@ declare(strict_types=1);
  * @var array<int, Transcription> $transcriptions
  * @var array<int, object> $transkribus_jobs
  * @var array<int, array<int, object>> $transkribus_job_files
+ * @var bool $discourse_authorized
+ * @var array<string,string> $discourse_settings
+ * @var string|null $discourse_last_test_status
+ * @var string|null $discourse_last_test_message
  */
 
 use Fisharebest\Webtrees\I18N;
@@ -51,23 +55,38 @@ $cell_format = 'text-decoration-none d-block';
 $muted = 'text-secondary fst-italic';
 ?>
 
-<h2><?= e($title) ?></h2>
+<h2 class="mb-3"><?= e($title) ?></h2>
 
 <?php if (Auth::isEditor($tree)) : ?>
-<p class="d-flex gap-2 mb-4">
+<p class="d-flex gap-2 mb-5 flex-wrap">
     <a class="btn btn-primary" href="<?= e(route('source-transcription-create-manual', ['tree' => $tree->name()])) ?>">
         <?= I18N::translate('Create manual transcription') ?>
     </a>
     <a class="btn btn-primary" href="<?= e(route('source-transcription-create-transkribus', ['tree' => $tree->name()])) ?>">
         <?= I18N::translate('Upload images to Transkribus') ?>
     </a>
+    <a class="btn btn-secondary" href="<?= e(route('source-transcription-authorize-discourse', ['tree' => $tree->name(), 'base_url' => 'https://discourse.genealogy.net'])) ?>">
+        <?= $discourse_authorized ? I18N::translate('Renew Discourse authorization') : I18N::translate('Authorize Discourse') ?>
+    </a>
+    <a class="btn btn-outline-secondary" href="<?= e(route('source-transcription-authorize-discourse', ['tree' => $tree->name(), 'base_url' => 'https://discourse-test.genealogy.net'])) ?>">
+        <?= I18N::translate('Authorize Discourse test') ?>
+    </a>
 </p>
+<?php if ($discourse_authorized) : ?>
+    <p class="text-muted small">
+        <?= I18N::translate('Discourse authorization stored for %s.', e($discourse_settings['base_url'] ?? 'Discourse')) ?>
+        <?php if ($discourse_last_test_status !== null && $discourse_last_test_message !== null) : ?>
+            <?= e($discourse_last_test_message) ?>
+        <?php endif ?>
+    </p>
+<?php endif ?>
 <?php endif ?>
 
 <?php if (($transkribus_jobs ?? []) !== []) : ?>
-    <h3><?= I18N::translate('Transkribus jobs') ?></h3>
+    <section class="mb-5">
+    <h3 class="mb-3"><?= I18N::translate('Transkribus jobs') ?></h3>
 
-    <table class="table table-bordered table-sm mb-4">
+    <table class="table table-bordered table-sm mb-0">
         <thead>
             <tr>
                 <th><?= I18N::translate('Job title') ?></th>
@@ -135,10 +154,12 @@ $muted = 'text-secondary fst-italic';
             <?php endforeach ?>
         </tbody>
     </table>
+    </section>
 <?php endif ?>
 
 <?php if (count($transcriptions) > 0) : ?>
-    <h3><?= I18N::translate('Transcriptions') ?></h3>
+    <section class="mt-5">
+    <h3 class="mb-3"><?= I18N::translate('Transcriptions') ?></h3>
 <?php endif ?>
 
 <div class="d-flex justify-content-between align-items-center mb-2">
@@ -238,8 +259,14 @@ $muted = 'text-secondary fst-italic';
 
                         <?php foreach ($media_files as $media_file) : ?>
                             <div class="d-flex align-items-start gap-2 mb-1">
-                                <div>
-                                    <?= $media_file->displayImage(30, 60, 'contain', []) ?>
+                                <div class="text-center" style="width: 30px;">
+                                    <?php if ($media_file->isExternal()) : ?>
+                                        <span class="fs-5 text-muted" title="<?= e(I18N::translate('External media URL')) ?>">
+                                            <?= view('icons/media') ?>
+                                        </span>
+                                    <?php else : ?>
+                                        <?= $media_file->displayImage(30, 60, 'contain', []) ?>
+                                    <?php endif ?>
                                 </div>
                                 <div>
                                     <a href="<?= e($media->url()) ?>" class="<?= $cell_format ?>">
@@ -287,4 +314,5 @@ $muted = 'text-secondary fst-italic';
         <?php endforeach ?>
         </tbody>
     </table>
+    </section>
 <?php endif ?>

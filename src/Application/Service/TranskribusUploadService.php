@@ -22,6 +22,8 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Service;
 use Fisharebest\Webtrees\MediaFile;
 use Fisharebest\Webtrees\Registry;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Dto\UploadTranskribusImagesCommand;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Factory\TranscriptionProviderFactory;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider\SupportsMediaUploadRulesInterface;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Transkribus\TranskribusClient;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\ProviderCredentialRepository;
@@ -35,13 +37,11 @@ use function trim;
 
 final class TranskribusUploadService
 {
-    private const int MAX_FILE_SIZE = 20 * 1024 * 1024;
-    private const array ACCEPTED_MIME_TYPES = ['image/jpeg', 'image/tiff', 'image/png'];
-
     public function __construct(
         private readonly ProviderCredentialRepository $credentialRepository,
         private readonly TranskribusJobRepository $jobRepository,
         private readonly TranskribusClient $client,
+        private readonly TranscriptionProviderFactory $providerFactory,
     ) {
     }
 
@@ -155,11 +155,18 @@ final class TranskribusUploadService
             throw new RuntimeException('Media file does not exist: ' . $media_file->filename());
         }
 
-        if (!in_array($media_file->mimeType(), self::ACCEPTED_MIME_TYPES, true)) {
+        $provider = $this->providerFactory->forKey(ProviderKey::TRANSKRIBUS);
+        if (!$provider instanceof SupportsMediaUploadRulesInterface) {
+            throw new RuntimeException('Transkribus provider does not define media upload rules.');
+        }
+
+        if (!in_array($media_file->mimeType(), $provider->acceptedMediaMimeTypes(), true)) {
             throw new RuntimeException('Unsupported media format: ' . $media_file->filename());
         }
 
-        if ($this->fileSize($media_file) > self::MAX_FILE_SIZE) {
+        $max_file_size = $provider->maxMediaFileSize();
+
+        if ($max_file_size !== null && $this->fileSize($media_file) > $max_file_size) {
             throw new RuntimeException('Media file exceeds 20 MB: ' . $media_file->filename());
         }
 

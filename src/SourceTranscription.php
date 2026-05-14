@@ -34,7 +34,6 @@ use Aura\Router\Exception\ImmutableProperty;
 use Aura\Router\Exception\RouteAlreadyExists;
 use Fisharebest\{Localization\Translation,
     Webtrees\DB,
-    Webtrees\FlashMessages,
     Webtrees\I18N,
     Webtrees\Auth,
     Webtrees\Module\AbstractModule,
@@ -42,6 +41,8 @@ use Fisharebest\{Localization\Translation,
     Webtrees\Module\ModuleConfigTrait,
     Webtrees\Module\ModuleCustomInterface,
     Webtrees\Module\ModuleCustomTrait,
+    Webtrees\Media,
+    Webtrees\MediaFile,
     Webtrees\Registry,
     Webtrees\Validator,
     Webtrees\View,
@@ -65,11 +66,13 @@ use Hartenthaler\{Webtrees\Module\SourceTranscription\Infrastructure\Persistence
     Webtrees\Module\SourceTranscription\Domain\ValueObject\NoteStrategy,
     Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\CollaborationStatusAction,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\AuthorizeDiscourseAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\CompareRevisionsAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\CreateManualAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\CreateTranskribusJobAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\DashboardAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\DetailAction,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\DiscourseAuthorizationCallbackAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\ManualStatusAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\MakeRevisionCurrentAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\MediaFilesForMediaAction,
@@ -79,9 +82,11 @@ use Hartenthaler\{Webtrees\Module\SourceTranscription\Infrastructure\Persistence
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\SourceForManualAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\UpdateCurrentNoteAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\UploadTranskribusImagesAction,
+    Webtrees\Module\SourceTranscription\Http\RequestHandlers\VendorAssetAction,
     Webtrees\Module\SourceTranscription\Http\RequestHandlers\MediaForSourceAction,
     Webtrees\Module\SourceTranscription\Infrastructure\Webtrees\SharedNoteGateway,
     Webtrees\Module\SourceTranscription\Support\HashService,
+    Webtrees\Module\SourceTranscription\Support\ModuleFlashMessages as FlashMessages,
     Webtrees\Module\SourceTranscription\Infrastructure\WhatsNew\WhatsNewInterface};
 
 final class SourceTranscription extends AbstractModule implements
@@ -92,7 +97,7 @@ final class SourceTranscription extends AbstractModule implements
     use ModuleMenuTrait;
 
     //Custom module version
-	public const string CUSTOM_VERSION = '2.2.5.0';
+	public const string CUSTOM_VERSION = '2.2.6.1';
 
     //Supported webtrees version
     public const string MINIMUM_WEBTREES_VERSION = '2.2.5';
@@ -146,6 +151,10 @@ final class SourceTranscription extends AbstractModule implements
     private const string ROUTE_POST_NAME_UPLOAD_TRANSKRIBUS = 'source-transcription-upload-transkribus';
     private const string ROUTE_PATH_CREATE_TRANSKRIBUS = '/tree/{tree}/source-transcriptions/create-transkribus';
     private const string ROUTE_PATH_UPLOAD_TRANSKRIBUS = '/tree/{tree}/source-transcriptions/transkribus/upload';
+    private const string ROUTE_GET_NAME_AUTHORIZE_DISCOURSE = 'source-transcription-authorize-discourse';
+    private const string ROUTE_PATH_AUTHORIZE_DISCOURSE = '/tree/{tree}/source-transcriptions/discourse/authorize';
+    private const string ROUTE_GET_NAME_DISCOURSE_CALLBACK = 'source-transcription-discourse-callback';
+    private const string ROUTE_PATH_DISCOURSE_CALLBACK = '/tree/{tree}/source-transcriptions/discourse/callback';
     private const string ROUTE_POST_NAME_UPDATE_NOTE = 'source-transcription-update-note';
     private const string ROUTE_PATH_UPDATE_NOTE = '/tree/{tree}/source-transcriptions/{transcription_id}/update-note';
     private const string ROUTE_POST_NAME_SAVE_NOTE_AS_REVISION = 'source-transcription-save-note-as-revision';
@@ -166,6 +175,8 @@ final class SourceTranscription extends AbstractModule implements
     private const string ROUTE_PATH_DETAIL = '/tree/{tree}/source-transcriptions/{transcription_id}';
     private const string ROUTE_GET_NAME_COMPARE_REVISIONS = 'source-transcription-compare-revisions';
     private const string ROUTE_PATH_COMPARE_REVISIONS = '/tree/{tree}/source-transcriptions/{transcription_id}/compare-revisions';
+    private const string ROUTE_GET_NAME_VENDOR_ASSET = 'source-transcription-vendor-asset';
+    private const string ROUTE_PATH_VENDOR_ASSET = '/source-transcription/vendor/{asset}';
 
     /**
      * SourceTranscription constructor.
@@ -242,6 +253,18 @@ final class SourceTranscription extends AbstractModule implements
             UploadTranskribusImagesAction::class
         );
 
+        $router->get(
+            self::ROUTE_GET_NAME_AUTHORIZE_DISCOURSE,
+            self::ROUTE_PATH_AUTHORIZE_DISCOURSE,
+            AuthorizeDiscourseAction::class
+        );
+
+        $router->get(
+            self::ROUTE_GET_NAME_DISCOURSE_CALLBACK,
+            self::ROUTE_PATH_DISCOURSE_CALLBACK,
+            DiscourseAuthorizationCallbackAction::class
+        );
+
         $router->post(
             self::ROUTE_POST_NAME_UPDATE_NOTE,
             self::ROUTE_PATH_UPDATE_NOTE,
@@ -301,6 +324,14 @@ final class SourceTranscription extends AbstractModule implements
             self::ROUTE_PATH_COMPARE_REVISIONS,
             CompareRevisionsAction::class
         );
+
+        $router->get(
+            self::ROUTE_GET_NAME_VENDOR_ASSET,
+            self::ROUTE_PATH_VENDOR_ASSET,
+            VendorAssetAction::class
+        )->tokens([
+            'asset' => '.+',
+        ]);
 
         //Generic Route at the end!
         $router->get(
@@ -367,6 +398,7 @@ final class SourceTranscription extends AbstractModule implements
     /**
      * toggles registration for using markdown editor on note fields provided by linkenhancer custom module
      * registration is persisted by linkenhancer custom module so it's not necessary to force registering again each time
+     *
      * @param bool $enable
      * @param bool $force
      * @return void
@@ -430,7 +462,7 @@ final class SourceTranscription extends AbstractModule implements
      */
     public function title(): string
     {
-        return /* I18N: Name of a module/tab on the individual page. */ I18N::translate("Source Transcription");
+        return /* I18N: Name of a module. */ I18N::translate("Source Transcription");
     }
 
     /**
@@ -609,11 +641,11 @@ final class SourceTranscription extends AbstractModule implements
      */
     public function getAdminAction(ServerRequestInterface $request): ResponseInterface
     {
-        $this->layout = 'layouts/administration';
+        $this->layout = 'layouts' . DIRECTORY_SEPARATOR . 'administration';
 
         $settings = Registry::container()->get(SettingsRepository::class);
         $selected_user_id = Validator::queryParams($request)->integer('provider_user_id', 0);
-        $selected_provider_key = Validator::queryParams($request)->isInArray(array_keys($this->providerOptions()))->string('provider_key', ProviderKey::DISCOURSE);
+        $selected_provider_key = Validator::queryParams($request)->isInArray(array_keys($this->providerOptions()))->string('provider_key', ProviderKey::TRANSKRIBUS);
 
         $tag_text = $settings->get('default_tag_text', self::DEFAULT_TAG_PREFIX . self::DEFAULT_TAG_VALUE);
         $tag_value = $this->tagValueFromTagText($tag_text);
@@ -627,7 +659,7 @@ final class SourceTranscription extends AbstractModule implements
         ?array $consistency_check = null,
         ?array $provider_test_result = null,
         int $selected_user_id = 0,
-        string $selected_provider_key = ProviderKey::DISCOURSE
+        string $selected_provider_key = ProviderKey::TRANSKRIBUS
     ): ResponseInterface {
         return $this->viewResponse(self::CUSTOM_TITLE . '::' . 'admin-settings', [
             'title'                         => $this->title(),
@@ -685,7 +717,7 @@ final class SourceTranscription extends AbstractModule implements
             $provider_key = (string) ($params['provider_key'] ?? ProviderKey::DISCOURSE);
 
             if (!array_key_exists($provider_key, $this->providerOptions())) {
-                $provider_key = ProviderKey::DISCOURSE;
+                $provider_key = ProviderKey::TRANSKRIBUS;
             }
 
             $credential_repository = Registry::container()->get(ProviderCredentialRepository::class);
@@ -764,7 +796,6 @@ final class SourceTranscription extends AbstractModule implements
     private function providerOptions(): array
     {
         return [
-            ProviderKey::DISCOURSE   => 'Discourse',
             ProviderKey::TRANSKRIBUS => 'Transkribus',
         ];
     }
@@ -794,7 +825,7 @@ final class SourceTranscription extends AbstractModule implements
         }
 
         if (!array_key_exists($selected_provider_key, $this->providerOptions())) {
-            $selected_provider_key = ProviderKey::DISCOURSE;
+            $selected_provider_key = ProviderKey::TRANSKRIBUS;
         }
 
         $credential_repository = Registry::container()->get(ProviderCredentialRepository::class);
@@ -836,10 +867,6 @@ final class SourceTranscription extends AbstractModule implements
     private function providerSettingsFromParams(string $provider_key, array $params): array
     {
         return match ($provider_key) {
-            ProviderKey::DISCOURSE => [
-                'base_url'     => rtrim(trim((string) ($params['discourse_base_url'] ?? '')), '/'),
-                'api_username' => trim((string) ($params['discourse_api_username'] ?? '')),
-            ],
             ProviderKey::TRANSKRIBUS => [
                 'token_url' => trim((string) ($params['transkribus_token_url'] ?? self::DEFAULT_TRANSKRIBUS_TOKEN_URL)),
                 'client_id' => trim((string) ($params['transkribus_client_id'] ?? self::DEFAULT_TRANSKRIBUS_CLIENT_ID)),
@@ -856,7 +883,6 @@ final class SourceTranscription extends AbstractModule implements
     private function providerSecretFromParams(string $provider_key, array $params): ?string
     {
         $secret = match ($provider_key) {
-            ProviderKey::DISCOURSE => trim((string) ($params['discourse_api_key'] ?? '')),
             ProviderKey::TRANSKRIBUS => trim((string) ($params['transkribus_password'] ?? '')),
             default => '',
         };
@@ -926,6 +952,10 @@ final class SourceTranscription extends AbstractModule implements
 
             if ($transcription->media_xref !== null && $media === null) {
                 $this->addConsistencyIssue($result, 'errors', $tree_label, $transcription_label, I18N::translate('The referenced media object does not exist: %s', (string) $transcription->media_xref));
+            }
+
+            if ($media !== null) {
+                $this->checkMediaFileMetadata($result, $tree_label, $transcription_label, $media);
             }
 
             if ($source !== null && $transcription->media_xref !== null && !$this->gedcomLinksToNoteOrMedia($source->gedcom(), 'OBJE', (string) $transcription->media_xref)) {
@@ -1072,6 +1102,370 @@ final class SourceTranscription extends AbstractModule implements
         }
 
         return $result;
+    }
+
+    private function checkMediaFileMetadata(array &$result, string $tree_label, string $transcription_label, Media $media): void
+    {
+        $media_files = $media->mediaFiles()->values();
+        $media_file_facts = $media->facts(['FILE'])->values();
+
+        foreach ($media_files as $index => $media_file) {
+            /** @var MediaFile $media_file */
+            $filename = $media_file->filename();
+            $file_label = $filename !== '' ? $filename : $media_file->factId();
+            $extension = $this->mediaFileExtension($filename);
+            $file_gedcom = (string) ($media_file_facts->get($index)?->gedcom() ?? '');
+            $form = $this->mediaFileForm($media, $media_file, $file_gedcom);
+            $type = $this->mediaFileType($media, $media_file, $file_gedcom);
+            $mime_type = strtolower(trim($media_file->mimeType()));
+            $is_external = $media_file->isExternal();
+
+            if ($extension === '') {
+                $this->addConsistencyIssue(
+                    $result,
+                    'warnings',
+                    $tree_label,
+                    $transcription_label,
+                    I18N::translate('Media file %s has no filename extension; FORM is %s and MIME type is %s.', $file_label, $form !== '' ? $form : I18N::translate('None'), $mime_type !== '' ? $mime_type : I18N::translate('None'))
+                );
+            }
+
+            if (!$is_external && $form === '') {
+                $this->addConsistencyIssue(
+                    $result,
+                    'warnings',
+                    $tree_label,
+                    $transcription_label,
+                    I18N::translate('Media file %s has no GEDCOM FORM value; filename extension is %s and MIME type is %s.', $file_label, $extension !== '' ? $extension : I18N::translate('None'), $mime_type !== '' ? $mime_type : I18N::translate('None'))
+                );
+            }
+
+            if ($type === '') {
+                $this->addConsistencyIssue(
+                    $result,
+                    'warnings',
+                    $tree_label,
+                    $transcription_label,
+                    I18N::translate('Media file %s has no GEDCOM TYPE value; filename extension is %s and MIME type is %s.', $file_label, $extension !== '' ? $extension : I18N::translate('None'), $mime_type !== '' ? $mime_type : I18N::translate('None'))
+                );
+            }
+
+            if (!$is_external && $extension !== '' && $form !== '' && $this->canonicalMediaFormat($extension) !== $this->canonicalMediaFormat($form)) {
+                $this->addConsistencyIssue(
+                    $result,
+                    'warnings',
+                    $tree_label,
+                    $transcription_label,
+                    I18N::translate('Media file %s has inconsistent filename extension and GEDCOM FORM: extension %s, FORM %s.', $file_label, $extension, $form)
+                );
+            }
+
+            if ($mime_type === '' || $mime_type === 'application/octet-stream') {
+                $this->addConsistencyIssue(
+                    $result,
+                    'warnings',
+                    $tree_label,
+                    $transcription_label,
+                    I18N::translate('Media file %s has no specific MIME type: %s. Filename extension is %s and FORM is %s.', $file_label, $mime_type !== '' ? $mime_type : I18N::translate('None'), $extension !== '' ? $extension : I18N::translate('None'), $form !== '' ? $form : I18N::translate('None'))
+                );
+            }
+
+            if ($extension !== '' && $mime_type !== '' && $mime_type !== 'application/octet-stream' && !$this->mediaMimeMatchesFormat($mime_type, $extension)) {
+                $this->addConsistencyIssue(
+                    $result,
+                    'warnings',
+                    $tree_label,
+                    $transcription_label,
+                    I18N::translate('Media file %s has inconsistent filename extension and MIME type: extension %s, MIME type %s.', $file_label, $extension, $mime_type)
+                );
+            }
+
+            if (!$is_external && $form !== '' && $mime_type !== '' && $mime_type !== 'application/octet-stream' && !$this->mediaMimeMatchesFormat($mime_type, $form)) {
+                $this->addConsistencyIssue(
+                    $result,
+                    'warnings',
+                    $tree_label,
+                    $transcription_label,
+                    I18N::translate('Media file %s has inconsistent GEDCOM FORM and MIME type: FORM %s, MIME type %s.', $file_label, $form, $mime_type)
+                );
+            }
+
+            if ($type !== '' && !$this->mediaTypeMatchesMetadata($type, $extension, $mime_type)) {
+                $this->addConsistencyIssue(
+                    $result,
+                    'warnings',
+                    $tree_label,
+                    $transcription_label,
+                    I18N::translate('Media file %s has inconsistent GEDCOM TYPE and technical metadata: TYPE %s, extension %s, MIME type %s.', $file_label, $type, $extension !== '' ? $extension : I18N::translate('None'), $mime_type !== '' ? $mime_type : I18N::translate('None'))
+                );
+            }
+        }
+    }
+
+    private function mediaFileExtension(string $filename): string
+    {
+        $path = parse_url($filename, PHP_URL_PATH);
+
+        return strtolower(pathinfo((string) ($path ?: $filename), PATHINFO_EXTENSION));
+    }
+
+    private function mediaFileForm(Media $media, MediaFile $media_file, string $file_gedcom): string
+    {
+        $form = $this->mediaFileFormFromGedcom($file_gedcom);
+
+        if ($form !== '') {
+            return $form;
+        }
+
+        $form = strtolower(trim($media_file->format()));
+
+        if ($form !== '' && $this->expectedMediaMetadataForType($form) === null) {
+            return $form;
+        }
+
+        $filename = $media_file->filename();
+
+        foreach ($this->mediaFileMetadataFromGedcom($media) as $file_metadata) {
+            if ($file_metadata['form'] === '' || !$this->mediaFileNamesReferToSameFile($filename, $file_metadata['filename'])) {
+                continue;
+            }
+
+            return strtolower(trim($file_metadata['form']));
+        }
+
+        return '';
+    }
+
+    private function mediaFileFormFromGedcom(string $gedcom): string
+    {
+        return $this->mediaFileTagFromGedcom($gedcom, 'FORM');
+    }
+
+    private function mediaFileType(Media $media, MediaFile $media_file, string $file_gedcom): string
+    {
+        $type = $this->mediaFileTypeFromGedcom($file_gedcom);
+
+        if ($type !== '') {
+            return $type;
+        }
+
+        $type = strtolower(trim($media_file->type()));
+
+        if ($type !== '') {
+            return $type;
+        }
+
+        $format = strtolower(trim($media_file->format()));
+
+        if ($format !== '' && $this->expectedMediaMetadataForType($format) !== null) {
+            return $format;
+        }
+
+        $filename = $media_file->filename();
+
+        foreach ($this->mediaFileMetadataFromGedcom($media) as $file_metadata) {
+            if ($file_metadata['type'] === '' || !$this->mediaFileNamesReferToSameFile($filename, $file_metadata['filename'])) {
+                continue;
+            }
+
+            return strtolower(trim($file_metadata['type']));
+        }
+
+        return '';
+    }
+
+    private function mediaFileTypeFromGedcom(string $gedcom): string
+    {
+        return $this->mediaFileTagFromGedcom($gedcom, 'TYPE');
+    }
+
+    private function mediaFileTagFromGedcom(string $gedcom, string $tag): string
+    {
+        if (preg_match('/^\d+[ \t]+' . preg_quote($tag, '/') . '[ \t]+([^\r\n]+)$/m', $gedcom, $match) !== 1) {
+            return '';
+        }
+
+        return strtolower(trim($match[1]));
+    }
+
+    /**
+     * @return array<int,array{filename:string,form:string,type:string}>
+     */
+    private function mediaFileMetadataFromGedcom(Media $media): array
+    {
+        $metadata = [];
+        $current = null;
+        $lines = preg_split('/\R/', $media->gedcom());
+
+        if ($lines === false) {
+            return [];
+        }
+
+        foreach ($lines as $line) {
+            if (!preg_match('/^(\d+)[ \t]+([A-Z0-9_]+)(?:[ \t]+([^\r\n]*))?$/', $line, $match)) {
+                continue;
+            }
+
+            $level = (int) $match[1];
+            $tag = $match[2];
+            $value = trim($match[3] ?? '');
+
+            if ($current !== null && $level <= $current['level']) {
+                $metadata[] = [
+                    'filename' => $current['filename'],
+                    'form'     => $current['form'],
+                    'type'     => $current['type'],
+                ];
+                $current = null;
+            }
+
+            if ($tag === 'FILE') {
+                $current = [
+                    'level'    => $level,
+                    'filename' => $value,
+                    'form'     => '',
+                    'type'     => '',
+                ];
+
+                continue;
+            }
+
+            if ($current !== null && $level === $current['level'] + 1 && $tag === 'FORM') {
+                $current['form'] = $value;
+            }
+
+            if ($current !== null && $tag === 'TYPE') {
+                $current['type'] = $value;
+            }
+        }
+
+        if ($current !== null) {
+            $metadata[] = [
+                'filename' => $current['filename'],
+                'form'     => $current['form'],
+                'type'     => $current['type'],
+            ];
+        }
+
+        return $metadata;
+    }
+
+    private function mediaFileNamesReferToSameFile(string $left, string $right): bool
+    {
+        $left_key = $this->mediaFilePathKey($left);
+        $right_key = $this->mediaFilePathKey($right);
+
+        if ($left_key === '' || $right_key === '') {
+            return false;
+        }
+
+        return $left_key === $right_key ||
+            str_ends_with($left_key, '/' . $right_key) ||
+            str_ends_with($right_key, '/' . $left_key) ||
+            basename($left_key) === basename($right_key);
+    }
+
+    private function mediaFilePathKey(string $filename): string
+    {
+        $path = parse_url($filename, PHP_URL_PATH);
+        $path = (string) ($path ?: $filename);
+        $path = rawurldecode(str_replace('\\', '/', $path));
+
+        return strtolower(trim($path, '/'));
+    }
+
+    private function canonicalMediaFormat(string $format): string
+    {
+        return match (strtolower(trim($format))) {
+            'jpeg' => 'jpg',
+            'tiff' => 'tif',
+            'text' => 'txt',
+            default => strtolower(trim($format)),
+        };
+    }
+
+    private function mediaMimeMatchesFormat(string $mime_type, string $format): bool
+    {
+        $expected_mime_types = $this->expectedMediaMimeTypes($format);
+
+        return $expected_mime_types === [] || in_array($mime_type, $expected_mime_types, true);
+    }
+
+    private function mediaTypeMatchesMetadata(string $type, string $extension, string $mime_type): bool
+    {
+        $rules = $this->expectedMediaMetadataForType($type);
+
+        if ($rules === null) {
+            return false;
+        }
+
+        $extension_matches = $extension === '' || $rules['extensions'] === [] || in_array($this->canonicalMediaFormat($extension), $rules['extensions'], true);
+        $mime_matches = $mime_type === '' || $mime_type === 'application/octet-stream' || $rules['mime_types'] === [] || in_array($mime_type, $rules['mime_types'], true);
+
+        return $extension_matches && $mime_matches;
+    }
+
+    /**
+     * @return array{extensions:array<int,string>,mime_types:array<int,string>}|null
+     */
+    private function expectedMediaMetadataForType(string $type): ?array
+    {
+        $image_extensions = ['avif', 'gif', 'heic', 'heif', 'jpg', 'png', 'tif', 'webp'];
+        $image_mime_types = ['image/avif', 'image/gif', 'image/heic', 'image/heif', 'image/jpeg', 'image/png', 'image/tiff', 'image/webp'];
+        $document_extensions = [...$image_extensions, 'doc', 'docx', 'pdf', 'rtf', 'txt'];
+        $document_mime_types = [...$image_mime_types, 'application/msword', 'application/pdf', 'application/rtf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'application/x-rtf', 'text/plain', 'text/rtf'];
+
+        return match (strtoupper(trim($type))) {
+            'AUDIO' => [
+                'extensions' => ['aac', 'flac', 'm4a', 'mp3', 'oga', 'ogg', 'wav'],
+                'mime_types' => ['application/ogg', 'audio/aac', 'audio/flac', 'audio/mp4', 'audio/mp3', 'audio/mpeg', 'audio/ogg', 'audio/wav', 'audio/wave', 'audio/x-flac', 'audio/x-m4a', 'audio/x-wav'],
+            ],
+            'VIDEO' => [
+                'extensions' => ['m4v', 'mov', 'mp4', 'ogv', 'webm'],
+                'mime_types' => ['application/ogg', 'video/mp4', 'video/ogg', 'video/quicktime', 'video/webm'],
+            ],
+            'PHOTO', 'TOMBSTONE', 'PAINTING', 'COAT', 'MAP' => [
+                'extensions' => $image_extensions,
+                'mime_types' => $image_mime_types,
+            ],
+            'BOOK', 'CARD', 'CERTIFICATE', 'DOCUMENT', 'ELECTRONIC', 'FICHE', 'FILM', 'MAGAZINE', 'MANUSCRIPT', 'NEWSPAPER', 'OTHER' => [
+                'extensions' => $document_extensions,
+                'mime_types' => $document_mime_types,
+            ],
+            default => null,
+        };
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    private function expectedMediaMimeTypes(string $format): array
+    {
+        return match ($this->canonicalMediaFormat($format)) {
+            'aac' => ['audio/aac'],
+            'avif' => ['image/avif'],
+            'flac' => ['audio/flac', 'audio/x-flac'],
+            'gif' => ['image/gif'],
+            'heic' => ['image/heic'],
+            'heif' => ['image/heif'],
+            'jpg' => ['image/jpeg'],
+            'm4a' => ['audio/mp4', 'audio/x-m4a'],
+            'm4v' => ['video/mp4'],
+            'mov' => ['video/quicktime'],
+            'mp3' => ['audio/mpeg', 'audio/mp3'],
+            'mp4' => ['video/mp4'],
+            'oga', 'ogg' => ['audio/ogg', 'application/ogg'],
+            'ogv' => ['video/ogg', 'application/ogg'],
+            'pdf' => ['application/pdf'],
+            'png' => ['image/png'],
+            'rtf' => ['application/rtf', 'application/x-rtf', 'text/rtf'],
+            'tif' => ['image/tiff'],
+            'txt' => ['text/plain'],
+            'wav' => ['audio/wav', 'audio/x-wav', 'audio/wave'],
+            'webm' => ['video/webm'],
+            'webp' => ['image/webp'],
+            default => [],
+        };
     }
 
     private function addConsistencyIssue(array &$result, string $severity, string $tree, string $transcription, string $message): void

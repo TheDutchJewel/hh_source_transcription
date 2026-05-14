@@ -33,6 +33,8 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription\Http\RequestHandlers;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Registry;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\ProviderCredentialRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranskribusJobRepository;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Infrastructure\Persistence\Repository\TranscriptionRepository;
 use Psr\Http\Message\ResponseInterface;
@@ -53,6 +55,8 @@ final class DashboardAction
 
         $repo = Registry::container()->get(TranscriptionRepository::class);
         $job_repo = Registry::container()->get(TranskribusJobRepository::class);
+        $credential_repo = Registry::container()->get(ProviderCredentialRepository::class);
+        $discourse_credential = $credential_repo->find(Auth::user()->id(), ProviderKey::DISCOURSE);
 
         $transkribus_jobs = $job_repo->recentForTree($tree);
         $transkribus_job_files = [];
@@ -67,6 +71,10 @@ final class DashboardAction
             'transcriptions'   => $repo->allActiveForTree($tree),
             'transkribus_jobs' => $transkribus_jobs,
             'transkribus_job_files' => $transkribus_job_files,
+            'discourse_authorized' => (bool) ($discourse_credential['has_secret'] ?? false),
+            'discourse_settings' => $discourse_credential['settings'] ?? [],
+            'discourse_last_test_status' => $discourse_credential['last_test_status'] ?? null,
+            'discourse_last_test_message' => $discourse_credential['last_test_message'] ?? null,
         ]);
 
         return response(view('layouts/default', [

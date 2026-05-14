@@ -23,6 +23,9 @@ use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\I18N;
 use Fisharebest\Webtrees\MediaFile;
 use Fisharebest\Webtrees\Registry;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Factory\TranscriptionProviderFactory;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider\SupportsMediaUploadRulesInterface;
+use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -35,9 +38,6 @@ use function trim;
 
 final class MediaFilesForMediaAction
 {
-    private const int MAX_FILE_SIZE = 20 * 1024 * 1024;
-    private const array ACCEPTED_MIME_TYPES = ['image/jpeg', 'image/tiff', 'image/png'];
-
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $tree = $request->getAttribute('tree');
@@ -88,11 +88,18 @@ final class MediaFilesForMediaAction
             return I18N::translate('The file does not exist on this server.');
         }
 
-        if (!in_array($file->mimeType(), self::ACCEPTED_MIME_TYPES, true)) {
+        $provider = Registry::container()->get(TranscriptionProviderFactory::class)->forKey(ProviderKey::TRANSKRIBUS);
+        if (!$provider instanceof SupportsMediaUploadRulesInterface) {
+            return I18N::translate('The selected provider does not support media uploads.');
+        }
+
+        if (!in_array($file->mimeType(), $provider->acceptedMediaMimeTypes(), true)) {
             return I18N::translate('Unsupported file format. Use JPEG, TIFF or PNG.');
         }
 
-        if ($size > self::MAX_FILE_SIZE) {
+        $max_file_size = $provider->maxMediaFileSize();
+
+        if ($max_file_size !== null && $size > $max_file_size) {
             return I18N::translate('The file is larger than 20 MB.');
         }
 

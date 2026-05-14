@@ -20,6 +20,7 @@ declare(strict_types=1);
  * @var array|null $consistency_check
  */
 
+use Fisharebest\Webtrees\Http\RequestHandlers\ControlPanel;
 use Fisharebest\Webtrees\I18N;
 use Hartenthaler\Webtrees\Module\SourceTranscription\SourceTranscription;
 
@@ -42,6 +43,8 @@ $statusBadge = static function (bool $status): string {
 };
 
 ?>
+
+<?= view('components/breadcrumbs', ['links' => [route(ControlPanel::class) => I18N::translate('Control panel'), $title]]) ?>
 
 <h2><?= e($title) ?></h2>
 <?php if (!$runs_with_webtrees_version) : ?>
@@ -155,8 +158,8 @@ $statusBadge = static function (bool $status): string {
 <div class="alert alert-info">
     <p class="mb-2">
         <strong>Discourse:</strong>
-        <?= I18N::translate('An administrator creates an API key in the Discourse administration under Admin > API > API keys. Use the forum base URL, the Discourse username for requests and the generated API key. For a key limited to one user, the API username must match that user; for an all-users key, choose the user whose permissions should be used.') ?>
-        <a href="https://meta.discourse.org/t/create-and-configure-an-api-key/230124" target="_blank" rel="noopener noreferrer">
+        <?= I18N::translate('Discourse uses the User API Key authorization flow. Users authorize the module from the transcription dashboard; the module stores the returned user-specific key for later requests.') ?>
+        <a href="https://meta.discourse.org/t/user-api-keys-specification/48536" target="_blank" rel="noopener noreferrer">
             <?= I18N::translate('Discourse documentation') ?>
         </a>
     </p>
@@ -208,57 +211,6 @@ $statusBadge = static function (bool $status): string {
                     </option>
                 <?php endforeach ?>
             </select>
-        </div>
-    </div>
-
-    <?php $discourse_settings = $provider_credentials['discourse']['settings']; ?>
-    <div id="discourse_credentials">
-        <div class="row mb-3">
-            <label class="col-sm-3 col-form-label" for="discourse_base_url">
-                <?= I18N::translate('Discourse URL') ?>
-            </label>
-
-            <div class="col-sm-9">
-                <input class="form-control" id="discourse_base_url" name="discourse_base_url" type="url" value="<?= e($discourse_settings['base_url'] ?? '') ?>" placeholder="https://forum.example.org">
-                <div class="form-text">
-                    <?= I18N::translate('Base address of the Discourse forum, without an API path.') ?>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <label class="col-sm-3 col-form-label" for="discourse_api_username">
-                <?= I18N::translate('API username') ?>
-            </label>
-
-            <div class="col-sm-9">
-                <input class="form-control" id="discourse_api_username" name="discourse_api_username" type="text" value="<?= e($discourse_settings['api_username'] ?? '') ?>">
-                <div class="form-text">
-                    <?= I18N::translate('Discourse username used in the Api-Username request header.') ?>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <label class="col-sm-3 col-form-label" for="discourse_api_key">
-                <?= I18N::translate('API key') ?>
-            </label>
-
-            <div class="col-sm-9">
-                <input class="form-control" id="discourse_api_key" name="discourse_api_key" type="password" value="" autocomplete="new-password" placeholder="<?= $provider_credentials['discourse']['has_secret'] ? e(I18N::translate('stored; leave empty to keep')) : '' ?>">
-                <div class="form-text">
-                    <?= I18N::translate('The API key is shown only once in Discourse; store it here or create a new key if it was lost.') ?>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-3">
-            <div class="col-sm-9 offset-sm-3">
-                <?= $providerStatusBadge($provider_credentials['discourse']['last_test_status']) ?>
-                <?php if ($provider_credentials['discourse']['last_test_message'] !== null) : ?>
-                    <span class="text-muted"><?= e($provider_credentials['discourse']['last_test_message']) ?></span>
-                <?php endif ?>
-            </div>
         </div>
     </div>
 
@@ -556,13 +508,11 @@ $statusBadge = static function (bool $status): string {
 
     const providerSelect = document.getElementById('provider_key');
     const providerUserSelect = document.getElementById('provider_user_id');
-    const discourseCredentials = document.getElementById('discourse_credentials');
     const transkribusCredentials = document.getElementById('transkribus_credentials');
     const configLink = <?= json_encode($module->getConfigLink(), JSON_THROW_ON_ERROR) ?>;
 
     function updateProviderFields() {
         const provider = providerSelect.value;
-        discourseCredentials.hidden = provider !== 'discourse';
         transkribusCredentials.hidden = provider !== 'transkribus';
     }
 

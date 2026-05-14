@@ -240,107 +240,7 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
     </div>
 </div>
 
-<div class="card mb-3">
-    <div class="card-header">
-        <?= I18N::translateContext('Panel heading for the webtrees-internal collaboration workflow', 'Internal collaboration') ?>
-    </div>
-
-    <div class="card-body">
-        <?php if ($active_collaborators !== []) : ?>
-            <div class="mb-3">
-                <strong><?= I18N::translate('Team') ?></strong>
-                <ul class="mb-0">
-                    <?php foreach ($active_collaborators as $collaborator) : ?>
-                        <li>
-                            <?= e($collaborator['name']) ?>
-                            <span class="text-muted">
-                                (<?= e($collaborator['role'] === 'initiator' ? I18N::translateContext('Collaboration team role', 'Initiator') : I18N::translateContext('Collaboration team role, singular noun', 'Collaborator')) ?>)
-                            </span>
-                        </li>
-                    <?php endforeach ?>
-                </ul>
-            </div>
-        <?php elseif (!$can_open_collaboration && $collaboration_is_editable) : ?>
-            <div class="text-muted">
-                <?= I18N::translate('This transcription is not currently open for internal collaboration.') ?>
-            </div>
-        <?php endif ?>
-
-        <?php if ($is_internal_collaboration && $can_submit_review) : ?>
-            <form method="post" action="<?= e(route('source-transcription-collaboration-status', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>" class="mb-3 d-flex gap-2 flex-wrap">
-                <?= csrf_field() ?>
-
-                <button class="btn btn-info" type="submit" name="collaboration_action" value="submit_for_review">
-                    <?= I18N::translateContext('Button: submit the transcription for review', 'Ready for review') ?>
-                </button>
-            </form>
-        <?php endif ?>
-
-        <?php if ($can_open_collaboration) : ?>
-            <form method="post" action="<?= e(route('source-transcription-open-collaboration', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>">
-                <?= csrf_field() ?>
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <label class="form-label">
-                            <?= I18N::translateContext('Form label for selecting multiple collaboration team members; not a plural variant of the role label', 'Collaborators') ?>
-                        </label>
-
-                        <?php if ($eligible_collaborators === []) : ?>
-                            <div class="alert alert-secondary mb-0">
-                                <?= I18N::translate('No eligible users found.') ?>
-                            </div>
-                        <?php else : ?>
-                            <div class="border rounded p-2" style="max-height: 12rem; overflow-y: auto;">
-                                <?php foreach ($eligible_collaborators as $candidate) : ?>
-                                    <div class="form-check">
-                                        <input
-                                            class="form-check-input"
-                                            type="checkbox"
-                                            id="collaborator-<?= e((string) $candidate->id()) ?>"
-                                            name="collaborator_user_ids[]"
-                                            value="<?= e((string) $candidate->id()) ?>"
-                                            <?= in_array($candidate->id(), $active_collaborator_ids, true) ? 'checked' : '' ?>
-                                        >
-                                        <label class="form-check-label" for="collaborator-<?= e((string) $candidate->id()) ?>">
-                                            <?= e($candidate->realName() !== '' ? $candidate->realName() : $candidate->userName()) ?>
-                                        </label>
-                                    </div>
-                                <?php endforeach ?>
-                            </div>
-                        <?php endif ?>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label class="form-label" for="collaboration-message">
-                            <?= I18N::translate('Message') ?>
-                        </label>
-                        <textarea class="form-control" id="collaboration-message" name="message" rows="4"></textarea>
-
-                        <div class="form-check mt-2">
-                            <input class="form-check-input" type="checkbox" id="save-current-note-first" name="save_current_note_first" value="1" checked>
-                            <label class="form-check-label" for="save-current-note-first">
-                                <?= I18N::translate('Save the current NOTE as a starting revision') ?>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="mt-3">
-                    <button class="btn btn-primary" type="submit" <?= $eligible_collaborators === [] ? 'disabled' : '' ?>>
-                        <?= $is_internal_collaboration ? I18N::translateContext('Button: update the selected collaboration team', 'Update collaboration') : I18N::translateContext('Button: open this transcription for collaboration', 'Open for collaboration') ?>
-                    </button>
-                </div>
-            </form>
-        <?php elseif (Auth::isEditor($tree) && !$collaboration_is_editable) : ?>
-            <div class="text-muted">
-                <?= I18N::translateContext('Hint shown when collaboration cannot be started because the transcription is final or canceled', 'Reopen the transcription before starting or changing internal collaboration.') ?>
-            </div>
-        <?php endif ?>
-    </div>
-</div>
-
-<div class="row">
+<div class="row mb-3">
     <div class="col-md-6">
         <div class="card h-100">
             <div class="card-header">
@@ -357,62 +257,7 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
                         <?= I18N::translate('No media files found for this media object.') ?>
                     </div>
                 <?php else : ?>
-                <?php if (count($media_files) > 1) : ?>
-                    <div class="mb-3">
-                        <label class="form-label" for="media-file-select">
-                            <?= I18N::translateContext('Label for selecting one media file', 'Media file') ?>
-                        </label>
-
-                        <select class="form-select" id="media-file-select">
-                            <?php foreach ($media_files as $index => $file_data) : ?>
-                                <option value="<?= e((string) $index) ?>">
-                                    <?= e($file_data['filename']) ?>
-                                </option>
-                            <?php endforeach ?>
-                        </select>
-                    </div>
-                <?php endif ?>
-
-                <?php foreach ($media_files as $index => $file_data) : ?>
-                    <?php $file = $file_data['file']; ?>
-                    <div
-                            class="source-transcription-media-preview"
-                            data-media-file-index="<?= e((string) $index) ?>"
-                            style="<?= $index === 0 ? '' : 'display:none' ?>"
-                    >
-                        <?php if ($file->isImage()) : ?>
-                            <div class="border p-2 text-center">
-                                <?= $file->displayImage(900, 900, 'contain', [
-                                        'class' => 'img-fluid',
-                                ]) ?>
-                            </div>
-                        <?php else : ?>
-                            <div class="alert alert-secondary">
-                                <?= I18N::translate('This media file cannot be previewed here.') ?>
-                            </div>
-                            <p>
-                                <?= e($file_data['filename']) ?>
-                            </p>
-                        <?php endif ?>
-                    </div>
-                <?php endforeach ?>
-
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function () {
-                            const select = document.getElementById('media-file-select');
-
-                            if (!select) {
-                                return;
-                            }
-
-                            select.addEventListener('change', function () {
-                                document.querySelectorAll('.source-transcription-media-preview').forEach(function (element) {
-                                    element.style.display = element.dataset.mediaFileIndex === select.value ? '' : 'none';
-                                });
-                            });
-                        });
-                    </script>
-
+                    <?= view('hh_source_transcription::partials/media-viewer', ['media_files' => $media_files]) ?>
                 <?php endif ?>
             </div>
         </div>
@@ -508,6 +353,104 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
                 <?php endif ?>
             </div>
         </div>
+    </div>
+</div>
+
+<div class="card mb-3">
+    <div class="card-header">
+        <?= I18N::translateContext('Panel heading for the webtrees-internal collaboration workflow', 'Internal collaboration') ?>
+    </div>
+
+    <div class="card-body">
+        <?php if ($active_collaborators !== []) : ?>
+            <div class="mb-3">
+                <strong><?= I18N::translate('Team') ?></strong>
+                <ul class="mb-0">
+                    <?php foreach ($active_collaborators as $collaborator) : ?>
+                        <li>
+                            <?= e($collaborator['name']) ?>
+                            <span class="text-muted">
+                                (<?= e($collaborator['role'] === 'initiator' ? I18N::translateContext('Collaboration team role', 'Initiator') : I18N::translateContext('Collaboration team role, singular noun', 'Collaborator')) ?>)
+                            </span>
+                        </li>
+                    <?php endforeach ?>
+                </ul>
+            </div>
+        <?php elseif (!$can_open_collaboration && $collaboration_is_editable) : ?>
+            <div class="text-muted">
+                <?= I18N::translate('This transcription is not currently open for internal collaboration.') ?>
+            </div>
+        <?php endif ?>
+
+        <?php if ($is_internal_collaboration && $can_submit_review) : ?>
+            <form method="post" action="<?= e(route('source-transcription-collaboration-status', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>" class="mb-3 d-flex gap-2 flex-wrap">
+                <?= csrf_field() ?>
+
+                <button class="btn btn-info" type="submit" name="collaboration_action" value="submit_for_review">
+                    <?= I18N::translateContext('Button: submit the transcription for review', 'Ready for review') ?>
+                </button>
+            </form>
+        <?php endif ?>
+
+        <?php if ($can_open_collaboration && $eligible_collaborators === []) : ?>
+            <div class="alert alert-secondary mb-0">
+                <?= I18N::translate('No eligible users found.') ?>
+            </div>
+        <?php elseif ($can_open_collaboration) : ?>
+            <form method="post" action="<?= e(route('source-transcription-open-collaboration', ['tree' => $tree->name(), 'transcription_id' => $transcription->id])) ?>">
+                <?= csrf_field() ?>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label class="form-label">
+                            <?= I18N::translateContext('Form label for selecting multiple collaboration team members; not a plural variant of the role label', 'Collaborators') ?>
+                        </label>
+
+                        <div class="border rounded p-2" style="max-height: 12rem; overflow-y: auto;">
+                            <?php foreach ($eligible_collaborators as $candidate) : ?>
+                                <div class="form-check">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        id="collaborator-<?= e((string) $candidate->id()) ?>"
+                                        name="collaborator_user_ids[]"
+                                        value="<?= e((string) $candidate->id()) ?>"
+                                        <?= in_array($candidate->id(), $active_collaborator_ids, true) ? 'checked' : '' ?>
+                                    >
+                                    <label class="form-check-label" for="collaborator-<?= e((string) $candidate->id()) ?>">
+                                        <?= e($candidate->realName() !== '' ? $candidate->realName() : $candidate->userName()) ?>
+                                    </label>
+                                </div>
+                            <?php endforeach ?>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label" for="collaboration-message">
+                            <?= I18N::translate('Message') ?>
+                        </label>
+                        <textarea class="form-control" id="collaboration-message" name="message" rows="4"></textarea>
+
+                        <div class="form-check mt-2">
+                            <input class="form-check-input" type="checkbox" id="save-current-note-first" name="save_current_note_first" value="1" checked>
+                            <label class="form-check-label" for="save-current-note-first">
+                                <?= I18N::translate('Save the current NOTE as a starting revision') ?>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <button class="btn btn-primary" type="submit">
+                        <?= $is_internal_collaboration ? I18N::translateContext('Button: update the selected collaboration team', 'Update collaboration') : I18N::translateContext('Button: open this transcription for collaboration', 'Open for collaboration') ?>
+                    </button>
+                </div>
+            </form>
+        <?php elseif (Auth::isEditor($tree) && !$collaboration_is_editable) : ?>
+            <div class="text-muted">
+                <?= I18N::translateContext('Hint shown when collaboration cannot be started because the transcription is final or canceled', 'Reopen the transcription before starting or changing internal collaboration.') ?>
+            </div>
+        <?php endif ?>
     </div>
 </div>
 

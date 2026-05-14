@@ -48,9 +48,16 @@ The module links transcriptions to
 - a **source** (`SOUR`)
 - usually a specific **media object** (`OBJE`) attached to a source
 
-The media object contains a media file with one or more pages of images (jpg, pdf, tiff, ...)
-or a media file with a single audio or video file (mp3, ...).
+The media object contains a media file with one or more pages of images (jpg, pdf, tiff, ...),
+a single audio or video file (mp3, ...), or a supporting text file (txt, rtf).
 If no media object exists or none is selected, the transcription can be attached directly to the source.
+
+The detail page includes a local media viewer. It supports image zoom/pan for common browser image formats via a bundled OpenSeadragon build, native PDF preview, native audio/video playback with a stop button, and clear download links for unsupported or blocked external media.
+QuickTime/MOV files use the download fallback because browser support is unreliable.
+Local TXT files are displayed as scrollable text. Local RTF files are converted to a simple plain-text preview; complex RTF formatting may still leave visible control text.
+Manual media viewer test cases are documented in [docs/media-viewer-test-matrix.md](docs/media-viewer-test-matrix.md).
+
+The control panel consistency check also reviews media files used by transcriptions. It reports suspicious metadata combinations such as missing filename extensions, missing GEDCOM `FORM` values, generic MIME types, or mismatches between filename extension, `FORM`, and MIME type. This is especially relevant before sending files to providers such as Transkribus.
 
 A transcription is not just a note.  
 It is treated as a structured object with
@@ -205,7 +212,11 @@ The team relation is stored separately from the transcription revision history.
 This keeps existing source/media links, the working NOTE, and previous revisions intact.
 
 ### Discourse provider
-tbd
+Detailed documentation: [docs/provider/discourse.md](docs/provider/discourse.md)
+
+The Discourse provider uses the Discourse User API Key authorization flow. Users authorize the module from the dashboard; no manual Discourse API key entry is required.
+
+Prepared Discourse attachments are `jpg`, `jpeg`, `png`, `gif`, `webp`, `txt`, and `pdf`. No Discourse file-size limit is currently known in the module.
 
 ### Transkribus provider
 tbd
@@ -288,6 +299,8 @@ Permission checks are currently handled in the UI and request handlers. They sho
 
 Older development data may still contain NOTE links at the source that are moved to the selected media object only after the affected transcription or tag NOTE is saved again.
 
+External media URLs are embedded directly in the browser only for `http` and `https`. Remote servers can still block previewing through CORS, frame, range-request, or hotlinking policies; in that case the module shows an open-link fallback.
+
 ### Implementation of provider candidates by priority
 
 1. Manual and internal collaboration
@@ -317,11 +330,17 @@ The detailed roadmap is maintained in GitHub milestones and issues:
 - [Milestones](https://github.com/hartenthaler/hh_source_transcription/milestones)
 - [Issues](https://github.com/hartenthaler/hh_source_transcription/issues)
 
+An overview is at [docs/github-roadmap.md](docs/github-roadmap.md)
+
 ### Discussion points
 
 Open discussion points are maintained as GitHub issues with the `discussion` label:
 
 - [Discussion issues](https://github.com/hartenthaler/hh_source_transcription/issues?q=is%3Aissue%20label%3Adiscussion)
+
+It is possible to use the GitHub Discussion board:
+
+- [Discussion board](https://github.com/hartenthaler/hh_source_transcription/discussions)
 
 <a name="Screenshots"></a>
 ## 🖼 Screenshots
@@ -369,8 +388,6 @@ and all available themes and all other custom modules.
 <a name="Installation"></a>
 ## 📥 Installation
 
-At the current time, install the development version from GitHub. After V1.3:
-
 Install and use [Custom Module Manager](https://github.com/Jefferson49/CustomModuleManager) for an easy and convenient installation of **webtrees** custom modules.
 + Open the Custom Module Manager view in **webtrees**, scroll to "Source Transcription", and click on the "Install Module" button.
 
@@ -387,7 +404,7 @@ Install and use [Custom Module Manager](https://github.com/Jefferson49/CustomMod
 <a name="Upgrade"></a>
 ## ⬆️ Upgrade
 
-To update, simply replace the `hh_source_transcription` files with the new ones from the latest release.
+To update, replace the `hh_source_transcription` files with the new ones from the latest release.
 
 <a name="Translation"></a>
 ## 🌍 Translation
@@ -399,17 +416,17 @@ You can do this via a pull request (if you know how) or by e-mail.
 Updated translations will be included in the next release of this module.
 
 There are the following translations available
-- English by @Hartenthaler
-- German by @Hartenthaler
-- Dutch by @TheDutchJewel
-- Spanish template
-- Catalan template
+- English by [@Hartenthaler](https://github.com/Hartenthaler)
+- German by [@Hartenthaler](https://github.com/Hartenthaler)
+- Dutch by [@TheDutchJewel](https://github.com/TheDutchJewel)
+- Spanish by Bernat
+- Catalan by Bernat
 
 <a name="Support"></a>
 ## ❓ Support
 
 - <span style="font-weight: bold;">Issues: </span> You can report errors by raising an issue in this GitHub repository.
-- <span style="font-weight: bold;">Forum: </span>General webtrees support can be found at the [webtrees forum](http://www.webtrees.net/).
+- <span style="font-weight: bold;">Forum: </span>General webtrees support can be found at the [webtrees forum](https://www.webtrees.net/index.php/forum).
 
 <a name="License"></a>
 ## 📄 License

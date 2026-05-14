@@ -73,6 +73,31 @@ created_at
 updated_at  
 closed_at  
 
+### Future: Evidence Layer
+
+The long-term direction of the module is not only to store better notes. It should support an explicit evidence layer between transcription text and genealogical conclusions.
+
+A future table such as `transcription_inferences` could document the chain:
+
+```text
+transcription revision
+    -> finding / evidence statement
+    -> interpretation
+    -> conclusion or claim
+```
+
+This would allow users to distinguish what the source literally says, what is inferred from it, and which genealogical conclusion is derived from that inference. The goal is to make reasoning inspectable instead of embedding it only in free-text notes.
+
+This direction follows the Genealogical Proof Standard (GPS) in spirit:
+
+- reasonably exhaustive research is supported by linking conclusions to multiple source-based findings
+- complete and accurate source references remain anchored in webtrees records
+- analysis and correlation can be represented as explicit inference steps
+- conflicting evidence can be documented without overwriting earlier interpretations
+- conclusions can carry a visible reasoning path back to the underlying transcription revisions
+
+This is intentionally a future architecture direction. The current module focuses on transcription, NOTE synchronization, revision history, provider integration, and collaboration; the evidence layer should build on those foundations later.
+
 ---
 
 ## Interaction Models
@@ -157,6 +182,7 @@ Status request handlers for manual and internal workflows also ensure that a fin
 - **OpensCollaborationInterface**: Marks providers that can open an existing transcription for collaboration.
 - **ManualTranscriptionProvider**: Encapsulates the manual workflow, including transcription creation, initial revision, working NOTE, and tag NOTE.
 - **InternalCollaborationProvider**: Encapsulates opening an existing transcription for internal collaboration. Source, media object, working NOTE, and existing revisions are preserved.
+- Provider-specific media rules are exposed by the provider classes themselves. Transkribus accepts JPEG, TIFF, and PNG with a 20 MB limit. Discourse is prepared for `jpg`, `jpeg`, `png`, `gif`, `heic`, `heif`, `webp`, `avif`, `txt`, and `pdf`; no Discourse file-size limit is currently known.
 
 `TranscriptionProviderFactory` lives in `Application/Factory` and resolves the matching provider from the provider key.
 
@@ -178,6 +204,44 @@ Status request handlers for manual and internal workflows also ensure that a fin
 - **Detail**: Main working view. It contains the editor for the current NOTE, shows the linked media object, lists the revision history, allows a previous revision to become current again, and provides revision comparison controls.
 - **Compare revisions**: Side-by-side view for two revisions of one transcription. It highlights changed metadata fields and displays line-level text additions, removals, and changes.
 - **Admin settings**: Module configuration plus diagnostics for database schema, NOTE editor/TinyMDE availability, tree Markdown settings, transcription counts by tree, and an optional consistency check.
+
+### Media Viewer
+
+The detail page renders media files through `resources/views/partials/media-viewer.phtml`.
+
+`MediaObjectGateway::files()` enriches webtrees `MediaFile` objects with viewer metadata:
+
+- `url`: inline download URL for local media, original URL for external media
+- `download_url`: attachment download URL for local media, original URL for external media
+- `mime`
+- `extension`
+- `is_external`
+- `is_embeddable_external`
+- `viewer_type`: `image`, `pdf`, `audio`, `video`, `text`, or `download`
+- `text_content` and `text_truncated` for local text previews
+
+Supported preview behavior:
+
+- images (`jpg`, `jpeg`, `png`, `gif`, `webp`) use the locally bundled OpenSeadragon viewer for zoom and pan
+- PDF files use the browser's native PDF renderer in an iframe
+- audio files use native HTML5 `<audio controls>` plus a module stop button
+- video files use native HTML5 `<video controls>` plus a module stop button
+- QuickTime/MOV files are not treated as browser-previewable and fall back to a download link
+- TXT files are read server-side from the local webtrees media directory and shown as a scrollable text preview
+- RTF files are converted to a simple plain-text preview; complex RTF markup may still leave visible control text or formatting artifacts
+- unsupported files show a preview warning and a clearly labeled download link
+
+No external CDN libraries are used. Viewer CSS, JavaScript, and vendored viewer libraries live in:
+
+```text
+resources/css/media-viewer.css
+resources/js/media-viewer.js
+vendor/openseadragon/
+```
+
+External media URLs are embedded only when they use `http` or `https`. They are loaded directly by the browser, not fetched server-side by PHP. This avoids server-side request risks. External media can still fail to display when the remote server blocks embedding, CORS, or range requests; in that case the user can open the URL directly.
+
+Manual verification cases are tracked in [docs/media-viewer-test-matrix.md](media-viewer-test-matrix.md).
 
 ### Actions / API
 - **UpdateCurrentNoteAction**: Saves the current editor text to the webtrees NOTE.
@@ -214,6 +278,8 @@ Current checks:
 - active transcription references a missing source
 - active transcription references a missing media object
 - referenced media object is no longer linked to the source
+- metadata of media files used by transcriptions is plausible:
+  filename extension, GEDCOM `FORM`, and MIME type are compared against each other
 - transcription has no current NOTE
 - current NOTE does not exist
 - current NOTE is not linked to the expected `SOUR` or `OBJE`
@@ -281,6 +347,7 @@ case CANCEL = 'cancel';
 │   │       ├── dashboard.png
 │   │       └── details.png
 │   └── provider/
+│       ├── discourse.md
 │       ├── internal.md
 │       ├── manual.md
 │       └── transkribus.md
@@ -307,9 +374,11 @@ case CANCEL = 'cancel';
     │   │   └── TranscriptionProviderFactory.php
     │   ├── Provider/
     │   │   ├── CreatesTranscriptionsInterface.php
+    │   │   ├── DiscourseTranscriptionProvider.php
     │   │   ├── InternalCollaborationProvider.php
     │   │   ├── ManualTranscriptionProvider.php
     │   │   ├── OpensCollaborationInterface.php
+    │   │   ├── TranskribusTranscriptionProvider.php
     │   │   └── TranscriptionProviderInterface.php
     │   └── Service/
     │       ├── CollaborationNotificationService.php

@@ -1,0 +1,68 @@
+.source-transcription-media-toolbar {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.source-transcription-image-stage {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    height: min(70vh, 720px);
+    overflow: hidden;
+    position: relative;
+}
+
+.source-transcription-image-stage img.source-transcription-image-fallback {
+    display: block;
+    height: auto;
+    margin: 0 auto;
+    max-height: 100%;
+    max-width: 100%;
+    transform: scale(var(--st-fallback-zoom, 1));
+    transform-origin: center center;
+    transition: transform 120ms ease-out;
+}
+
+.source-transcription-pdf-viewer {
+    border: 1px solid #dee2e6;
+    height: min(75vh, 760px);
+}
+
+.source-transcription-pdf-viewer iframe {
+    border: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.source-transcription-text-frame,
+.source-transcription-text-preview {
+    border: 1px solid #dee2e6;
+    height: min(70vh, 720px);
+}
+
+.source-transcription-text-frame iframe {
+    border: 0;
+    height: 100%;
+    width: 100%;
+}
+
+.source-transcription-text-preview {
+    background: #f8f9fa;
+    margin: 0;
+    overflow: auto;
+    padding: 1rem;
+    white-space: pre-wrap;
+}
+
+.source-transcription-av-viewer audio,
+.source-transcription-av-viewer video {
+    display: block;
+    max-height: min(70vh, 720px);
+    width: 100%;
+}
+
+.source-transcription-av-viewer audio {
+    max-height: none;
+}

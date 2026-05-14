@@ -22,7 +22,7 @@ namespace Hartenthaler\Webtrees\Module\SourceTranscription\Application\Provider;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Enum\InteractionModel;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\ValueObject\ProviderKey;
 
-final class DiscourseTranscriptionProvider implements TranscriptionProviderInterface
+final class DiscourseTranscriptionProvider implements TranscriptionProviderInterface, SupportsMediaUploadRulesInterface
 {
     public function key(): string
     {
@@ -32,5 +32,30 @@ final class DiscourseTranscriptionProvider implements TranscriptionProviderInter
     public function interactionModel(): string
     {
         return InteractionModel::CROWD_ASYNC->value;
+    }
+
+    public function acceptedMediaExtensions(): array
+    {
+        return ['jpg', 'jpeg', 'png', 'gif', 'heic', 'heif', 'webp', 'avif', 'txt', 'pdf'];
+    }
+
+    public function acceptedMediaMimeTypes(): array
+    {
+        return [
+            'image/jpeg',
+            'image/png',
+            'image/gif',
+            'image/heic',
+            'image/heif',
+            'image/webp',
+            'image/avif',
+            'text/plain',
+            'application/pdf',
+        ];
+    }
+
+    public function maxMediaFileSize(): ?int
+    {
+        return null;
     }
 }
