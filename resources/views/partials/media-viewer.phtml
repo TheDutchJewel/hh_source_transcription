@@ -23,15 +23,23 @@ $asset_route = [
 $css_asset = 'css/media-viewer.css';
 $js_asset = 'js/media-viewer.js';
 $openseadragon_asset = 'openseadragon/openseadragon.min.js';
+$css_path = $resources_dir . DIRECTORY_SEPARATOR . $css_asset;
+$js_path = $resources_dir . DIRECTORY_SEPARATOR . $js_asset;
+$openseadragon_path = $module_dir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . $openseadragon_asset;
+$css_hash = is_file($css_path) ? (string) filemtime($css_path) : '0';
+$js_hash = is_file($js_path) ? (string) filemtime($js_path) : '0';
+$openseadragon_hash = is_file($openseadragon_path) ? (string) filemtime($openseadragon_path) : '0';
 ?>
 
 <?php View::push('styles') ?>
-<link rel="stylesheet" href="<?= e(route('module', $asset_route + ['asset' => $css_asset, 'hash' => (string) filemtime($resources_dir . DIRECTORY_SEPARATOR . $css_asset)])) ?>">
+<link rel="stylesheet" href="<?= e(route('module', $asset_route + ['asset' => $css_asset, 'hash' => $css_hash])) ?>">
 <?php View::endpush() ?>
 
 <?php View::push('javascript') ?>
-<script src="<?= e(route('source-transcription-vendor-asset', ['asset' => $openseadragon_asset, 'hash' => (string) filemtime($module_dir . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . $openseadragon_asset)])) ?>"></script>
-<script src="<?= e(route('module', $asset_route + ['asset' => $js_asset, 'hash' => (string) filemtime($resources_dir . DIRECTORY_SEPARATOR . $js_asset)])) ?>"></script>
+<?php if (is_file($openseadragon_path)) : ?>
+    <script src="<?= e(route('source-transcription-vendor-asset', ['asset' => $openseadragon_asset, 'hash' => $openseadragon_hash])) ?>"></script>
+<?php endif ?>
+<script src="<?= e(route('module', $asset_route + ['asset' => $js_asset, 'hash' => $js_hash])) ?>"></script>
 <?php View::endpush() ?>
 
 <?php if (count($media_files) > 1) : ?>

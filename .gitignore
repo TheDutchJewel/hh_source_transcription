@@ -5,5 +5,10 @@
 /dist/
 /node_modules/
 /vendor/
+!/vendor/
+/vendor/*
+!/vendor/openseadragon/
+!/vendor/openseadragon/LICENSE.txt
+!/vendor/openseadragon/openseadragon.min.js
 # others
 *.bak
