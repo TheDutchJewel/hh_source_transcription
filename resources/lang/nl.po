@@ -88,10 +88,10 @@ msgid "Origin reference"
 msgstr "Herkomstreferentie"
 
 msgid "Content format"
-msgstr "Content‑formaat"
+msgstr "Content-formaat"
 
 msgid "Content hash"
-msgstr "Content‑hash"
+msgstr "Content-hash"
 
 msgid "Created by"
 msgstr "Gemaakt door"
@@ -453,6 +453,9 @@ msgstr "Externe mediabestanden kunnen niet direct worden geüpload."
 msgid "The file does not exist on this server."
 msgstr "Het bestand bestaat niet op deze server."
 
+msgid "The selected provider does not support media uploads."
+msgstr "De geselecteerde aanbieder ondersteunt het uploaden van mediabestanden niet."
+
 msgid "Unsupported file format. Use JPEG, TIFF or PNG."
 msgstr "Niet-ondersteund bestandsformaat. Gebruik JPEG, TIFF of PNG."
 
@@ -504,13 +507,13 @@ msgid "Transcriptions"
 msgstr "Transcripties"
 
 msgid "The provider credentials have been deleted."
-msgstr "De provider‑credentials zijn verwijderd."
+msgstr "De provider-credentials zijn verwijderd."
 
 msgid "The provider credentials could not be loaded."
-msgstr "De provider‑credentials konden niet worden geladen."
+msgstr "De provider-credentials konden niet worden geladen."
 
 msgid "The provider credentials have been saved."
-msgstr "De provider‑credentials zijn opgeslagen ."
+msgstr "De provider-credentials zijn opgeslagen ."
 
 #, php-format
 msgid "The preferences for the module “%s” have been updated."
@@ -583,6 +586,41 @@ msgstr "De huidige revisie verwijst naar een andere NOTE dan de huidige NOTE van
 msgid "An active collaboration entry references a user that no longer exists: %s"
 msgstr "Een actief samenwerkingsitem verwijst naar een gebruiker die niet meer bestaat: %s"
 
+msgid "None"
+msgstr "Geen"
+
+#, php-format
+msgid "Media file %s has no filename extension; FORM is %s and MIME type is %s."
+msgstr "Mediabestand %s heeft geen bestandsextensie; FORM-formaat is %s en MIME-type is %s."
+
+#, php-format
+msgid "Media file %s has no GEDCOM FORM value; filename extension is %s and MIME type is %s."
+msgstr "Mediabestand %s bevat geen GEDCOM-FORM-waarde; bestandsextensie is %s en MIME-type is %s."
+
+#, php-format
+msgid "Media file %s has no GEDCOM TYPE value; filename extension is %s and MIME type is %s."
+msgstr "Mediabestand %s bevat geen GEDCOM-TYPE-waarde; bestandsextensie is %s en MIME-type is %s."
+
+#, php-format
+msgid "Media file %s has inconsistent filename extension and GEDCOM FORM: extension %s, FORM %s."
+msgstr "Mediabestand %s heeft een inconsistente bestandsextensie en GEDCOM-FORM: extensie %s, FORM %s."
+
+#, php-format
+msgid "Media file %s has no specific MIME type: %s. Filename extension is %s and FORM is %s."
+msgstr "Mediabestand %s heeft geen specifiek MIME-type: %s. Bestandsextensie is %s en FORM is %s."
+
+#, php-format
+msgid "Media file %s has inconsistent filename extension and MIME type: extension %s, MIME type %s."
+msgstr "Mediabestand %s vertoont een inconsistentie tussen bestandsextensie en MIME-type: extensie %s, MIME-type %s."
+
+#, php-format
+msgid "Media file %s has inconsistent GEDCOM FORM and MIME type: FORM %s, MIME type %s."
+msgstr "Mediabestand %s heeft een inconsistent GEDCOM-FORM en MIME-type: FORM %s, MIME-type %s."
+
+#, php-format
+msgid "Media file %s has inconsistent GEDCOM TYPE and technical metadata: TYPE %s, extension %s, MIME type %s."
+msgstr "Mediabestand %s vertoont een inconsistentie tussen GEDCOM-TYPE en MIME-type: TYPE %s, extensie %s, MIME-type %s."
+
 msgid "successful"
 msgstr "succesvol"
 
@@ -591,6 +629,9 @@ msgstr "mislukt"
 
 msgid "not tested"
 msgstr "niet getest"
+
+msgid "Control panel"
+msgstr "Controlepaneel"
 
 #, php-format
 msgid "This module can only be used with a webtrees version greater or equal than %s."
@@ -615,10 +656,10 @@ msgid "save"
 msgstr "opslaan"
 
 msgid "Provider credentials"
-msgstr "Provider‑credentials"
+msgstr "Provider-credentials"
 
-msgid "An administrator creates an API key in the Discourse administration under Admin > API > API keys. Use the forum base URL, the Discourse username for requests and the generated API key. For a key limited to one user, the API username must match that user; for an all-users key, choose the user whose permissions should be used."
-msgstr "Een beheerder maakt een API-sleutel aan in het Discourse-beheergedeelte onder Beheer > API > API-sleutels. Gebruik de basis-URL van het forum, de Discourse-gebruikersnaam voor verzoeken en de gegenereerde API-sleutel. Voor een sleutel die beperkt is tot één gebruiker, moet de API-gebruikersnaam overeenkomen met die van die gebruiker; voor een sleutel voor alle gebruikers kiest u de gebruiker wiens rechten moeten worden gebruikt."
+msgid "Discourse uses the User API Key authorization flow. Users authorize the module from the transcription dashboard; the module stores the returned user-specific key for later requests."
+msgstr "Discourse maakt gebruik van het autorisatieproces via de gebruikers-API-sleutel. Gebruikers autoriseren de module via het transcriptiedashboard; de module slaat de teruggestuurde gebruikersspecifieke sleutel op voor latere verzoeken."
 
 msgid "Discourse documentation"
 msgstr "Discourse-documentatie"
@@ -631,27 +672,6 @@ msgstr "Transkribus API-documentatie"
 
 msgid "webtrees user"
 msgstr "webtrees-gebruikers"
-
-msgid "Discourse URL"
-msgstr "Discourse-URL"
-
-msgid "Base address of the Discourse forum, without an API path."
-msgstr "Basisadres van het Discourse-forum, zonder het API-gedeelte."
-
-msgid "API username"
-msgstr "API-gebruikersnaam"
-
-msgid "Discourse username used in the Api-Username request header."
-msgstr "Discourse-gebruikersnaam in de API-Username Request Header."
-
-msgid "API key"
-msgstr "API-sleutel"
-
-msgid "stored; leave empty to keep"
-msgstr "opgeslagen; laat leeg om te behouden"
-
-msgid "The API key is shown only once in Discourse; store it here or create a new key if it was lost."
-msgstr "De API-sleutel wordt in Discourse slechts één keer getoond; sla hem hier op of maak een nieuwe sleutel aan als u hem kwijt bent."
 
 msgid "Token URL"
 msgstr "Token-URL"
@@ -679,6 +699,9 @@ msgstr "Transkribus-gebruikersnaam of e-mailadres. Laat ongewijzigd als u een AP
 
 msgid "Password or API key"
 msgstr "Wachtwoord of API-sleutel"
+
+msgid "stored; leave empty to keep"
+msgstr "opgeslagen; laat leeg om te behouden"
 
 msgid "Use an API key starting with \"sk_\" for direct upload authentication, or the account password for token-based authentication."
 msgstr "Gebruik een API-sleutel die begint met \"sk_\" voor authenticatie bij directe uploads, of het accountwachtwoord voor tokengebaseerde authenticatie."
@@ -766,7 +789,7 @@ msgid "Back to transcription"
 msgstr "Terug naar transcriptie"
 
 msgid "Metadata differences"
-msgstr "Metadata‑verschillen"
+msgstr "Metadata-verschillen"
 
 msgid "Field"
 msgstr "Veld"
@@ -837,6 +860,19 @@ msgstr "Geen mediabestanden gevonden."
 msgid "Could not load media files."
 msgstr "Mediabestanden konden niet worden geladen."
 
+msgid "Renew Discourse authorization"
+msgstr "Vernieuw Discourse-autorisatie"
+
+msgid "Authorize Discourse"
+msgstr "Discourse autoriseren"
+
+msgid "Authorize Discourse test"
+msgstr "Test Discourse-autorisatie"
+
+#, php-format
+msgid "Discourse authorization stored for %s."
+msgstr "Discourse-autorisatie opgeslagen voor %s."
+
 msgid "Transkribus jobs"
 msgstr "Transkribus-taken"
 
@@ -861,6 +897,9 @@ msgid_plural "%s transcriptions"
 msgstr[0] "%s transcriptie"
 msgstr[1] "%s transcripties"
 
+msgid "Transcription title"
+msgstr "Transcriptietitel"
+
 msgid "Transcription provider"
 msgstr "Transcriptieaanbieder"
 
@@ -873,8 +912,8 @@ msgstr "Acties"
 msgid "Source record"
 msgstr "Bronrecord"
 
-msgid "None"
-msgstr "Geen"
+msgid "External media URL"
+msgstr "URL van extern mediabestand"
 
 msgid "Open"
 msgstr "Openen"
@@ -902,6 +941,26 @@ msgstr "Geen mediaobject geselecteerd."
 msgid "Current NOTE"
 msgstr "Huidige NOTE"
 
+msgid "Media preview"
+msgstr "Mediavoorbeeld"
+
+msgid "No media files found for this media object."
+msgstr "Geen mediabestanden gevonden voor dit mediaobject."
+
+msgid "Save NOTE"
+msgstr "Opslaan NOTE"
+
+msgid "Archive as new revision"
+msgstr "Archiveren als nieuwe revisie"
+
+msgctxt "Button: mark this transcription as final"
+msgid "Finalize"
+msgstr "Voltooien"
+
+msgctxt "Button: reopen this finalized transcription for editing"
+msgid "Reopen"
+msgstr "Heropenen"
+
 msgctxt "Panel heading for the webtrees-internal collaboration workflow"
 msgid "Internal collaboration"
 msgstr "Interne samenwerking"
@@ -924,12 +983,12 @@ msgctxt "Button: submit the transcription for review"
 msgid "Ready for review"
 msgstr "Gereed voor beoordeling"
 
+msgid "No eligible users found."
+msgstr "Geen geschikte gebruikers gevonden."
+
 msgctxt "Form label for selecting multiple collaboration team members; not a plural variant of the role label"
 msgid "Collaborators"
 msgstr "Samenwerkers"
-
-msgid "No eligible users found."
-msgstr "Geen geschikte gebruikers gevonden."
 
 msgid "Save the current NOTE as a starting revision"
 msgstr "Sla de huidige NOTE op als startrevisie"
@@ -945,33 +1004,6 @@ msgstr "Open voor samenwerking"
 msgctxt "Hint shown when collaboration cannot be started because the transcription is final or canceled"
 msgid "Reopen the transcription before starting or changing internal collaboration."
 msgstr "Heropen de transcriptie voordat je interne samenwerking start of wijzigt."
-
-msgid "Media preview"
-msgstr "Mediavoorvertoning"
-
-msgid "No media files found for this media object."
-msgstr "Geen mediabestanden gevonden voor dit mediaobject."
-
-msgctxt "Label for selecting one media file"
-msgid "Media file"
-msgstr "Mediabestand"
-
-msgid "This media file cannot be previewed here."
-msgstr "Van dit mediabestand kan geen voorbeeld worden bekeken."
-
-msgid "Save NOTE"
-msgstr "Opslaan NOTE"
-
-msgid "Archive as new revision"
-msgstr "Archiveren als nieuwe revisie"
-
-msgctxt "Button: mark this transcription as final"
-msgid "Finalize"
-msgstr "Voltooien"
-
-msgctxt "Button: reopen this finalized transcription for editing"
-msgid "Reopen"
-msgstr "Heropenen"
 
 msgid "Revision history"
 msgstr "Revisiegeschiedenis"
@@ -998,7 +1030,67 @@ msgid "Make this revision current? The current NOTE will be overwritten with the
 msgstr "Deze revisie als de huidige revisie instellen? De huidige NOTE wordt overschreven met de tekst van deze revisie."
 
 msgid "Make current"
-msgstr "Aktuell machen"
+msgstr "Maak huidig"
+
+msgctxt "Label for selecting one media file"
+msgid "Media file"
+msgstr "Mediabestand"
+
+msgid "This external media URL cannot be embedded here."
+msgstr "De URL van het externe mediabestand kan hier niet worden ingesloten."
+
+msgid "Open external media"
+msgstr "Open extern mediabestand"
+
+msgid "Image controls"
+msgstr "Beeldinstellingen"
+
+msgid "Zoom out"
+msgstr "Uitzoomen"
+
+msgid "Reset"
+msgstr "Opnieuw instellen"
+
+msgid "Zoom in"
+msgstr "Inzoomen"
+
+msgid "Open PDF in a new window"
+msgstr "Open PDF in een nieuw venster"
+
+msgid "The text preview is shortened."
+msgstr "Het tekstvoorbeeld is ingekort."
+
+msgid "Stop"
+msgstr "Stop"
+
+msgid "This media file cannot be previewed here. Use the download link below to save the file."
+msgstr "Dit mediabestand kan hier niet worden voorvertoond. Gebruik de onderstaande downloadlink om het op te slaan."
+
+msgid "Download file"
+msgstr "Bestand downloaden"
+
+#~ msgid ""
+#~ "An administrator creates an API key in the Discourse administration under Admin > API > API keys. Use the forum base URL, the Discourse username for requests and the generated API key. For a key limited to one user, the API username must match that user; for an all-users key, "
+#~ "choose the user whose permissions should be used."
+#~ msgstr "Ein Administrator erstellt einen API-Schlüssel in der Discourse-Verwaltung unter „Admin > API > API-Schlüssel“.  Der Prozess wie Discourse-Nutzer einen API-Schlüssel erhalten, ist noch in Diskussion."
+
+#~ msgid "Discourse URL"
+#~ msgstr "Discourse URL"
+
+#~ msgid "Base address of the Discourse forum, without an API path."
+#~ msgstr "Basisadresse des Discourse-Forums, ohne den API-Teil."
+
+#~ msgid "API username"
+#~ msgstr "API Benutzername"
+
+#~ msgid "Discourse username used in the Api-Username request header."
+#~ msgstr "Discourse-Benutzername im API-Username Request Header."
+
+#~ msgid "API key"
+#~ msgstr "API Schlüssel"
+
+#~ msgid "The API key is shown only once in Discourse; store it here or create a new key if it was lost."
+#~ msgstr "Der API-Schlüssel wird in Discourse nur einmal angezeigt; speichern Sie ihn hier oder erstellen Sie einen neuen Schlüssel, falls er verloren gegangen ist."
 
 #~ msgid "End transcription"
 #~ msgstr "Ende der Transkription"
