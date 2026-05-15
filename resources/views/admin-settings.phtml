@@ -13,6 +13,7 @@ declare(strict_types=1);
  * @var array<string,string> $note_strategies
  * @var string $tiny_mde
  * @var string $tagging_support
+ * @var int $dashboard_page_size
  * @var string $tag_prefix
  * @var string $tag_value
  * @var array $provider_credentials
@@ -116,6 +117,30 @@ $statusBadge = static function (bool $status): string {
                         value="enabled"
                         <?= $tagging_support === 'enabled' ? 'checked' : '' ?>
                 >
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-3">
+        <label class="col-sm-3 col-form-label" for="dashboard_page_size">
+            <?= I18N::translate('Dashboard entries per page') ?>
+        </label>
+
+        <div class="col-sm-9">
+            <input
+                    class="form-control"
+                    id="dashboard_page_size"
+                    name="<?= e(SourceTranscription::DASHBOARD_PAGE_SIZE) ?>"
+                    type="number"
+                    min="<?= e((string) SourceTranscription::MINIMUM_DASHBOARD_PAGE_SIZE) ?>"
+                    max="<?= e((string) SourceTranscription::MAXIMUM_DASHBOARD_PAGE_SIZE) ?>"
+                    step="1"
+                    value="<?= e((string) $dashboard_page_size) ?>"
+                    required
+            >
+
+            <div class="form-text">
+                <?= I18N::translate('Default') . ': ' . I18N::number(SourceTranscription::DEFAULT_DASHBOARD_PAGE_SIZE) ?>
             </div>
         </div>
     </div>

@@ -50,6 +50,8 @@ final class Transcription
         public readonly ?string $tag_note_xref,
         public readonly ?string $current_note_xref,
         public readonly int     $created_by_user_id,
+        public readonly string  $created_at,
+        public readonly ?string $updated_at,
         public readonly bool    $is_active,
     ) {
     }

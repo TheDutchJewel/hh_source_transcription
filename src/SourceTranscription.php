@@ -97,7 +97,7 @@ final class SourceTranscription extends AbstractModule implements
     use ModuleMenuTrait;
 
     //Custom module version
-	public const string CUSTOM_VERSION = '2.2.6.1';
+	public const string CUSTOM_VERSION = '2.2.6.2';
 
     //Supported webtrees version
     public const string MINIMUM_WEBTREES_VERSION = '2.2.5';
@@ -134,7 +134,11 @@ final class SourceTranscription extends AbstractModule implements
     public const string DEFAULT_TAG_TEXT = 'default_tag_text';
     public const string TINY_MDE = 'tiny_mde';
     public const string TAGGING_SUPPORT = 'tagging_support';
+    public const string DASHBOARD_PAGE_SIZE = 'dashboard_page_size';
     public const string WHATS_NEW = 'whats_new';
+    public const int DEFAULT_DASHBOARD_PAGE_SIZE = 20;
+    public const int MINIMUM_DASHBOARD_PAGE_SIZE = 1;
+    public const int MAXIMUM_DASHBOARD_PAGE_SIZE = 200;
 
     //Default provider credential endpoints
     public const string DEFAULT_TRANSKRIBUS_TOKEN_URL = 'https://account.readcoop.eu/auth/realms/readcoop/protocol/openid-connect/token';
@@ -392,6 +396,7 @@ final class SourceTranscription extends AbstractModule implements
         $settingsRepository->set(self::DEFAULT_TAG_TEXT, self::DEFAULT_TAG);
         $settingsRepository->set(self::TINY_MDE, 'enabled');
         $settingsRepository->set(self::TAGGING_SUPPORT, 'enabled');
+        $settingsRepository->set(self::DASHBOARD_PAGE_SIZE, (string) self::DEFAULT_DASHBOARD_PAGE_SIZE);
     }
 
 
@@ -674,6 +679,7 @@ final class SourceTranscription extends AbstractModule implements
             'note_strategies'               => NoteStrategy::labels(),
             'tiny_mde'                      => $settings->get('tiny_mde', ''),
             'tagging_support'               => $settings->get('tagging_support', 'enabled'),
+            'dashboard_page_size'           => $this->dashboardPageSize($settings),
             'tag_prefix'                    => self::DEFAULT_TAG_PREFIX,
             'tag_value'                     => $tag_value,
             'provider_credentials'          => $this->providerCredentialViewData($selected_user_id, $selected_provider_key),
@@ -780,6 +786,7 @@ final class SourceTranscription extends AbstractModule implements
             $settings->set('default_note_strategy', $note_strategy);
             $settings->set('tiny_mde', (string) ($params['tiny_mde'] ?? ''));
             $settings->set('tagging_support', (string) ($params['tagging_support'] ?? ''));
+            $settings->set(self::DASHBOARD_PAGE_SIZE, (string) $this->normalizeDashboardPageSize((int) ($params[self::DASHBOARD_PAGE_SIZE] ?? self::DEFAULT_DASHBOARD_PAGE_SIZE)));
 
             //Finally, show a success message
             FlashMessages::addMessage(
@@ -788,6 +795,19 @@ final class SourceTranscription extends AbstractModule implements
             );
         }
         return redirect($this->getConfigLink());
+    }
+
+    private function dashboardPageSize(SettingsRepository $settings): int
+    {
+        return $this->normalizeDashboardPageSize((int) $settings->get(self::DASHBOARD_PAGE_SIZE, (string) self::DEFAULT_DASHBOARD_PAGE_SIZE));
+    }
+
+    private function normalizeDashboardPageSize(int $page_size): int
+    {
+        return min(
+            self::MAXIMUM_DASHBOARD_PAGE_SIZE,
+            max(self::MINIMUM_DASHBOARD_PAGE_SIZE, $page_size)
+        );
     }
 
     /**

@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: SourceTranscription\n"
-"POT-Creation-Date: 2026-05-15 00:49+0200\n"
+"POT-Creation-Date: 2026-05-15 21:03+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Hermann Hartenthaler <hermann@hartenthaler.de>\n"
 "Language-Team: \n"
@@ -580,7 +580,7 @@ msgstr "Start einer manuellen Transkription"
 msgid "Upload images to Transkribus"
 msgstr "Hochladen von Bildern zu Transkribus"
 
-#: src/Http/RequestHandlers/DashboardAction.php:54
+#: src/Http/RequestHandlers/DashboardAction.php:59
 msgid "Source capture and analysis"
 msgstr "Quellenerfassung und -analyse"
 
@@ -667,79 +667,79 @@ msgstr ""
 "Ein neuer Transkriptionsanbieter ist verfügbar: interne Zusammenarbeit mit "
 "anderen webtrees-Nutzern."
 
-#: src/SourceTranscription.php:372
+#: src/SourceTranscription.php:376
 msgid "What's new?"
 msgstr "Was gibt es Neues?"
 
-#: src/SourceTranscription.php:465
+#: src/SourceTranscription.php:470
 msgid "Source Transcription"
 msgstr "Transkription von Quellen"
 
-#: src/SourceTranscription.php:477
+#: src/SourceTranscription.php:482
 msgid "Manage source transcriptions with manual and provider-based workflows."
 msgstr ""
 "Verwaltung von Quellen-Transkriptionen mit einem manuellen oder Anbieter-"
 "Arbeitsablauf."
 
-#: src/SourceTranscription.php:569
+#: src/SourceTranscription.php:574
 msgid "Transcriptions"
 msgstr "Transkriptionen"
 
-#: src/SourceTranscription.php:727
+#: src/SourceTranscription.php:733
 msgid "The provider credentials have been deleted."
 msgstr "Die Anmeldedaten des Anbieters sind gelöscht worden."
 
-#: src/SourceTranscription.php:751
+#: src/SourceTranscription.php:757
 msgid "The provider credentials could not be loaded."
 msgstr "Die Anmeldedaten des Anbieters konnten nicht geladen werden.."
 
-#: src/SourceTranscription.php:760
+#: src/SourceTranscription.php:766
 msgid "The provider credentials have been saved."
 msgstr "Die Anmeldedaten des Anbieters sind gesichert worden."
 
-#: src/SourceTranscription.php:786
+#: src/SourceTranscription.php:793
 #, php-format
 msgid "The preferences for the module “%s” have been updated."
 msgstr ""
 "Die Einstellungen für das Erweiterungsmodul \"%s\" wurden aktualisiert."
 
-#: src/SourceTranscription.php:914
+#: src/SourceTranscription.php:934
 msgid "The module database tables are incomplete."
 msgstr "Die Datenbanktabellen des Moduls sind unvollständig."
 
-#: src/SourceTranscription.php:937 src/SourceTranscription.php:1056
+#: src/SourceTranscription.php:957 src/SourceTranscription.php:1076
 msgid "Unknown tree"
 msgstr "Unbekannter Baum"
 
-#: src/SourceTranscription.php:941
+#: src/SourceTranscription.php:961
 msgid "The referenced family tree no longer exists."
 msgstr "Der referenzierte Familienbaum existiert nicht mehr."
 
-#: src/SourceTranscription.php:950
+#: src/SourceTranscription.php:970
 #, php-format
 msgid "The referenced source does not exist: %s"
 msgstr "Die referenzierte Quelle existiert nicht: %s"
 
-#: src/SourceTranscription.php:954
+#: src/SourceTranscription.php:974
 #, php-format
 msgid "The referenced media object does not exist: %s"
 msgstr "Das referenzierte Medienobjekt existiert nicht: %s"
 
-#: src/SourceTranscription.php:962
+#: src/SourceTranscription.php:982
 msgid "The referenced media object is no longer linked to the source."
 msgstr ""
 "Das referenzierte Medienobjekt ist nicht mehr mit der Quelle verknüpft."
 
-#: src/SourceTranscription.php:967
+#: src/SourceTranscription.php:987
 msgid "The transcription has no current NOTE."
 msgstr "Die Transkription hat keine aktuelle NOTE."
 
-#: src/SourceTranscription.php:972
+#: src/SourceTranscription.php:992
 #, php-format
 msgid "The current NOTE does not exist: %s"
 msgstr "Die aktuelle NOTE existiert nicht: %s"
 
-#: src/SourceTranscription.php:974
+#: src/SourceTranscription.php:994
 #, php-format
 msgid ""
 "The current NOTE is not linked to the expected source or media object: %s"
@@ -747,49 +747,49 @@ msgstr ""
 "Die aktuelle NOTE ist nicht wie erwartet mit der Quelle oder dem "
 "Medienobjekt verknüpft: %s"
 
-#: src/SourceTranscription.php:993
+#: src/SourceTranscription.php:1013
 msgid "The current NOTE has changed since it was last linked to a revision."
 msgstr ""
 "Die aktuelle NOTE wurde nach der Verknüpfung mit einer Revision geändert."
 
-#: src/SourceTranscription.php:999
+#: src/SourceTranscription.php:1019
 msgid "Tagging is enabled, but the transcription has no tag NOTE."
 msgstr "Tagging ist aktiviert, aber die Transkription enthält keine Tag-NOTE."
 
-#: src/SourceTranscription.php:1004
+#: src/SourceTranscription.php:1024
 #, php-format
 msgid "The tag NOTE does not exist: %s"
 msgstr "Die Tag-NOTE existiert nicht: %s"
 
-#: src/SourceTranscription.php:1006
+#: src/SourceTranscription.php:1026
 #, php-format
 msgid "The tag NOTE is not linked to the expected source or media object: %s"
 msgstr ""
 "Die Tag-NOTE ist nicht wie erwartet mit der Quelle oder dem Medienobjekt "
 "verknüpft: %s"
 
-#: src/SourceTranscription.php:1030
+#: src/SourceTranscription.php:1050
 #, php-format
 msgid "Revision %s belongs to a transcription that no longer exists."
 msgstr ""
 "Die Revision %s gehört zu einer Transkription, die nicht mehr existiert."
 
-#: src/SourceTranscription.php:1047
+#: src/SourceTranscription.php:1067
 #, php-format
 msgid "Revision %s references a NOTE that no longer exists: %s"
 msgstr "Die Revision %s referenziert eine NOTE, die nicht mehr existiert: %s"
 
-#: src/SourceTranscription.php:1062
+#: src/SourceTranscription.php:1082
 msgid "The transcription has no revisions."
 msgstr "Die Transkription hat keine Revisionen."
 
-#: src/SourceTranscription.php:1064
+#: src/SourceTranscription.php:1084
 #, php-format
 msgid "The transcription has %s current revisions; expected exactly one."
 msgstr ""
 "Die Transkription hat %s aktuelle Revisionen; erwartet wird genau eine."
 
-#: src/SourceTranscription.php:1077
+#: src/SourceTranscription.php:1097
 msgid ""
 "The current revision references a different NOTE than the transcription "
 "current NOTE."
@@ -797,7 +797,7 @@ msgstr ""
 "Die aktuelle Revision referenziert eine andere NOTE als die aktuelle NOTE "
 "dieser Transkription."
 
-#: src/SourceTranscription.php:1100
+#: src/SourceTranscription.php:1120
 #, php-format
 msgid ""
 "An active collaboration entry references a user that no longer exists: %s"
@@ -805,13 +805,13 @@ msgstr ""
 "Ein aktiver Zusammenarbeitseintrag verweist auf einen Nutzer, der nicht mehr "
 "existiert: %s"
 
-#: src/SourceTranscription.php:1129 src/SourceTranscription.php:1139
-#: src/SourceTranscription.php:1149 src/SourceTranscription.php:1169
-#: src/SourceTranscription.php:1199
+#: src/SourceTranscription.php:1149 src/SourceTranscription.php:1159
+#: src/SourceTranscription.php:1169 src/SourceTranscription.php:1189
+#: src/SourceTranscription.php:1219
 msgid "None"
 msgstr "Keine"
 
-#: src/SourceTranscription.php:1129
+#: src/SourceTranscription.php:1149
 #, php-format
 msgid ""
 "Media file %s has no filename extension; FORM is %s and MIME type is %s."
@@ -819,7 +819,7 @@ msgstr ""
 "Die Mediendatei %s hat keine Dateiendung; das FORM-Format lautet %s und der "
 "MIME-Typ ist %s."
 
-#: src/SourceTranscription.php:1139
+#: src/SourceTranscription.php:1159
 #, php-format
 msgid ""
 "Media file %s has no GEDCOM FORM value; filename extension is %s and MIME "
@@ -828,7 +828,7 @@ msgstr ""
 "Die Mediendatei %s enthält keinen GEDCOM-FORM-Wert; die Dateiendung lautet "
 "%s und der MIME-Typ ist %s."
 
-#: src/SourceTranscription.php:1149
+#: src/SourceTranscription.php:1169
 #, php-format
 msgid ""
 "Media file %s has no GEDCOM TYPE value; filename extension is %s and MIME "
@@ -837,7 +837,7 @@ msgstr ""
 "Die Mediendatei %s enthält keinen GEDCOM-TYPE-Wert; die Dateiendung lautet "
 "%s und der MIME-Typ ist %s."
 
-#: src/SourceTranscription.php:1159
+#: src/SourceTranscription.php:1179
 #, php-format
 msgid ""
 "Media file %s has inconsistent filename extension and GEDCOM FORM: extension "
@@ -846,7 +846,7 @@ msgstr ""
 "Die Mediendatei %s weist eine Dateinamenerweiterung auf, die zur GEDCOM FORM "
 "inkonsistent ist: Erweiterung %s, FORM %s."
 
-#: src/SourceTranscription.php:1169
+#: src/SourceTranscription.php:1189
 #, php-format
 msgid ""
 "Media file %s has no specific MIME type: %s. Filename extension is %s and "
@@ -855,7 +855,7 @@ msgstr ""
 "Die Mediendatei %s hat keinen spezifischen MIME-Typ: %s. Die Dateiendung "
 "lautet %s und FORM ist %s."
 
-#: src/SourceTranscription.php:1179
+#: src/SourceTranscription.php:1199
 #, php-format
 msgid ""
 "Media file %s has inconsistent filename extension and MIME type: extension "
@@ -864,7 +864,7 @@ msgstr ""
 "Die Mediendatei %s weist eine Inkonsistenz zwischen Dateinamenerweiterung "
 "und MIME-Typ auf: Erweiterung %s, MIME-Typ %s."
 
-#: src/SourceTranscription.php:1189
+#: src/SourceTranscription.php:1209
 #, php-format
 msgid ""
 "Media file %s has inconsistent GEDCOM FORM and MIME type: FORM %s, MIME type "
@@ -873,7 +873,7 @@ msgstr ""
 "Die Mediendatei %s weist einen inkonsistenten GEDCOM-FORM- und MIME-Typ auf: "
 "FORM %s, MIME-Typ %s."
 
-#: src/SourceTranscription.php:1199
+#: src/SourceTranscription.php:1219
 #, php-format
 msgid ""
 "Media file %s has inconsistent GEDCOM TYPE and technical metadata: TYPE %s, "
@@ -882,23 +882,23 @@ msgstr ""
 "Die Mediendatei %s weist eine Inkonsistenz zwischen dem GEDCOM-TYPE und dem "
 "MIME-Typ auf: TYPE %s, Erweiterung %s, MIME-Typ %s."
 
-#: resources/views/admin-settings.phtml:33
+#: resources/views/admin-settings.phtml:34
 msgid "successful"
 msgstr "erfolgreich"
 
-#: resources/views/admin-settings.phtml:34
+#: resources/views/admin-settings.phtml:35
 msgid "failed"
 msgstr "schief gegangen"
 
-#: resources/views/admin-settings.phtml:35
+#: resources/views/admin-settings.phtml:36
 msgid "not tested"
 msgstr "nicht getestet"
 
-#: resources/views/admin-settings.phtml:47
+#: resources/views/admin-settings.phtml:48
 msgid "Control panel"
 msgstr ""
 
-#: resources/views/admin-settings.phtml:52
+#: resources/views/admin-settings.phtml:53
 #, php-format
 msgid ""
 "This module can only be used with a webtrees version greater or equal than "
@@ -907,37 +907,42 @@ msgstr ""
 "Dieses Erweiterungsmodul kann nur mit einer webtrees-Version verwendet "
 "werden, die größer oder gleich %s ist."
 
-#: resources/views/admin-settings.phtml:62
+#: resources/views/admin-settings.phtml:63
 msgid "NOTE update strategy"
 msgstr "NOTE-Aktualisierungsstrategie"
 
-#: resources/views/admin-settings.phtml:87
+#: resources/views/admin-settings.phtml:88
 msgid "Use of TinyMDE as the editor for transcription notes"
 msgstr "Verwendung von TinyMDE als Editor für Transkriptions-Notizen"
 
-#: resources/views/admin-settings.phtml:106
+#: resources/views/admin-settings.phtml:107
 msgid "Should tagging be supported?"
 msgstr "Soll Tagging unterstützt werden?"
 
-#: resources/views/admin-settings.phtml:125
-msgid "Tag value for tagging all sources with at least one transcription"
-msgstr ""
-"Tag-Kennzeichen zum Taggen aller Quellen mit wenigstens einer Transkription"
+#: resources/views/admin-settings.phtml:126
+msgid "Dashboard entries per page"
+msgstr "Anzahl der Dashboard-Einträge pro Seite"
 
-#: resources/views/admin-settings.phtml:142
+#: resources/views/admin-settings.phtml:143
+#: resources/views/admin-settings.phtml:167
 msgid "Default"
 msgstr "Standard"
 
 #: resources/views/admin-settings.phtml:150
-#: resources/views/admin-settings.phtml:297
+msgid "Tag value for tagging all sources with at least one transcription"
+msgstr ""
+"Tag-Kennzeichen zum Taggen aller Quellen mit wenigstens einer Transkription"
+
+#: resources/views/admin-settings.phtml:175
+#: resources/views/admin-settings.phtml:322
 msgid "save"
 msgstr "sichern"
 
-#: resources/views/admin-settings.phtml:156
+#: resources/views/admin-settings.phtml:181
 msgid "Provider credentials"
 msgstr "Anmeldedaten des Anbieters"
 
-#: resources/views/admin-settings.phtml:161
+#: resources/views/admin-settings.phtml:186
 msgid ""
 "Discourse uses the User API Key authorization flow. Users authorize the "
 "module from the transcription dashboard; the module stores the returned user-"
@@ -948,11 +953,11 @@ msgstr ""
 "Modul speichert den zurückgegebenen benutzerspezifischen Schlüssel für "
 "spätere Anfragen."
 
-#: resources/views/admin-settings.phtml:163
+#: resources/views/admin-settings.phtml:188
 msgid "Discourse documentation"
 msgstr "Dokumentation zu Discourse"
 
-#: resources/views/admin-settings.phtml:169
+#: resources/views/admin-settings.phtml:194
 msgid ""
 "For uploads, use a Transkribus API key as the secret if your account "
 "provides one. As a fallback, you can use the regular Transkribus account "
@@ -965,19 +970,19 @@ msgstr ""
 "verwenden; die Token-URL und die Client-ID werden für die Processing-API "
 "automatisch ausgefüllt."
 
-#: resources/views/admin-settings.phtml:171
+#: resources/views/admin-settings.phtml:196
 msgid "Transkribus API documentation"
 msgstr "Transkribus API Dokumentation"
 
-#: resources/views/admin-settings.phtml:187
+#: resources/views/admin-settings.phtml:212
 msgid "webtrees user"
 msgstr "webtrees-Nutzer"
 
-#: resources/views/admin-settings.phtml:221
+#: resources/views/admin-settings.phtml:246
 msgid "Token URL"
 msgstr ""
 
-#: resources/views/admin-settings.phtml:227
+#: resources/views/admin-settings.phtml:252
 msgid ""
 "OpenID Connect token endpoint used to obtain a temporary Transkribus access "
 "token."
@@ -985,11 +990,11 @@ msgstr ""
 "OpenID Connect-Token-Endpunkt zum Abrufen eines temporären Transkribus-"
 "Zugriffs-Tokens."
 
-#: resources/views/admin-settings.phtml:234
+#: resources/views/admin-settings.phtml:259
 msgid "Upload URL"
 msgstr "Hochladen URL"
 
-#: resources/views/admin-settings.phtml:240
+#: resources/views/admin-settings.phtml:265
 msgid ""
 "Endpoint used for the first upload step. Keep the default unless Transkribus "
 "changes the upload endpoint for your API account."
@@ -998,11 +1003,11 @@ msgstr ""
 "Standardeinstellung bei, es sei denn, Transkribus ändert den Upload-Endpunkt "
 "für Ihr API-Konto."
 
-#: resources/views/admin-settings.phtml:247
+#: resources/views/admin-settings.phtml:272
 msgid "Client ID"
 msgstr ""
 
-#: resources/views/admin-settings.phtml:253
+#: resources/views/admin-settings.phtml:278
 msgid ""
 "Use \"processing-api-client\" for the Processing API. Use \"transkribus-api-"
 "client\" only for the legacy REST API."
@@ -1010,11 +1015,11 @@ msgstr ""
 "Verwenden Sie „processing-api-client“ für die Processing-API. Verwenden Sie "
 "„transkribus-api-client“ nur für die alte REST-API."
 
-#: resources/views/admin-settings.phtml:260
+#: resources/views/admin-settings.phtml:285
 msgid "Username"
 msgstr "Benutzername"
 
-#: resources/views/admin-settings.phtml:266
+#: resources/views/admin-settings.phtml:291
 msgid ""
 "Transkribus login name or email address. Leave unchanged when using an API "
 "key as the secret."
@@ -1022,15 +1027,15 @@ msgstr ""
 "Transkribus-Benutzername oder E-Mail-Adresse. Bei Verwendung eines API-"
 "Schlüssels als Geheimnis unverändert lassen."
 
-#: resources/views/admin-settings.phtml:273
+#: resources/views/admin-settings.phtml:298
 msgid "Password or API key"
 msgstr "Passwort oder API-Schlüssel"
 
-#: resources/views/admin-settings.phtml:277
+#: resources/views/admin-settings.phtml:302
 msgid "stored; leave empty to keep"
 msgstr "gespeichert; zum Beibehalten leer lassen"
 
-#: resources/views/admin-settings.phtml:279
+#: resources/views/admin-settings.phtml:304
 msgid ""
 "Use an API key starting with \"sk_\" for direct upload authentication, or "
 "the account password for token-based authentication."
@@ -1039,106 +1044,106 @@ msgstr ""
 "Schlüssel, der mit „sk_“ beginnt, oder das Passwort des Kontos für die "
 "tokenbasierte Authentifizierung."
 
-#: resources/views/admin-settings.phtml:300
+#: resources/views/admin-settings.phtml:325
 msgid "Save and test"
 msgstr "Sichern und testen"
 
-#: resources/views/admin-settings.phtml:303
+#: resources/views/admin-settings.phtml:328
 msgid "delete"
 msgstr "löschen"
 
-#: resources/views/admin-settings.phtml:309
+#: resources/views/admin-settings.phtml:334
 msgid "Diagnostics"
 msgstr "Diagnose"
 
-#: resources/views/admin-settings.phtml:316
+#: resources/views/admin-settings.phtml:341
 msgid "Run consistency check"
 msgstr "Führe Konsistenzprüfung durch"
 
-#: resources/views/admin-settings.phtml:321
+#: resources/views/admin-settings.phtml:346
 msgid "Consistency check"
 msgstr "Konsistenzprüfung"
 
-#: resources/views/admin-settings.phtml:325
+#: resources/views/admin-settings.phtml:350
 msgid "No consistency issues found."
 msgstr "Es wurden keine Konsistenzprobleme gefunden."
 
-#: resources/views/admin-settings.phtml:330
+#: resources/views/admin-settings.phtml:355
 msgid "Errors"
 msgstr "Fehler"
 
-#: resources/views/admin-settings.phtml:336
 #: resources/views/admin-settings.phtml:361
-#: resources/views/admin-settings.phtml:407
-#: resources/views/admin-settings.phtml:468
+#: resources/views/admin-settings.phtml:386
+#: resources/views/admin-settings.phtml:432
+#: resources/views/admin-settings.phtml:493
 msgid "Family tree"
 msgstr "Familienbaum"
 
-#: resources/views/admin-settings.phtml:338
+#: resources/views/admin-settings.phtml:363
 msgid "Error"
 msgstr "Fehler"
 
-#: resources/views/admin-settings.phtml:355
+#: resources/views/admin-settings.phtml:380
 msgid "Warnings"
 msgstr "Warnungen"
 
-#: resources/views/admin-settings.phtml:363
+#: resources/views/admin-settings.phtml:388
 msgid "Warning"
 msgstr "Warnung"
 
-#: resources/views/admin-settings.phtml:380
+#: resources/views/admin-settings.phtml:405
 msgid "Database"
 msgstr "Datenbank"
 
-#: resources/views/admin-settings.phtml:386
+#: resources/views/admin-settings.phtml:411
 msgid "Schema version"
 msgstr "Schema-Version"
 
-#: resources/views/admin-settings.phtml:394
+#: resources/views/admin-settings.phtml:419
 msgid "Database tables"
 msgstr "Datenbanktabellen"
 
-#: resources/views/admin-settings.phtml:401
+#: resources/views/admin-settings.phtml:426
 msgid "Trees with transcriptions"
 msgstr "Bäume mit Transkriptionen"
 
-#: resources/views/admin-settings.phtml:409
+#: resources/views/admin-settings.phtml:434
 msgid "Revisions"
 msgstr "Revisionen"
 
-#: resources/views/admin-settings.phtml:415
+#: resources/views/admin-settings.phtml:440
 msgid "No active transcriptions found."
 msgstr "Keine aktiven Transkriptionen gefunden."
 
-#: resources/views/admin-settings.phtml:433
+#: resources/views/admin-settings.phtml:458
 msgid "NOTE editor"
 msgstr "NOTE-Editor"
 
-#: resources/views/admin-settings.phtml:439
+#: resources/views/admin-settings.phtml:464
 msgid "linkenhancer installed"
 msgstr "linkenhancer ist installiert"
 
-#: resources/views/admin-settings.phtml:443
+#: resources/views/admin-settings.phtml:468
 msgid "linkenhancer enabled"
 msgstr "linkenhancer ist aktiviert"
 
-#: resources/views/admin-settings.phtml:447
+#: resources/views/admin-settings.phtml:472
 msgid "TinyMDE setting enabled"
 msgstr "TinyMDE-Option ist ausgewählt"
 
-#: resources/views/admin-settings.phtml:451
+#: resources/views/admin-settings.phtml:476
 msgid "TinyMDE service available"
 msgstr "TinyMDE-Dienst ist verfügbar"
 
-#: resources/views/admin-settings.phtml:455
+#: resources/views/admin-settings.phtml:480
 msgid "TinyMDE rule registered"
 msgstr "TinyMDE-Regel ist registriert"
 
-#: resources/views/admin-settings.phtml:462
+#: resources/views/admin-settings.phtml:487
 msgid "Markdown option by tree"
 msgstr "Markdown-Option pro Baum"
 
-#: resources/views/admin-settings.phtml:469
+#: resources/views/admin-settings.phtml:494
 msgid "Markdown"
 msgstr ""
 
@@ -1225,7 +1230,7 @@ msgid "Could not load media objects"
 msgstr "Es konnten keine Medienobjekte geladen werden"
 
 #: resources/views/create-transkribus-job.phtml:25
-#: resources/views/dashboard.phtml:92
+#: resources/views/dashboard.phtml:442
 msgid "Job title"
 msgstr "Job-Titel"
 
@@ -1268,86 +1273,134 @@ msgstr "Keine Mediendateien gefunden."
 msgid "Could not load media files."
 msgstr "Es konnten keine Mediendateien geladen werden."
 
-#: resources/views/dashboard.phtml:69
+#: resources/views/dashboard.phtml:155
 msgid "Renew Discourse authorization"
 msgstr "Erneuere die Autorisierung bei Discourse"
 
-#: resources/views/dashboard.phtml:69
+#: resources/views/dashboard.phtml:155
 msgid "Authorize Discourse"
 msgstr "Discourse autorisieren"
 
-#: resources/views/dashboard.phtml:72
+#: resources/views/dashboard.phtml:158
 msgid "Authorize Discourse test"
 msgstr "Test der Discourse-Autorisierung"
 
-#: resources/views/dashboard.phtml:77
+#: resources/views/dashboard.phtml:163
 #, php-format
 msgid "Discourse authorization stored for %s."
 msgstr "Discourse-Autorisierung gespeichert für %s."
 
-#: resources/views/dashboard.phtml:87
-msgid "Transkribus jobs"
-msgstr "Transkribus Jobs"
+#: resources/views/dashboard.phtml:175 resources/views/dashboard.phtml:434
+msgid "Show/hide"
+msgstr "Anzeigen/Verstecken"
 
-#: resources/views/dashboard.phtml:94 resources/views/dashboard.phtml:185
-msgid "Media"
-msgstr ""
-
-#: resources/views/dashboard.phtml:95 resources/views/dashboard.phtml:187
-#: resources/views/detail.phtml:195
+#: resources/views/dashboard.phtml:187 resources/views/dashboard.phtml:250
+#: resources/views/dashboard.phtml:445 resources/views/detail.phtml:195
 msgid "Status"
 msgstr "Status"
 
-#: resources/views/dashboard.phtml:96
-msgid "Upload references"
-msgstr "Hochladereferenz"
+#: resources/views/dashboard.phtml:189 resources/views/dashboard.phtml:200
+msgid "All"
+msgstr "Alle"
 
-#: resources/views/dashboard.phtml:97 resources/views/detail.phtml:430
-msgid "Message"
-msgstr "Nachricht"
+#: resources/views/dashboard.phtml:198 resources/views/dashboard.phtml:245
+msgid "Transcription provider"
+msgstr "Anbieter der Transkription"
 
-#: resources/views/dashboard.phtml:121 resources/views/dashboard.phtml:128
-#: resources/views/dashboard.phtml:247
-msgid "Deleted"
-msgstr "Gelöscht"
+#: resources/views/dashboard.phtml:209
+msgid "Filter"
+msgstr ""
 
-#: resources/views/dashboard.phtml:173
+#: resources/views/dashboard.phtml:210
+#: resources/views/partials/media-viewer.phtml:101
+msgid "Reset"
+msgstr "Zurücksetzen"
+
+#: resources/views/dashboard.phtml:218
+#, php-format
+msgid "%s-%s of %s"
+msgstr "%s-%s von %s"
+
+#: resources/views/dashboard.phtml:226
 #, php-format
 msgid "%s transcription"
 msgid_plural "%s transcriptions"
 msgstr[0] "%s Transkription"
 msgstr[1] "%s Transkriptionen"
 
-#: resources/views/dashboard.phtml:183
+#: resources/views/dashboard.phtml:238
 msgid "Transcription title"
 msgstr "Transkriptionstitel"
 
-#: resources/views/dashboard.phtml:186
-msgid "Transcription provider"
-msgstr "Anbieter der Transkription"
+#: resources/views/dashboard.phtml:242 resources/views/dashboard.phtml:444
+msgid "Media"
+msgstr ""
 
-#: resources/views/dashboard.phtml:188
+#: resources/views/dashboard.phtml:255
+msgid "Created"
+msgstr "Erzeugt"
+
+#: resources/views/dashboard.phtml:260
+msgid "Updated"
+msgstr ""
+
+#: resources/views/dashboard.phtml:263
 msgid "Note"
 msgstr ""
 
-#: resources/views/dashboard.phtml:189
+#: resources/views/dashboard.phtml:264
 msgid "Actions"
 msgstr "Aktionen"
 
-#: resources/views/dashboard.phtml:243
+#: resources/views/dashboard.phtml:319
 msgid "Source record"
 msgstr "Quellendatensatz"
 
-#: resources/views/dashboard.phtml:264
-#: resources/views/partials/media-viewer.phtml:76
+#: resources/views/dashboard.phtml:323 resources/views/dashboard.phtml:471
+#: resources/views/dashboard.phtml:478
+msgid "Deleted"
+msgstr "Gelöscht"
+
+#: resources/views/dashboard.phtml:345
+#: resources/views/partials/media-viewer.phtml:84
 msgid "External media URL"
 msgstr "URL einer externen Mediendatei"
 
-#: resources/views/dashboard.phtml:310
-#: resources/views/partials/media-viewer.phtml:96
-#: resources/views/partials/media-viewer.phtml:125
+#: resources/views/dashboard.phtml:397
+#: resources/views/partials/media-viewer.phtml:104
+#: resources/views/partials/media-viewer.phtml:133
 msgid "Open"
 msgstr "Öffnen"
+
+#: resources/views/dashboard.phtml:405
+msgid "Pagination"
+msgstr "Seitenumbruch"
+
+#: resources/views/dashboard.phtml:408
+msgid "Previous"
+msgstr "Vorherige"
+
+#: resources/views/dashboard.phtml:416
+msgid "Next"
+msgstr "Nächste"
+
+#: resources/views/dashboard.phtml:423
+msgid "No transcriptions match the selected filters."
+msgstr ""
+"Es wurden keine Transkriptionen gefunden, die den ausgewählten Filtern "
+"entsprechen."
+
+#: resources/views/dashboard.phtml:432
+msgid "Transkribus jobs"
+msgstr "Transkribus Jobs"
+
+#: resources/views/dashboard.phtml:446
+msgid "Upload references"
+msgstr "Hochladereferenz"
+
+#: resources/views/dashboard.phtml:447 resources/views/detail.phtml:430
+msgid "Message"
+msgstr "Nachricht"
 
 #: resources/views/detail.phtml:101
 msgid "Back to dashboard"
@@ -1522,49 +1575,45 @@ msgstr ""
 msgid "Make current"
 msgstr "Aktuell machen"
 
-#: resources/views/partials/media-viewer.phtml:40
+#: resources/views/partials/media-viewer.phtml:48
 msgctxt "Label for selecting one media file"
 msgid "Media file"
 msgstr "Mediendatei"
 
-#: resources/views/partials/media-viewer.phtml:82
+#: resources/views/partials/media-viewer.phtml:90
 msgid "This external media URL cannot be embedded here."
 msgstr "Die URL zur externen Mediendatei kann hier nicht angezeigt werden."
 
-#: resources/views/partials/media-viewer.phtml:86
+#: resources/views/partials/media-viewer.phtml:94
 msgid "Open external media"
 msgstr "Öffne eine externe Mediendatei"
 
-#: resources/views/partials/media-viewer.phtml:91
+#: resources/views/partials/media-viewer.phtml:99
 msgid "Image controls"
 msgstr "Bildsteuerelemente"
 
-#: resources/views/partials/media-viewer.phtml:92
+#: resources/views/partials/media-viewer.phtml:100
 msgid "Zoom out"
 msgstr "Verkleinern"
 
-#: resources/views/partials/media-viewer.phtml:93
-msgid "Reset"
-msgstr "Zurücksetzen"
-
-#: resources/views/partials/media-viewer.phtml:94
+#: resources/views/partials/media-viewer.phtml:102
 msgid "Zoom in"
 msgstr "Vergrößern"
 
-#: resources/views/partials/media-viewer.phtml:107
+#: resources/views/partials/media-viewer.phtml:115
 msgid "Open PDF in a new window"
 msgstr "Öffne PDF in einem neuen Fenster"
 
-#: resources/views/partials/media-viewer.phtml:114
+#: resources/views/partials/media-viewer.phtml:122
 msgid "The text preview is shortened."
 msgstr "Die Textanzeige ist eingekürzt."
 
-#: resources/views/partials/media-viewer.phtml:135
-#: resources/views/partials/media-viewer.phtml:145
+#: resources/views/partials/media-viewer.phtml:143
+#: resources/views/partials/media-viewer.phtml:153
 msgid "Stop"
 msgstr ""
 
-#: resources/views/partials/media-viewer.phtml:150
+#: resources/views/partials/media-viewer.phtml:158
 msgid ""
 "This media file cannot be previewed here. Use the download link below to "
 "save the file."
@@ -1572,7 +1621,7 @@ msgstr ""
 "Diese Mediendatei kann hier nicht angezeigt werden. Verwende zur Sicherung "
 "der Datei den untenstehenden Link zum Herunterladen."
 
-#: resources/views/partials/media-viewer.phtml:154
+#: resources/views/partials/media-viewer.phtml:162
 msgid "Download file"
 msgstr "Datei herunterladen"
 

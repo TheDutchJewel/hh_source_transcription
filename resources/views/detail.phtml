@@ -58,7 +58,9 @@ use Fisharebest\Webtrees\Auth;
 use Fisharebest\Webtrees\Media;
 use Fisharebest\Webtrees\MediaFile;
 use Fisharebest\Webtrees\Registry;
+use Fisharebest\Webtrees\Site;
 use Fisharebest\Webtrees\Source;
+use Fisharebest\Webtrees\Timestamp;
 use Fisharebest\Webtrees\Tree;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription;
 use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\TranscriptionRevision;
@@ -92,6 +94,32 @@ $provider_label = ProviderPresentation::label($transcription->provider_key);
 $provider_url   = ProviderPresentation::url($transcription->provider_key, $tree);
 $provider_icon  = ProviderPresentation::icon($transcription->provider_key);
 $provider_title = ProviderPresentation::title($transcription->provider_key);
+
+$format_timestamp = static function (?string $timestamp) use ($muted): string {
+    if ($timestamp === null || $timestamp === '') {
+        return '<span class="' . $muted . '">' . e(I18N::translate('None')) . '</span>';
+    }
+
+    $parsed_timestamp = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $timestamp, new DateTimeZone('UTC'));
+
+    if ($parsed_timestamp === false) {
+        $parsed_timestamp = DateTimeImmutable::createFromFormat('Y-m-d H:i', $timestamp, new DateTimeZone('UTC'));
+    }
+
+    if ($parsed_timestamp === false) {
+        return e($timestamp);
+    }
+
+    $localized_timestamp = new Timestamp(
+        $parsed_timestamp->getTimestamp(),
+        Site::getPreference('TIMEZONE'),
+        I18N::locale()->code()
+    );
+
+    return '<time datetime="' . e($localized_timestamp->toDateTimeString()) . '" title="' . e($localized_timestamp->isoFormat('LLLL')) . '" dir="auto">' .
+        e($localized_timestamp->isoFormat('L LT')) .
+        '</time>';
+};
 ?>
 
 <h2><?= e($title) ?>: <?= e($transcription->title) ?></h2>
@@ -587,7 +615,7 @@ $provider_title = ProviderPresentation::title($transcription->provider_key);
                         <div><?= e($revision->generated_note_changed_by_user_name) ?></div>
                     <?php endif ?>
                     <?php if ($revision->generated_note_changed_at !== null) : ?>
-                        <div class="text-muted small"><?= e($revision->generated_note_changed_at) ?></div>
+                        <div class="text-muted small"><?= $format_timestamp($revision->generated_note_changed_at) ?></div>
                     <?php endif ?>
                 </td>
                 <td><pre class="mb-0"><?= e(mb_substr($revision->content_text, 0, 500)) ?></pre></td>

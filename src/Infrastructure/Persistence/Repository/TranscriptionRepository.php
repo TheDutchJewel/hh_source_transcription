@@ -39,6 +39,15 @@ use Hartenthaler\Webtrees\Module\SourceTranscription\Domain\Entity\Transcription
 final class TranscriptionRepository
 {
     private const string TABLE = 'transcriptions';
+    private const int DEFAULT_DASHBOARD_PER_PAGE = 20;
+
+    private const array DASHBOARD_SORT_COLUMNS = [
+        'title'    => 'title',
+        'status'   => 'status',
+        'provider' => 'provider_key',
+        'created'  => 'created_at',
+        'updated'  => 'updated_at',
+    ];
 
     public function create(array $data): int
     {
@@ -126,6 +135,8 @@ final class TranscriptionRepository
             tag_note_xref: $row->tag_note_xref !== null ? (string)$row->tag_note_xref : null,
             current_note_xref: $row->current_note_xref !== null ? (string)$row->current_note_xref : null,
             created_by_user_id: (int)$row->created_by_user_id,
+            created_at: (string)$row->created_at,
+            updated_at: $row->updated_at !== null ? (string)$row->updated_at : null,
             is_active: (bool)$row->is_active,
         );
     }
@@ -142,6 +153,75 @@ final class TranscriptionRepository
             ->orderByDesc('id')
             ->get()
             ->map(fn ($row): Transcription => $this->map($row))
+            ->all();
+    }
+
+    /**
+     * @return array{
+     *     items: array<int, Transcription>,
+     *     total: int,
+     *     page: int,
+     *     per_page: int,
+     *     total_pages: int
+     * }
+     */
+    public function dashboardForTree(
+        Tree $tree,
+        string $sort,
+        string $direction,
+        ?string $status,
+        ?string $provider,
+        int $page,
+        int $per_page = self::DEFAULT_DASHBOARD_PER_PAGE,
+    ): array {
+        $query = DB::table(self::TABLE)
+            ->where('tree_id', '=', $tree->id())
+            ->where('is_active', '=', true);
+
+        if ($status !== null) {
+            $query->where('status', '=', $status);
+        }
+
+        if ($provider !== null) {
+            $query->where('provider_key', '=', $provider);
+        }
+
+        $total = (int)(clone $query)->count();
+        $per_page = max(1, $per_page);
+        $total_pages = max(1, (int)ceil($total / $per_page));
+        $page = min(max(1, $page), $total_pages);
+        $column = self::DASHBOARD_SORT_COLUMNS[$sort] ?? self::DASHBOARD_SORT_COLUMNS['created'];
+        $direction = $direction === 'asc' ? 'asc' : 'desc';
+
+        $items = $query
+            ->orderBy($column, $direction)
+            ->orderBy('id', $direction)
+            ->forPage($page, $per_page)
+            ->get()
+            ->map(fn ($row): Transcription => $this->map($row))
+            ->all();
+
+        return [
+            'items'       => $items,
+            'total'       => $total,
+            'page'        => $page,
+            'per_page'    => $per_page,
+            'total_pages' => $total_pages,
+        ];
+    }
+
+    /**
+     * @return array<int,string>
+     */
+    public function activeProviderKeysForTree(Tree $tree): array
+    {
+        return DB::table(self::TABLE)
+            ->where('tree_id', '=', $tree->id())
+            ->where('is_active', '=', true)
+            ->distinct()
+            ->orderBy('provider_key')
+            ->pluck('provider_key')
+            ->map(static fn ($provider_key): string => (string)$provider_key)
             ->all();
     }
 }
